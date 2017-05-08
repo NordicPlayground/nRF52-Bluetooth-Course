@@ -19,7 +19,8 @@ typedef enum
 {
     BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
     BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
-    BLE_CUS_EVT_DISCONNECTED
+    BLE_CUS_EVT_DISCONNECTED,
+    BLE_CUS_EVT_CONNECTED
 } ble_cus_evt_type_t;
 
 /**@brief Custom Service event. */

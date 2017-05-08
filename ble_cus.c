@@ -3,15 +3,22 @@
 #include <string.h>
 #include "ble_srv_common.h"
 #include "nrf_gpio.h"
+#include "nrf_log.h"
 
 /**@brief Function for handling the Connect event.
  *
- * @param[in]   p_bas       Battery Service structure.
+ * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 {
     p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+
+    ble_cus_evt_t evt;
+
+    evt.evt_type = BLE_CUS_EVT_CONNECTED;
+
+    p_cus->evt_handler(p_cus, &evt);
 }
 
 /**@brief Function for handling the Disconnect event.
@@ -89,11 +96,12 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 {
+    NRF_LOG_INFO("BLE event received. Event type = %d\r\n", p_ble_evt->header.evt_id); 
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
     }
-
+    
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
@@ -108,6 +116,9 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
             on_write(p_cus, p_ble_evt);
             break;
 
+        case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
+            NRF_LOG_INFO("EXCHANGE_MTU_REQUEST event received.\r\n");
+            break;
         default:
             // No implementation needed.
             break;
@@ -116,8 +127,8 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 /**@brief Function for adding the Custom Value characteristic.
  *
- * @param[in]   p_bas        Battery Service structure.
- * @param[in]   p_bas_init   Information needed to initialize the service.
+ * @param[in]   p_cus        Battery Service structure.
+ * @param[in]   p_cus_init   Information needed to initialize the service.
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
@@ -269,6 +280,7 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 
 uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
 {
+    NRF_LOG_INFO("In ble_cus_custom_value_update. \r\n"); 
     if (p_cus == NULL)
     {
         return NRF_ERROR_NULL;
@@ -290,12 +302,7 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
         err_code = sd_ble_gatts_value_set(p_cus->conn_handle,
                                           p_cus->custom_value_handles.value_handle,
                                           &gatts_value);
-        if (err_code == NRF_SUCCESS)
-        {
-            // Save new battery value.
-            p_cus->custom_value_last = custom_value;
-        }
-        else
+        if (err_code != NRF_SUCCESS)
         {
             return err_code;
         }
@@ -314,10 +321,12 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
             hvx_params.p_data = gatts_value.p_value;
 
             err_code = sd_ble_gatts_hvx(p_cus->conn_handle, &hvx_params);
+            NRF_LOG_INFO("sd_ble_gatts_hvx result: %x. \r\n", err_code); 
         }
         else
         {
             err_code = NRF_ERROR_INVALID_STATE;
+            NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
         }
     }
 
