@@ -99,75 +99,77 @@ This event handler type can be used to declare an event handler function that we
 Ok, so far so good. Now we need to create two structures, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
 ```C 
-    /**@brief Battery Service init structure. This contains all options and data needed for
-    *        initialization of the service.*/
-    typedef struct
-    {
-        ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
-        bool                          support_notification;           /**< TRUE if notification of Battery Level measurement is supported. */
-        ble_srv_report_ref_t *        p_report_ref;                   /**< If not NULL, a Report Reference descriptor with the specified value will be added to the Battery Level characteristic */
-        uint8_t                       initial_custom_value;           /**< Initial custom value */
-        ble_srv_cccd_security_mode_t  battery_level_char_attr_md;     /**< Initial security level for battery characteristics attribute */
-        ble_gap_conn_sec_mode_t       battery_level_report_read_perm; /**< Initial security level for battery report read attribute */
-    } ble_cus_init_t;
+/**@brief Battery Service init structure. This contains all options and data needed for
+ *        initialization of the service.*/
+typedef struct
+{
+    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
+    uint8_t                       initial_custom_value;           /**< Initial custom value */
+    ble_srv_cccd_security_mode_t  battery_level_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
+} ble_cus_init_t;
 ```
 
 The second struct that we need to create is the Custom Service structure, ble_cus_s, which holds the status information of the service. 
 
 ```C 
-    /**@brief Battery Service structure. This contains various status information for the service. */
-    struct ble_cus_s
-    {
-        ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
-        uint16_t                      service_handle;                 /**< Handle of Custom Service (as provided by the BLE stack). */
-        ble_gatts_char_handles_t      custom_value_handles;          /**< Handles related to the Custom Value characteristic. */
-        uint16_t                      report_ref_handle;              /**< Handle of the Report Reference descriptor. */
-        uint8_t                       custom_value_last;             /**< Last Custom Value measurement passed to the Custom Service. */
-        uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
-        bool                          is_notification_supported;      /**< TRUE if notification of Custom Value is supported. */
-        uint8_t                       uuid_type; 
-    };
+/**@brief Custom Service structure. This contains various status information for the service. */
+struct ble_cus_s
+{
+    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
+    uint16_t                      service_handle;                 /**< Handle of Custom Service (as provided by the BLE stack). */
+    ble_gatts_char_handles_t      custom_value_handles;           /**< Handles related to the Custom Value characteristic. */
+    uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
+    uint8_t                       uuid_type; 
+};
 ```
 
 
 Great, the last thing we need to do in the ble_custom_service.h file is to add some function declerations. First, we're going to add the ble_cus_init function
 
 ```C    
-    /**@brief Function for initializing the Custom Service.
-    *
-    * @param[out]  p_cus       Custom Service structure. This structure will have to be supplied by
-    *                          the application. It will be initialized by this function, and will later
-    *                          be used to identify this particular service instance.
-    * @param[in]   p_cus_init  Information needed to initialize the service.
-    *
-    * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
-    */
-    uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
+/**@brief Function for initializing the Custom Service.
+ *
+ * @param[out]  p_cus       Custom Service structure. This structure will have to be supplied by
+ *                          the application. It will be initialized by this function, and will later
+ *                          be used to identify this particular service instance.
+ * @param[in]   p_cus_init  Information needed to initialize the service.
+ *
+ * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
+ */
+uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
 ```
 Second, we're going to add the ble_cus_on_ble_evt function
 
 ```C   
-    /**@brief Function for handling the Application's BLE Stack events.
-    *
-    * @details Handles all events from the BLE stack of interest to the Custom Service.
-    *
-    * @note For the requirements in the BAS specification to be fulfilled,
-    *       ble_bas_battery_level_update() must be called upon reconnection if the
-    *       battery level has changed while the service has been disconnected from a bonded
-    *       client.
-    *
-    * @param[in]   p_cus      Battery Service structure.
-    * @param[in]   p_ble_evt  Event received from the BLE stack.
-    */
-    void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
+/**@brief Function for handling the Application's BLE Stack events.
+ *
+ * @details Handles all events from the BLE stack of interest to the Battery Service.
+ *
+ * @note 
+ *
+ * @param[in]   p_cus      Custom Service structure.
+ * @param[in]   p_ble_evt  Event received from the BLE stack.
+ */
+void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
 ```
 
 and lastly we're going to add the ble_cus_custom_value_update function.
 
-- [ ] Add brief to the ble_cus_custom_value_update function
-
 ```C  
-    uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
+/**@brief Function for updating the custom value.
+ *
+ * @details The application calls this function when the cutom value should be updated. If
+ *          notification has been enabled, the custom value characteristic is sent to the client.
+ *
+ * @note 
+ *       
+ * @param[in]   p_bas          Custom Service structure.
+ * @param[in]   Custom value 
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+
+uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
 ```
 
 ### Step 2 -  ble_custom_service.c
