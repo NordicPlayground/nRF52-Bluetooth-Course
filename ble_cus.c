@@ -51,8 +51,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
     {
         if(*p_evt_write->data == 0x01)
-        {
-            nrf_gpio_cfg_output(20);
+    }
             nrf_gpio_pin_clear(20); 
         }
         else if(*p_evt_write->data == 0x02)
@@ -65,7 +64,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
         }
     }
 
-    // Check if the Custom value CCCD is written to.
+    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
     if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
         && (p_evt_write->len == 2)
        )
