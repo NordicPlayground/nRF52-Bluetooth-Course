@@ -1,3 +1,10 @@
+```c    
+#include <stdint.h>
+#include <stdbool.h>
+#include "ble.h"
+#include "ble_srv_common.h"
+```
+
 Custom Service Tutorial
 -------
 
@@ -27,15 +34,15 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 [link to webpage](www.google.com)
 --->
-### Step 1 - 
+### Step 1 
 
 The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h. We'll start by declaring types and functions in ble_custom_service.h before we move to the actual implementation of our custom service. At the top we'll need to include the following .h files
 
 ```c    
-    #include <stdint.h>
-    #include <stdbool.h>
-    #include "ble.h"
-    #include "ble_srv_common.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include "ble.h"
+#include "ble_srv_common.h"
 ```
 
 
