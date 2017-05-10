@@ -111,10 +111,11 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
         case BLE_GATTS_EVT_WRITE:
             on_write(p_cus, p_ble_evt);
             break;
-
+/* Handling this event is not necessary
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
             NRF_LOG_INFO("EXCHANGE_MTU_REQUEST event received.\r\n");
             break;
+*/
         default:
             // No implementation needed.
             break;

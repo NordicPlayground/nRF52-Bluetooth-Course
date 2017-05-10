@@ -38,7 +38,6 @@ The first thing we need to do is to create a new .c file, lets call it ble_custo
 #include "ble_srv_common.h"
 ```
 
-
 Next, we're going to need a 128-bit UUID for our custom service since its not Bluetooth SIG . There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
 ```
@@ -124,7 +123,7 @@ struct ble_cus_s
 ```
 
 
-Great, the last thing we need to do in the ble_custom_service.h file is to add some function declerations. First, we're going to add the ble_cus_init function
+Great, the last thing we need to do in the ble_custom_service.h file is to add some function declerations. First, we're going to add the ble_cus_init function, which we're going to initialize our service with.
 
 ```c
 /**@brief Function for initializing the Custom Service.
@@ -138,7 +137,7 @@ Great, the last thing we need to do in the ble_custom_service.h file is to add s
  */
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
 ```
-Second, we're going to add the ble_cus_on_ble_evt function
+Second, we're going to add the ble_cus_on_ble_evt function to handle the events of the ble_cus_evt_type_t from our service.
 
 ```c
 /**@brief Function for handling the Application's BLE Stack events.
@@ -153,7 +152,7 @@ Second, we're going to add the ble_cus_on_ble_evt function
 void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
 ```
 
-and lastly we're going to add the ble_cus_custom_value_update function.
+Lastly we're going to add the ble_cus_custom_value_update function, which we're going to use to update our Custom Value Characteristic.
 
 ```c
 /**@brief Function for updating the custom value.
