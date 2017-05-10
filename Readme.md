@@ -27,7 +27,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 [link to webpage](www.google.com)
 --->
-### Step 1
+### Step 1 - 
 
 The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h. We'll start by declaring types and functions in ble_custom_service.h before we move to the actual implementation of our custom service. At the top we'll need to include the following .h files
 
@@ -169,3 +169,6 @@ and lastly we're going to add the ble_cus_custom_value_update function.
 ```C  
     uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
 ```
+
+### Step 2 -  ble_custom_service.c
+

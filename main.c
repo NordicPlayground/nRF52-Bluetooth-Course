@@ -383,17 +383,25 @@ static void application_timers_start(void)
 
 }
 
+/**@brief Function for handling the Custom Service Service events.
+ *
+ * @details This function will be called for all Custom Service events which are passed to
+ *          the application.
+ *
+ * @param[in]   p_cus_service  Custom Service structure.
+ * @param[in]   p_evt          Event received from the Custom Service.
+ *
+ */
 static void on_cus_evt(ble_cus_t     * p_cus_service,
                        ble_cus_evt_t * p_evt)
 {
     NRF_LOG_INFO("CUS event received. Event type = %d\r\n", p_evt->evt_type); 
 
-    ret_code_t err_code;
+    //ret_code_t err_code;
 
     switch(p_evt->evt_type)
     {
         case BLE_CUS_EVT_NOTIFICATION_ENABLED:
-              nrf_gpio_cfg_output(20);
               nrf_gpio_pin_clear(20);
               application_timers_start();
         case BLE_CUS_EVT_DISCONNECTED:
@@ -415,51 +423,24 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
  */
 static void services_init(void)
 {
-
+    /* YOUR_JOB: Add code to initialize the services used by the application.*/
     ret_code_t                         err_code;
     ble_cus_init_t                     cus_init;
 
+     // Initialize CUS Service.
     memset(&cus_init, 0, sizeof(cus_init));
+    
+    // Set the cus event handler
+    cus_init.evt_handler                = on_cus_evt;
 	
-    // Here the sec level for the Custom Service can be changed/increased.
+    // Here the Sec level for the Custom Service can be changed/increased.
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.cccd_write_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.write_perm);
-
-    //BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_report_read_perm);
-	
-    cus_init.evt_handler                = on_cus_evt;
-    cus_init.support_notification       = true;
-    cus_init.p_report_ref         	= NULL;
-    cus_init.initial_custom_value 	= 1;
     
-
     err_code = ble_cus_init(&m_cus, &cus_init);
     APP_ERROR_CHECK(err_code);
 	
-    /* YOUR_JOB: Add code to initialize the services used by the application.
-       ret_code_t                         err_code;
-       ble_xxs_init_t                     xxs_init;
-       ble_yys_init_t                     yys_init;
-
-       // Initialize XXX Service.
-       memset(&xxs_init, 0, sizeof(xxs_init));
-
-       xxs_init.evt_handler                = NULL;
-       xxs_init.is_xxx_notify_supported    = true;
-       xxs_init.ble_xx_initial_value.level = 100;
-
-       err_code = ble_bas_init(&m_xxs, &xxs_init);
-       APP_ERROR_CHECK(err_code);
-
-       // Initialize YYY Service.
-       memset(&yys_init, 0, sizeof(yys_init));
-       yys_init.evt_handler                  = on_yys_evt;
-       yys_init.ble_yy_initial_value.counter = 0;
-
-       err_code = ble_yy_service_init(&yys_init, &yy_init);
-       APP_ERROR_CHECK(err_code);
-     */
 }
 
 
@@ -516,9 +497,6 @@ static void conn_params_init(void)
     err_code = ble_conn_params_init(&cp_init);
     APP_ERROR_CHECK(err_code);
 }
-
-
-
 
 
 /**@brief Function for putting the chip into sleep mode.
@@ -668,11 +646,10 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
     nrf_ble_gatt_on_ble_evt(&m_gatt, p_ble_evt);
+   
+    //YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
     ble_cus_on_ble_evt(&m_cus, p_ble_evt);
-    /*YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
-       ble_xxs_on_ble_evt(&m_xxs, p_ble_evt);
-       ble_yys_on_ble_evt(&m_yys, p_ble_evt);
-     */
+    
 }
 
 
@@ -919,7 +896,7 @@ static void advertising_start(bool erase_bonds)
  */
 void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 {   
-    ret_code_t err_code;
+    //ret_code_t err_code;
 
     
     switch(p_event->type)
@@ -1015,7 +992,8 @@ int main(void)
     conn_params_init();
     peer_manager_init();
     timers_init();
-  
+    
+    nrf_gpio_cfg_output(20);
     //twi_init();
     //MMA7660_set_mode();
     //application_timers_start();
