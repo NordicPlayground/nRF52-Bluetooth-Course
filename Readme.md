@@ -20,7 +20,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 ## Tutorial Steps
 <!---
-```C    
+```c    
     uint8_t data
     // put C code here
 ```
@@ -31,7 +31,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h. We'll start by declaring types and functions in ble_custom_service.h before we move to the actual implementation of our custom service. At the top we'll need to include the following .h files
 
-```C    
+```c    
     #include <stdint.h>
     #include <stdbool.h>
     #include "ble.h"
@@ -41,18 +41,18 @@ The first thing we need to do is to create a new .c file, lets call it ble_custo
 
 Next, we're going to need a 128-bit UUID for our custom service since its not Bluetooth SIG . There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
-```C 
-    f364adc9-b000-4042-ba50-05ca45bf8abc
+```
+f364adc9-b000-4042-ba50-05ca45bf8abc
 ```
 The UUID is given as the sixteen octets of a UUID are represented as 32 hexadecimal (base 16) digits, displayed in five groups separated by hyphens, in the form 8-4-4-4-12. The 16 octets are given in big-endian, while we use the small-endian representation in our SDK. Thus, we must reverse the byte-ordering when we define our UUID base, as shown below.
 
-```C    
+```c    
 #define CUSTOM_SERVICE_UUID_BASE         {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, \
                                           0x40, 0x42, 0xB0, 0x00, 0xC9, 0xAD, 0x64, 0xF3}
-````
+```
 Now that we have defined our Base UUID, we need to define a 16-bit UUID for the Custom Service and a 16-bit UUID for a Custom Value Characteristic.  
 
-```C   
+```c   
 #define CUSTOM_SERVICE_UUID               0x1400
 #define CUSTOM_VALUE_CHAR_UUID            0x1401
 ```
@@ -62,7 +62,7 @@ The values for the 16-bit UUIDs can pretty much be choosen by random
 
 Next we need to declare an event type specific to our service
 
-```C    
+```c    
 typedef enum
 {
     BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
@@ -74,7 +74,7 @@ typedef enum
 
 After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
 
-```C    
+```c    
     /**@brief Custom Service event. */
     typedef struct
     {
@@ -83,13 +83,13 @@ After declaring the event type we need to declare an event structure that holds 
 ```
 
 The next step is to add a forward declaration of the ble_cus_t type
-```C 
+```c 
     // Forward declaration of the ble_cus_t type.
     typedef struct ble_cus_s ble_cus_t;
 ```
 The reason why we need to do this is because the ble_cus_t type will be referenced in the decleration of the Custom Service event handler type which we will define next
 
-```C 
+```c 
     /**@brief Custom Service event handler type. */
     typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_bas, ble_cus_evt_t * p_evt);
 ```
@@ -98,7 +98,7 @@ This event handler type can be used to declare an event handler function that we
 
 Ok, so far so good. Now we need to create two structures, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
-```C 
+```c 
 /**@brief Battery Service init structure. This contains all options and data needed for
  *        initialization of the service.*/
 typedef struct
@@ -111,7 +111,7 @@ typedef struct
 
 The second struct that we need to create is the Custom Service structure, ble_cus_s, which holds the status information of the service. 
 
-```C 
+```c 
 /**@brief Custom Service structure. This contains various status information for the service. */
 struct ble_cus_s
 {
@@ -126,7 +126,7 @@ struct ble_cus_s
 
 Great, the last thing we need to do in the ble_custom_service.h file is to add some function declerations. First, we're going to add the ble_cus_init function
 
-```C    
+```c    
 /**@brief Function for initializing the Custom Service.
  *
  * @param[out]  p_cus       Custom Service structure. This structure will have to be supplied by
@@ -140,7 +140,7 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
 ```
 Second, we're going to add the ble_cus_on_ble_evt function
 
-```C   
+```c   
 /**@brief Function for handling the Application's BLE Stack events.
  *
  * @details Handles all events from the BLE stack of interest to the Battery Service.
@@ -155,7 +155,7 @@ void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
 
 and lastly we're going to add the ble_cus_custom_value_update function.
 
-```C  
+```c  
 /**@brief Function for updating the custom value.
  *
  * @details The application calls this function when the cutom value should be updated. If
