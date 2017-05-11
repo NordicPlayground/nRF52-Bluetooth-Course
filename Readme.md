@@ -14,8 +14,8 @@ The aim of this tutorial is simply to create one service with one characteristic
 ## Requirements
 
 - nRF5 SDK v13.0.0
-- nRF52 DK
-- Keil ARM MKD v5.22
+- nRF51 DK or nRF52 DK
+- Keil ARM MKD v5.22 (strictly speaking you can use any IDE you want)
 - nRF Commandline Tools
 
 ## Tutorial Steps
@@ -647,7 +647,146 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 }
 ```
 
-Great, we're now handling 
 ### Step X - Handling the Write event from the SoftDevice.
 
- but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED
+ Ok, now we really want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. How are we going to that? You guessed it! More event handling!
+
+ Whenever a characteristic is written to, a BLE_GATTS_EVT_WRITE event will be propagated to the application and dispatched to the functions in ble_evt_dispatch(). So this means that we need to add another case to our ble_cus_on_ble_evt switch-case statement, namely BLE_GATTS_EVT_WRITE
+
+
+ ```c
+void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    if (p_cus == NULL || p_ble_evt == NULL)
+    {
+        return;
+    }
+    
+    switch (p_ble_evt->header.evt_id)
+    {
+        case BLE_GAP_EVT_CONNECTED:
+            on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+            break;
+
+        case BLE_GAP_EVT_DISCONNECTED:
+            on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+            break;
+        case BLE_GATTS_EVT_WRITE:
+            break;
+        default:
+            // No implementation needed.
+            break;
+    }
+}
+```
+
+Just like we did for the BLE_GAP_EVT_CONNECTED and BLE_GAP_EVT_DISCONNECTED we're going to create a on_write function that should be called when we get the Write event. 
+
+```c
+/**@brief Function for handling the Write event.
+ *
+ * @param[in]   p_cus       Custom Service structure.
+ * @param[in]   p_ble_evt   Event received from the BLE stack.
+ */
+static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+
+}
+```
+
+Now, once we get the Write event we have to get hold of the Write event parameters that are passed with the event and we have to verify that the the handle that is written to matches the Custom Value Characteristic handle, i.e.
+
+```c
+static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    
+    // Check if the handle passed with the event matches the Custom Value Characteristic handle.
+    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    {
+        // Put specific task here. 
+    }
+```
+
+So lets say that our specifc task is to toggle a LED on the nRF5x DK every time the Custom Value Characteristic is written to. We can do this by calling nrf_gpio_pin_toggle on one of the pins connected to the nRF5x DK LEDs, e.g. LED4. In order to do this we'll have to include boards.h and nrf_gpio.h in ble_cus.h as well as call nrf_gpio_pin_toggle in the on_write function
+
+
+```c
+static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    
+    // Check if the handle passed with the event matches the Custom Value Characteristic handle.
+    if (p_evt_write->handle == p_cus->custom_value_handleWs.value_handle)
+    {
+        nrf_gpio_pin_toggle(LED_4); 
+    }
+```
+
+Challenge 1: p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
+
+### Step X - Notifications, Notifications and Notifications.
+
+
+
+
+```c
+    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
+        && (p_evt_write->len == 2)
+       )
+    {
+        // CCCD written, call application event handler
+        if (p_cus->evt_handler != NULL)
+        {
+            ble_cus_evt_t evt;
+
+            if (ble_srv_is_notification_enabled(p_evt_write->data))
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
+            }
+            else
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
+            }
+            // Call the application event handler.
+            p_cus->evt_handler(p_cus, &evt);
+        }
+    }
+```
+
+```c
+static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    
+    // Custom Value Characteristic Written to.
+    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    {
+        nrf_gpio_pin_toggle(LED_4);
+    }
+
+    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
+        && (p_evt_write->len == 2)
+       )
+    {
+        // CCCD written, call application event handler
+        if (p_cus->evt_handler != NULL)
+        {
+            ble_cus_evt_t evt;
+
+            if (ble_srv_is_notification_enabled(p_evt_write->data))
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
+            }
+            else
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
+            }
+            // Call the application event handler.
+            p_cus->evt_handler(p_cus, &evt);
+        }
+    }
+}
+```

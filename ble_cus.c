@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ble_srv_common.h"
 #include "nrf_gpio.h"
+#include "boards.h"
 #include "nrf_log.h"
 
 /**@brief Function for handling the Connect event.
@@ -40,7 +41,7 @@ static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 /**@brief Function for handling the Write event.
  *
- * @param[in]   p_bas       Custom Service structure.
+ * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
@@ -50,6 +51,8 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     // Custom Value Characteristic Written to.
     if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
     {
+        nrf_gpio_pin_toggle(LED_4);
+        /*
         if(*p_evt_write->data == 0x01)
         {
             nrf_gpio_pin_clear(20); 
@@ -62,6 +65,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
         {
           //Do nothing
         }
+        */
     }
 
     // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
