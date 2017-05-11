@@ -23,7 +23,7 @@ static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 /**@brief Function for handling the Disconnect event.
  *
- * @param[in]   p_bas       Battery Service structure.
+ * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
@@ -51,7 +51,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
     {
         if(*p_evt_write->data == 0x01)
-    }
+        {
             nrf_gpio_pin_clear(20); 
         }
         else if(*p_evt_write->data == 0x02)
@@ -144,7 +144,7 @@ static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
     
-    cccd_md.write_perm = p_cus_init->battery_level_char_attr_md.cccd_write_perm;
+    cccd_md.write_perm = p_cus_init->custom_value_char_attr_md.cccd_write_perm;
     cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
 
     memset(&char_md, 0, sizeof(char_md));
@@ -163,8 +163,8 @@ static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * 
 
     memset(&attr_md, 0, sizeof(attr_md));
 
-    attr_md.read_perm  = p_cus_init->battery_level_char_attr_md.read_perm;
-    attr_md.write_perm = p_cus_init->battery_level_char_attr_md.write_perm;
+    attr_md.read_perm  = p_cus_init->custom_value_char_attr_md.read_perm;
+    attr_md.write_perm = p_cus_init->custom_value_char_attr_md.write_perm;
     attr_md.vloc       = BLE_GATTS_VLOC_STACK;
     attr_md.rd_auth    = 0;
     attr_md.wr_auth    = 0;
@@ -218,7 +218,7 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
         return err_code;
     }
 
-    // Add Custom level characteristic
+    // Add Custom Value characteristic
     return custom_value_char_add(p_cus, p_cus_init);
 }
 

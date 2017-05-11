@@ -156,7 +156,8 @@ void MMA7660_read_xyz(void);
 
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
 //static ble_uuid_t m_adv_uuids[] = {{CUSTOM_SERVICE_UUID, m_cus.uuid_type }}; /**< Universally unique service identifiers. */
-
+ ble_uuid_t m_adv_uuids[] = {{CUSTOM_SERVICE_UUID, BLE_UUID_TYPE_VENDOR_BEGIN }}; /**< Universally unique service identifiers. */
+ 
 static void advertising_start(bool erase_bonds);
 
 /**@brief Callback function for asserts in the SoftDevice.
@@ -434,9 +435,9 @@ static void services_init(void)
     cus_init.evt_handler                = on_cus_evt;
 	
     // Here the Sec level for the Custom Service can be changed/increased.
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.cccd_write_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.read_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.battery_level_char_attr_md.write_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.cccd_write_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.write_perm);
     
     err_code = ble_cus_init(&m_cus, &cus_init);
     APP_ERROR_CHECK(err_code);
@@ -816,7 +817,7 @@ static void advertising_init(void)
     ble_advdata_t          advdata;
     ble_adv_modes_config_t options;
 
-    ble_uuid_t m_adv_uuids[] = {{CUSTOM_SERVICE_UUID, m_cus.uuid_type }}; /**< Universally unique service identifiers. */
+   
 
     // Build advertising data struct to pass into @ref ble_advertising_init.
     memset(&advdata, 0, sizeof(advdata));

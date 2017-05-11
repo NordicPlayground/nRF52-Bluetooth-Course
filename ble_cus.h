@@ -42,7 +42,7 @@ typedef struct
 {
     ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
     uint8_t                       initial_custom_value;           /**< Initial custom value */
-    ble_srv_cccd_security_mode_t  battery_level_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
+    ble_srv_cccd_security_mode_t  custom_value_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
 } ble_cus_init_t;
 
 /**@brief Custom Service structure. This contains various status information for the service. */
