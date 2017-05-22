@@ -27,9 +27,9 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 [link to webpage](www.google.com)
 --->
-### Step 1 
+### Step 1 - Creating a Custom UUID 
 
-The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h. We'll start by declaring types and functions in ble_custom_service.h before we move to the actual implementation of our custom service. At the top we'll need to include the following .h files
+The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h.  At the top of the header file we'll need to include the following .h files
 
 ```c
 #include <stdint.h>
@@ -59,41 +59,17 @@ The values for the 16-bit UUIDs can pretty much be choosen by random
 
 - [ ] Look up if the 16-bit UUIDs can be chosen randomly or if any rules apply. 
 
-Next we need to declare an event type specific to our service
+
+### Step 2 - Implementing the Custom Service 
+
+First things first, we need to include the ble_custom_service.h header file we just created as well as some common SDK header files in ble_custom_service.c.
 
 ```c
-typedef enum
-{
-    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
-    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
-    BLE_CUS_EVT_DISCONNECTED,
-    BLE_CUS_EVT_CONNECTED
-} ble_cus_evt_type_t;
+#include "sdk_common.h"
+#include "ble_srv_common.h"
+#include "ble_cus.h"
+#include <string.h>
 ```
-
-After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
-
-```c
-/**@brief Custom Service event. */
-typedef struct
-{
-    ble_cus_evt_type_t evt_type;                                  /**< Type of event. */
-} ble_cus_evt_t;
-```
-
-The next step is to add a forward declaration of the ble_cus_t type
-```c
-// Forward declaration of the ble_cus_t type.
-typedef struct ble_cus_s ble_cus_t;
-```
-The reason why we need to do this is because the ble_cus_t type will be referenced in the decleration of the Custom Service event handler type which we will define next
-
-```c
-/**@brief Custom Service event handler type. */
-typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_bas, ble_cus_evt_t * p_evt);
-```
-
-This event handler type can be used to declare an event handler function that we can invoke and pass ble_cus_evt_type_t events to. More on this latter. 
 
 Ok, so far so good. Now we need to create two structures, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
@@ -122,8 +98,7 @@ struct ble_cus_s
 };
 ```
 
-
-Great, the last thing we need to do in the ble_custom_service.h file is to add some function declerations. First, we're going to add the ble_cus_init function, which we're going to initialize our service with.
+The first function we're going to implement is ble_cus_init function, which we're going to initialize our service with. First, we need to do is to add its function decleration in the ble_custom_service.h file. 
 
 ```c
 /**@brief Function for initializing the Custom Service.
@@ -137,52 +112,8 @@ Great, the last thing we need to do in the ble_custom_service.h file is to add s
  */
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
 ```
-Second, we're going to add the ble_cus_on_ble_evt function to handle the events of the ble_cus_evt_type_t from our service.
 
-```c
-/**@brief Function for handling the Application's BLE Stack events.
- *
- * @details Handles all events from the BLE stack of interest to the Battery Service.
- *
- * @note 
- *
- * @param[in]   p_cus      Custom Service structure.
- * @param[in]   p_ble_evt  Event received from the BLE stack.
- */
-void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
-```
-
-Lastly we're going to add the ble_cus_custom_value_update function, which we're going to use to update our Custom Value Characteristic.
-
-```c
-/**@brief Function for updating the custom value.
- *
- * @details The application calls this function when the cutom value should be updated. If
- *          notification has been enabled, the custom value characteristic is sent to the client.
- *
- * @note 
- *       
- * @param[in]   p_bas          Custom Service structure.
- * @param[in]   Custom value 
- *
- * @return      NRF_SUCCESS on success, otherwise an error code.
- */
-
-uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
-```
-
-### Step 2 - Implementing the Custom Service 
-
-First things first, we need to include the ble_custom_service.h header file we just created as well as some common SDK header files in ble_custom_service.c.
-
-```c
-#include "sdk_common.h"
-#include "ble_srv_common.h"
-#include "ble_cus.h"
-#include <string.h>
-```
-
-The first function we're going to implement is ble_cus_init function. The first thing we should do upon entering ble_cus_init is to check that none of the pointers that we passed as arguments are NULL and declare the two variables err_code and ble_uuid.
+The first thing we should do upon entering ble_cus_init is to check that none of the pointers that we passed as arguments are NULL and declare the two variables err_code and ble_uuid.
 
 ```c
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
@@ -530,10 +461,63 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 ```
 
 
-### Step X - Handling events from the SoftDevice.
-Great, we now have a Custom Service and a Custom Value Characteristic, but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. However, before we can do that we need to do some event handling in ble_custom_service.c. We're now going to implement the ble_cus_on_ble_evt event handler that we declared in the header file.  
+### Step 5 - Handling events from the SoftDevice.
+Great, we now have a Custom Service and a Custom Value Characteristic, but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. However, before we can do that we need to do some event handling in ble_custom_service.h and ble_custom_service.c. 
 
-Upon entry its considered good practice to check that none of the pointers that we provided as arguments are NULL. 
+
+
+
+Next we need to declare an event type specific to our service
+
+```c
+typedef enum
+{
+    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
+    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
+    BLE_CUS_EVT_DISCONNECTED,
+    BLE_CUS_EVT_CONNECTED
+} ble_cus_evt_type_t;
+```
+For now we're only going to add the BLE_CUS_EVT_CONNECTED and BLE_CUS_EVT_DISCONNECTED events, but we'll add some additional events later in the tutorial. Also note that is possible to create custom events for your service. 
+
+After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
+
+```c
+/**@brief Custom Service event. */
+typedef struct
+{
+    ble_cus_evt_type_t evt_type;                                  /**< Type of event. */
+} ble_cus_evt_t;
+```
+
+The next step is to add a forward declaration of the ble_cus_t type
+```c
+// Forward declaration of the ble_cus_t type.
+typedef struct ble_cus_s ble_cus_t;
+```
+The reason why we need to do this is because the ble_cus_t type will be referenced in the decleration of the Custom Service event handler type which we will define next
+
+```c
+/**@brief Custom Service event handler type. */
+typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_cus, ble_cus_evt_t * p_evt);
+```
+
+Lastly, we're going to add the ble_cus_on_ble_evt function decleration, which will handle the events of the ble_cus_evt_type_t from our service.
+
+```c
+/**@brief Function for handling the Application's BLE Stack events.
+ *
+ * @details Handles all events from the BLE stack of interest to the Battery Service.
+ *
+ * @note 
+ *
+ * @param[in]   p_cus      Custom Service structure.
+ * @param[in]   p_ble_evt  Event received from the BLE stack.
+ */
+void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+```
+
+We're now going to implement the ble_cus_on_ble_evt event handler in ble_custom_service.c.Upon entry its considered good practice to check that none of the pointers that we provided as arguments are NULL. 
 
 ```c
 void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
@@ -647,7 +631,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 }
 ```
 
-### Step X - Handling the Write event from the SoftDevice.
+### Step 6 - Handling the Write event from the SoftDevice.
 
  Ok, now we really want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. How are we going to that? You guessed it! More event handling!
 
@@ -725,9 +709,38 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 Challenge 1: p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
 
-### Step X - Notifications, Notifications and Notifications.
+### Step 7 - Notifications, Notifications and Notifications.
 
+The first thing we should do is to add two additional events BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED to the ble_cus_evt_type_t enumeration in ble_custom_service.h
 
+```c
+typedef enum
+{
+    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
+    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
+    BLE_CUS_EVT_DISCONNECTED,
+    BLE_CUS_EVT_CONNECTED
+} ble_cus_evt_type_t;
+```
+
+Next, we're going to add the ble_cus_custom_value_update function decleration, which we're going to use to update our Custom Value Characteristic.
+
+```c
+/**@brief Function for updating the custom value.
+ *
+ * @details The application calls this function when the cutom value should be updated. If
+ *          notification has been enabled, the custom value characteristic is sent to the client.
+ *
+ * @note 
+ *       
+ * @param[in]   p_bas          Custom Service structure.
+ * @param[in]   Custom value 
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+
+uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
+```
 
 
 ```c
