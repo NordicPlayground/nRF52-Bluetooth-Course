@@ -27,7 +27,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 [link to webpage](www.google.com)
 --->
-### Step 1 - Creating a Custom UUID 
+### Step 1 - Creating a Custom Base UUID 
 
 The first thing we need to do is to create a new .c file, lets call it ble_custom_service.c, and its accompaning .h file ble_custom_service.h.  At the top of the header file we'll need to include the following .h files
 
@@ -38,7 +38,7 @@ The first thing we need to do is to create a new .c file, lets call it ble_custo
 #include "ble_srv_common.h"
 ```
 
-Next, we're going to need a 128-bit UUID for our custom service since its not Bluetooth SIG . There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
+Next, we're going to need a 128-bit UUID for our custom service since its not 16-bit Bluetooth  SIG UUID. There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
 ```
 f364adc9-b000-4042-ba50-05ca45bf8abc
@@ -97,6 +97,13 @@ struct ble_cus_s
     uint8_t                       uuid_type; 
 };
 ```
+
+The next step is to add a forward declaration of the ble_cus_t type
+```c
+// Forward declaration of the ble_cus_t type.
+typedef struct ble_cus_s ble_cus_t;
+```
+
 
 The first function we're going to implement is ble_cus_init function, which we're going to initialize our service with. First, we need to do is to add its function decleration in the ble_custom_service.h file. 
 
@@ -464,16 +471,11 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 ### Step 5 - Handling events from the SoftDevice.
 Great, we now have a Custom Service and a Custom Value Characteristic, but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. However, before we can do that we need to do some event handling in ble_custom_service.h and ble_custom_service.c. 
 
-
-
-
-Next we need to declare an event type specific to our service
+First we need to declare an event type specific to our service
 
 ```c
 typedef enum
 {
-    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
-    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
     BLE_CUS_EVT_DISCONNECTED,
     BLE_CUS_EVT_CONNECTED
 } ble_cus_evt_type_t;
@@ -490,12 +492,7 @@ typedef struct
 } ble_cus_evt_t;
 ```
 
-The next step is to add a forward declaration of the ble_cus_t type
-```c
-// Forward declaration of the ble_cus_t type.
-typedef struct ble_cus_s ble_cus_t;
-```
-The reason why we need to do this is because the ble_cus_t type will be referenced in the decleration of the Custom Service event handler type which we will define next
+ the decleration of the Custom Service event handler type which we will define next
 
 ```c
 /**@brief Custom Service event handler type. */
@@ -723,24 +720,8 @@ typedef enum
 } ble_cus_evt_type_t;
 ```
 
-Next, we're going to add the ble_cus_custom_value_update function decleration, which we're going to use to update our Custom Value Characteristic.
 
-```c
-/**@brief Function for updating the custom value.
- *
- * @details The application calls this function when the cutom value should be updated. If
- *          notification has been enabled, the custom value characteristic is sent to the client.
- *
- * @note 
- *       
- * @param[in]   p_bas          Custom Service structure.
- * @param[in]   Custom value 
- *
- * @return      NRF_SUCCESS on success, otherwise an error code.
- */
 
-uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
-```
 
 
 ```c
@@ -767,6 +748,8 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
         }
     }
 ```
+
+Adding the code-snippet above to the on_write() function should result in the following function. 
 
 ```c
 static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
@@ -801,5 +784,144 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
             p_cus->evt_handler(p_cus, &evt);
         }
     }
+}
+```
+
+Next, we're going to add the ble_cus_custom_value_update function decleration to the ble_custom_service.h file, which we're going to use to update our Custom Value Characteristic.
+
+```c
+/**@brief Function for updating the custom value.
+ *
+ * @details The application calls this function when the cutom value should be updated. If
+ *          notification has been enabled, the custom value characteristic is sent to the client.
+ *
+ * @note 
+ *       
+ * @param[in]   p_cus          Custom Service structure.
+ * @param[in]   Custom value 
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+
+uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
+```
+
+As always, we follow the good practice of checking that the pointer we passed as an argument is'nt NULL
+
+```c
+if (p_cus == NULL)
+{
+    return NRF_ERROR_NULL;
+}
+```
+
+Next, we're going to update the value in the GATT table with our custom_value that we passed as an argument to the ble_cus_custom_value_update() function. 
+
+```c
+uint32_t err_code = NRF_SUCCESS;
+ble_gatts_value_t gatts_value;
+
+// Initialize value struct.
+memset(&gatts_value, 0, sizeof(gatts_value));
+
+gatts_value.len     = sizeof(uint8_t);
+gatts_value.offset  = 0;
+gatts_value.p_value = &custom_value;
+
+// Update database.
+err_code = sd_ble_gatts_value_set(p_cus->conn_handle,
+                                    p_cus->custom_value_handles.value_handle,
+                                    &gatts_value);
+if (err_code != NRF_SUCCESS)
+{
+    return err_code;
+}
+```
+
+After updating the value in the GATT table we're ready to notify our peer that the value of our Custom Value Characteristic has changed. T
+
+```c
+// Send value if connected and notifying.
+if ((p_cus->conn_handle != BLE_CONN_HANDLE_INVALID)) 
+{
+    ble_gatts_hvx_params_t hvx_params;
+
+    memset(&hvx_params, 0, sizeof(hvx_params));
+
+    hvx_params.handle = p_cus->custom_value_handles.value_handle;
+    hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+    hvx_params.offset = gatts_value.offset;
+    hvx_params.p_len  = &gatts_value.len;
+    hvx_params.p_data = gatts_value.p_value;
+
+    err_code = sd_ble_gatts_hvx(p_cus->conn_handle, &hvx_params);
+    NRF_LOG_INFO("sd_ble_gatts_hvx result: %x. \r\n", err_code); 
+}
+else
+{
+    err_code = NRF_ERROR_INVALID_STATE;
+    NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
+}
+
+
+return err_code;
+
+```
+The first thing we should do is to verify that we have a valid connection handle, i.e. that we're actually connected to a peer. Next, we set the ble_gatts_hvx_params_t, which contains the handle of custom value attribute, the type(i.e. if its a Notification or Indication), the value offsett( only used if its larger than 20bytes), the length and the data. After setting the hvx_params, we notify the peer by calling sd_ble_gatts_hvx().
+
+
+
+```c
+uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
+{
+    NRF_LOG_INFO("In ble_cus_custom_value_update. \r\n"); 
+    if (p_cus == NULL)
+    {
+        return NRF_ERROR_NULL;
+    }
+
+    uint32_t err_code = NRF_SUCCESS;
+    ble_gatts_value_t gatts_value;
+
+    // Initialize value struct.
+    memset(&gatts_value, 0, sizeof(gatts_value));
+
+    gatts_value.len     = sizeof(uint8_t);
+    gatts_value.offset  = 0;
+    gatts_value.p_value = &custom_value;
+
+    // Update database.
+    err_code = sd_ble_gatts_value_set(p_cus->conn_handle,
+                                      p_cus->custom_value_handles.value_handle,
+                                      &gatts_value);
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
+
+    // Send value if connected and notifying.
+    if ((p_cus->conn_handle != BLE_CONN_HANDLE_INVALID)) 
+    {
+        ble_gatts_hvx_params_t hvx_params;
+
+        memset(&hvx_params, 0, sizeof(hvx_params));
+
+        hvx_params.handle = p_cus->custom_value_handles.value_handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = gatts_value.offset;
+        hvx_params.p_len  = &gatts_value.len;
+        hvx_params.p_data = gatts_value.p_value;
+
+        err_code = sd_ble_gatts_hvx(p_cus->conn_handle, &hvx_params);
+        NRF_LOG_INFO("sd_ble_gatts_hvx result: %x. \r\n", err_code); 
+    }
+    else
+    {
+        err_code = NRF_ERROR_INVALID_STATE;
+        NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
+    }
+
+
+    return err_code;
 }
 ```
