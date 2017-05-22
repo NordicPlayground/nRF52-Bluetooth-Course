@@ -471,33 +471,6 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 ### Step 5 - Handling events from the SoftDevice.
 Great, we now have a Custom Service and a Custom Value Characteristic, but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. However, before we can do that we need to do some event handling in ble_custom_service.h and ble_custom_service.c. 
 
-First we need to declare an event type specific to our service
-
-```c
-typedef enum
-{
-    BLE_CUS_EVT_DISCONNECTED,
-    BLE_CUS_EVT_CONNECTED
-} ble_cus_evt_type_t;
-```
-For now we're only going to add the BLE_CUS_EVT_CONNECTED and BLE_CUS_EVT_DISCONNECTED events, but we'll add some additional events later in the tutorial. Also note that is possible to create custom events for your service. 
-
-After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
-
-```c
-/**@brief Custom Service event. */
-typedef struct
-{
-    ble_cus_evt_type_t evt_type;                                  /**< Type of event. */
-} ble_cus_evt_t;
-```
-
- the decleration of the Custom Service event handler type which we will define next
-
-```c
-/**@brief Custom Service event handler type. */
-typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_cus, ble_cus_evt_t * p_evt);
-```
 
 Lastly, we're going to add the ble_cus_on_ble_evt function decleration, which will handle the events of the ble_cus_evt_type_t from our service.
 
@@ -706,86 +679,91 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 Challenge 1: p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
 
-### Step 7 - Notifications, Notifications and Notifications.
+### Step 7 - Propagating Custom Service events to the application
 
-The first thing we should do is to add two additional events BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED to the ble_cus_evt_type_t enumeration in ble_custom_service.h
+Until now we've only handled the events that are propagated by the SoftDevice, but in some cases it makes sense to 
+
+First we need to declare an event type specific to our service
 
 ```c
 typedef enum
 {
-    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
-    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
     BLE_CUS_EVT_DISCONNECTED,
     BLE_CUS_EVT_CONNECTED
 } ble_cus_evt_type_t;
 ```
+For now we're only going to add the BLE_CUS_EVT_CONNECTED and BLE_CUS_EVT_DISCONNECTED events, but we'll add some additional events later in the tutorial. 
 
-
-
-
+After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
 
 ```c
-    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
-    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
-        && (p_evt_write->len == 2)
-       )
-    {
-        // CCCD written, call application event handler
-        if (p_cus->evt_handler != NULL)
-        {
-            ble_cus_evt_t evt;
-
-            if (ble_srv_is_notification_enabled(p_evt_write->data))
-            {
-                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
-            }
-            else
-            {
-                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
-            }
-            // Call the application event handler.
-            p_cus->evt_handler(p_cus, &evt);
-        }
-    }
+/**@brief Custom Service event. */
+typedef struct
+{
+    ble_cus_evt_type_t evt_type;                                  /**< Type of event. */
+} ble_cus_evt_t;
 ```
 
-Adding the code-snippet above to the on_write() function should result in the following function. 
+ Next, we need declare the Custom Service event handler type 
 
 ```c
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+/**@brief Custom Service event handler type. */
+typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_cus, ble_cus_evt_t * p_evt);
+```
+
+Now, back in main we're going to create the event handler function on_cus_evt, which takes the same parameters as the ble_cus_evt_handler_t type.
+
+```c
+/**@brief Function for handling the Custom Service Service events.
+ *
+ * @details This function will be called for all Custom Service events which are passed to
+ *          the application.
+ *
+ * @param[in]   p_cus_service  Custom Service structure.
+ * @param[in]   p_evt          Event received from the Custom Service.
+ *
+ */
+static void on_cus_evt(ble_cus_t     * p_cus_service,
+                       ble_cus_evt_t * p_evt)
 {
-    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
-    
-    // Custom Value Characteristic Written to.
-    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    switch(p_evt->evt_type)
     {
-        nrf_gpio_pin_toggle(LED_4);
-    }
+        case BLE_CUS_EVT_CONNECTED:
+            break;
 
-    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
-    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
-        && (p_evt_write->len == 2)
-       )
-    {
-        // CCCD written, call application event handler
-        if (p_cus->evt_handler != NULL)
-        {
-            ble_cus_evt_t evt;
+        case BLE_CUS_EVT_DISCONNECTED:
+              break;
 
-            if (ble_srv_is_notification_enabled(p_evt_write->data))
-            {
-                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
-            }
-            else
-            {
-                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
-            }
-            // Call the application event handler.
-            p_cus->evt_handler(p_cus, &evt);
-        }
+        default:
+              // No implementation needed.
+              break;
     }
 }
 ```
+
+Now, in order to propagate events from our service we need to assign the on_cus_evt function as the event handler function of our service when we initialize the Custom Service. This is done by setting the .evt_handler field of the cus_init struct equal to on_cus_evt, i.e.
+
+```c
+    // Set the cus event handler
+    cus_init.evt_handler                = on_cus_evt;
+```
+
+We can now invoke this event handler from ble_custom_service.c by calling p_cus->evt_handler(p_cus, &evt) and as an example we'll invoke the event handler when we get the BLE_GAP_EVT_CONNECTED event, i.e. in the on_connect() function. It's fairly straight forward,  we simply declare a ble_cus_evt_t variable and set its .evt_type field to the BLE_CUS_EVT_CONNECTED and then invoke the event handler with said event. 
+
+```c
+static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+
+    ble_cus_evt_t evt;
+
+    evt.evt_type = BLE_CUS_EVT_CONNECTED;
+
+    p_cus->evt_handler(p_cus, &evt);
+}
+```
+
+### Step 8 - Notifying the Custom Value Characteristic
 
 Next, we're going to add the ble_cus_custom_value_update function decleration to the ble_custom_service.h file, which we're going to use to update our Custom Value Characteristic.
 
@@ -805,13 +783,14 @@ Next, we're going to add the ble_cus_custom_value_update function decleration to
 
 uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
 ```
-
-As always, we follow the good practice of checking that the pointer we passed as an argument is'nt NULL
+Back in ble_custom_service.c, we're going to continue the good practice of checking that the pointer we passed as an argument is'nt NULL
 
 ```c
-if (p_cus == NULL)
-{
-    return NRF_ERROR_NULL;
+uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value){
+    if (p_cus == NULL)
+    {
+        return NRF_ERROR_NULL;
+    }
 }
 ```
 
@@ -855,21 +834,18 @@ if ((p_cus->conn_handle != BLE_CONN_HANDLE_INVALID))
     hvx_params.p_data = gatts_value.p_value;
 
     err_code = sd_ble_gatts_hvx(p_cus->conn_handle, &hvx_params);
-    NRF_LOG_INFO("sd_ble_gatts_hvx result: %x. \r\n", err_code); 
 }
 else
 {
     err_code = NRF_ERROR_INVALID_STATE;
-    NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
 }
-
 
 return err_code;
 
 ```
-The first thing we should do is to verify that we have a valid connection handle, i.e. that we're actually connected to a peer. Next, we set the ble_gatts_hvx_params_t, which contains the handle of custom value attribute, the type(i.e. if its a Notification or Indication), the value offsett( only used if its larger than 20bytes), the length and the data. After setting the hvx_params, we notify the peer by calling sd_ble_gatts_hvx().
+The first thing we should do is to verify that we have a valid connection handle, i.e. that we're actually connected to a peer, if not we should return an error indicating that we're in an invalid state. Next, we set the ble_gatts_hvx_params_t, which contains the handle of custom value attribute, the type(i.e. if its a Notification or Indication), the value offsett( only used if its larger than 20bytes), the length and the data. After setting the hvx_params, we notify the peer by calling sd_ble_gatts_hvx(). Lastly, we should return the error code. 
 
-
+After adding the code snippets above ble_cus_custom_value_update() should look like below
 
 ```c
 uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
@@ -913,15 +889,146 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
         hvx_params.p_data = gatts_value.p_value;
 
         err_code = sd_ble_gatts_hvx(p_cus->conn_handle, &hvx_params);
-        NRF_LOG_INFO("sd_ble_gatts_hvx result: %x. \r\n", err_code); 
     }
     else
     {
         err_code = NRF_ERROR_INVALID_STATE;
-        NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
     }
 
 
     return err_code;
+}
+```
+
+Like the characteristic metadata we need to set the metadata of the CCCD in custom_value_char_add(), which is done by adding the following snippet before the characteristic metadata is set. 
+
+```c
+    memset(&cccd_md, 0, sizeof(cccd_md));
+
+    //  Read  operation on Cccd should be possible without authentication.
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+    
+    cccd_md.write_perm = p_cus_init->custom_value_char_attr_md.cccd_write_perm;
+    cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
+```
+We're setting the read and write permissions to the CCCD to open, i.e. no encryption is needed to write or read from the CCCD. 
+
+The next step is to add the Notify property to the Custom Value Characteristic and add a pointer to  the CCCD metadata in the characteristic metadata. This is done by modifying  the characteristic metadata properties in custom_value_char_add() function , i.e. setting .notify to 1 and .p_cccd_md to point to the CCCD metadata struct. 
+
+```c
+    char_md.char_props.notify = 1;  
+    char_md.p_cccd_md         = &cccd_md; 
+```
+
+This will add a Client Characteristic Configuration Descriptor or CCCD to the Custom Value Characteristic which allows us to enable or disable notifications by writing to the CCCD. Notification is by default disabled and in order to enable it we have to write 0x0001 to the CCCD. Remember that everytime we write to a characteristic or one of its descriptors, we will get a Write event, thus we need to handle the case where a peer writes to the CCCD in the on_write() function. 
+
+However, before modifying the on_write() function we need do is to add an additional event, BLE_CUS_EVT_NOTIFICATION_ENABLED, to the ble_cus_evt_type_t enumeration in ble_custom_service.h
+
+```c
+/**@brief Custom Service event type. */
+typedef enum
+{
+    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
+    BLE_CUS_EVT_DISCONNECTED,
+    BLE_CUS_EVT_CONNECTED
+} ble_cus_evt_type_t;
+```
+
+Back to the on_write() function, the first thing we should do is to add a if-statement that checks if the handle that is written to matches the handle of the CCCD and that the value has the correct length. If we pass this check we need to check wether notifications has been enabled or not. 
+
+```c
+    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
+        && (p_evt_write->len == 2)
+       )
+    {
+
+        // CCCD written, call application event handler
+        if (p_cus->evt_handler != NULL)
+        {
+            ble_cus_evt_t evt;
+
+            if (ble_srv_is_notification_enabled(p_evt_write->data))
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
+            }
+            else
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
+            }
+            // Call the application event handler.
+            p_cus->evt_handler(p_cus, &evt);
+        }
+
+    }
+```
+
+We do not actually need to enable notifications as this is done automatically by the SoftDevice. However, the SoftDevice will propagate the write event and based on this event we can decide if its ok to start notifying characteristic values or not. 
+
+Adding the code-snippet above to the on_write() function should result in the following function. 
+
+```c
+static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    
+    // Custom Value Characteristic Written to.
+    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    {
+        nrf_gpio_pin_toggle(LED_4);
+    }
+
+    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
+        && (p_evt_write->len == 2)
+       )
+    {
+        // CCCD written, call application event handler
+        if (p_cus->evt_handler != NULL)
+        {
+            ble_cus_evt_t evt;
+
+            if (ble_srv_is_notification_enabled(p_evt_write->data))
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
+            }
+            else
+            {
+                evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
+            }
+            // Call the application event handler.
+            p_cus->evt_handler(p_cus, &evt);
+        }
+    }
+}
+```
+
+Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED to the on_cus_evt() event handler in main.c and call ble_cus_custom_value_update(), i.e. 
+
+```c
+static void on_cus_evt(ble_cus_t     * p_cus_service,
+                       ble_cus_evt_t * p_evt)
+{
+    ret_code_t err_code;
+    uint8_t custom_value = 8;
+
+    switch(p_evt->evt_type)
+    {
+        case BLE_CUS_EVT_NOTIFICATION_ENABLED:
+            err_code = ble_cus_custom_value_update(p_cus_service, custom_value);
+            APP_ERROR_CHECK(err_code);
+            break;
+
+        case BLE_CUS_EVT_CONNECTED :
+            break;
+
+        case BLE_CUS_EVT_DISCONNECTED:
+            break;
+
+        default:
+              // No implementation needed.
+              break;
+    }
 }
 ```
