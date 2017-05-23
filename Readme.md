@@ -641,11 +641,11 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+            on_connect(p_cus, p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+            on_disconnect(p_cus, p_ble_evt);
             break;
         case BLE_GATTS_EVT_WRITE:
             break;
