@@ -55,7 +55,7 @@ Now that we have defined our Base UUID, we need to define a 16-bit UUID for the 
 #define CUSTOM_SERVICE_UUID               0x1400
 #define CUSTOM_VALUE_CHAR_UUID            0x1401
 ```
-The values for the 16-bit UUIDs can pretty much be choosen by random 
+The values for the 16-bit UUIDs can pretty much be choosen by random. 
 
 - [ ] Look up if the 16-bit UUIDs can be chosen randomly or if any rules apply. 
 
@@ -67,8 +67,10 @@ First things first, we need to include the ble_custom_service.h header file we j
 ```c
 #include "sdk_common.h"
 #include "ble_srv_common.h"
-#include "ble_custom_service.h"
+#include "ble_cus.h"
 #include <string.h>
+#include "nrf_gpio.h"
+#include "boards.h"
 ```
 
 Ok, so far so good. Now we need to create two structures in ble_custom_service.h, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
@@ -693,6 +695,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     {
         // Put specific task here. 
     }
+}
 ```
 
 So lets say that our specifc task is to toggle a LED on the nRF5x DK every time the Custom Value Characteristic is written to. We can do this by calling nrf_gpio_pin_toggle on one of the pins connected to the nRF5x DK LEDs, e.g. LED4. In order to do this we'll have to include boards.h and nrf_gpio.h in ble_cus.h as well as call nrf_gpio_pin_toggle in the on_write function
@@ -708,16 +711,47 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     {
         nrf_gpio_pin_toggle(LED_4); 
     }
+}
 ```
 
-We'we now implemented the necessary event handling, but we have to allow the peer to actually write and/or read from the characteristic value. This is done by adding two lines to services_init() in main.c before we call ble_cus_init(). 
+We'we now implemented the necessary event handling so on_write() should be added to the ble_cus_on_ble_evt() function under the BLE_GATTS_EVT_WRITE case, i.e.
+
+
+ ```c
+void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+{
+    if (p_cus == NULL || p_ble_evt == NULL)
+    {
+        return;
+    }
+    
+    switch (p_ble_evt->header.evt_id)
+    {
+        case BLE_GAP_EVT_CONNECTED:
+            on_connect(p_cus, p_ble_evt);
+            break;
+
+        case BLE_GAP_EVT_DISCONNECTED:
+            on_disconnect(p_cus, p_ble_evt);
+            break;
+        case BLE_GATTS_EVT_WRITE:
+            on_write(p_cus, p_ble_evt);
+            break;
+        default:
+            // No implementation needed.
+            break;
+    }
+}
+```
+
+However, all this will be for nothing if we do not to allow the peer to actually write and/or read from the characteristic value. This is done by adding two lines to services_init() in main.c before we call ble_cus_init(). 
 
 ```c
 BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.read_perm);
 BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.write_perm);
 ```
 
-These two lines sets the write and read permissions to the characteristic value attribute to open, i.e. the peer is allowed to write/read the value without encrypting the link first. Now, try writting to the characteristic using nRF Connect for Desktop or Android/iOS. Every time a value is written to the characteristic, LED4 on the nRF5x Dk should toogle. 
+These two lines sets the write and read permissions to the characteristic value attribute to open, i.e. the peer is allowed to write/read the value without encrypting the link first. Now, try writting to the characteristic using nRF Connect for Desktop or Android/iOS. Every time a value is written to the characteristic, LED4 on the nRF5x DK should toogle. 
 
 - [ ] Add screenshot from nRF Connect. 
 
