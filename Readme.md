@@ -38,7 +38,7 @@ The first thing we need to do is to create a new .c file, lets call it ble_custo
 #include "ble_srv_common.h"
 ```
 
-Next, we're going to need a 128-bit UUID for our custom service since its not 16-bit Bluetooth  SIG UUID. There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
+Next, we're going to need a 128-bit UUID for our custom service since we're not going to implement our service with one of the  16-bit Bluetooth SIG UUIDs that are reserved for standardized profiles. There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
 ```
 f364adc9-b000-4042-ba50-05ca45bf8abc
@@ -67,18 +67,17 @@ First things first, we need to include the ble_custom_service.h header file we j
 ```c
 #include "sdk_common.h"
 #include "ble_srv_common.h"
-#include "ble_cus.h"
+#include "ble_custom_service.h"
 #include <string.h>
 ```
 
-Ok, so far so good. Now we need to create two structures, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
+Ok, so far so good. Now we need to create two structures in ble_custom_service.h, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
 ```c
 /**@brief Battery Service init structure. This contains all options and data needed for
  *        initialization of the service.*/
 typedef struct
 {
-    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
     uint8_t                       initial_custom_value;           /**< Initial custom value */
     ble_srv_cccd_security_mode_t  custom_value_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
 } ble_cus_init_t;
@@ -90,7 +89,6 @@ The second struct that we need to create is the Custom Service structure, ble_cu
 /**@brief Custom Service structure. This contains various status information for the service. */
 struct ble_cus_s
 {
-    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
     uint16_t                      service_handle;                 /**< Handle of Custom Service (as provided by the BLE stack). */
     ble_gatts_char_handles_t      custom_value_handles;           /**< Handles related to the Custom Value characteristic. */
     uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
@@ -142,7 +140,7 @@ p_cus->evt_handler               = p_cus_init->evt_handler;
 p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 ```
 
-This consists of setting the connection handle to invalid( should only be valid when we're in a connection) and providing a function pointer to the custom service event handler. Next, we're going to add our custom (also referred to as vendor specific) base UUID to the BLE stack's table.
+This consists of setting the connection handle to invalid( should only be valid when we're in a connection). Next, we're going to add our custom (also referred to as vendor specific) base UUID to the BLE stack's table.
 
 ```c
 // Add Custom Service UUID
@@ -681,9 +679,40 @@ Challenge 1: p_evt_write also has a data field. Use the data to decide if the LE
 
 ### Step 7 - Propagating Custom Service events to the application
 
-Until now we've only handled the events that are propagated by the SoftDevice, but in some cases it makes sense to 
+Until now we've only handled the events that are propagated by the SoftDevice, but in some cases it makes sense to propagate events to the application. 
 
-First we need to declare an event type specific to our service
+In order to do this we need to add an event handler to our Custom Service Init structure and Custom Service structure
+
+```c
+/**@brief Custom Service init structure. This contains all options and data needed for
+ *        initialization of the service.*/
+typedef struct
+{
+    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
+    uint8_t                       initial_custom_value;           /**< Initial custom value */
+    ble_srv_cccd_security_mode_t  custom_value_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
+} ble_cus_init_t;
+
+/**@brief Custom Service structure. This contains various status information for the service. */
+struct ble_cus_s
+{
+    ble_cus_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Custom Service. */
+    uint16_t                      service_handle;                 /**< Handle of Custom Service (as provided by the BLE stack). */
+    ble_gatts_char_handles_t      custom_value_handles;           /**< Handles related to the Custom Value characteristic. */
+    uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
+    uint8_t                       uuid_type; 
+};
+```
+
+After adding the event handler to the structures we must make sure that we initialize our service correctly in ble_cus_init()
+
+```c
+// Initialize service structure
+p_cus->evt_handler               = p_cus_init->evt_handler;
+p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
+```
+
+Next, we need to declare an event type specific to our service
 
 ```c
 typedef enum
