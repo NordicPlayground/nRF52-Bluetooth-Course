@@ -704,7 +704,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
     // Check if the handle passed with the event matches the Custom Value Characteristic handle.
-    if (p_evt_write->handle == p_cus->custom_value_handleWs.value_handle)
+    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
     {
         nrf_gpio_pin_toggle(LED_4); 
     }
