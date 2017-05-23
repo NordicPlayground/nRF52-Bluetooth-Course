@@ -194,6 +194,7 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
     {
         return err_code;
     }
+    return err_code;
 }
 ```
 
@@ -280,6 +281,31 @@ We need to replace the BLE_UUID_DEVICE_INFORMATION_SERVICE with the CUSTOM_SERVI
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
  ble_uuid_t m_adv_uuids[] = {{CUSTOM_SERVICE_UUID, BLE_UUID_TYPE_VENDOR_BEGIN }}; /**< Universally unique service identifiers. */
 ```
+After this step you can try to compile your project, but you'll quickly discover that 
+We need to tell the BLE stack that we're using a vendor-specific 128-bit UUID and not a 16-bit bit UUID. This is done by changing the following line in ble_stack_init() 
+```c
+ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 0
+```
+to 
+
+```c
+ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 1
+```
+After this change the configuration section of ble_stack_init should look like the snippet below
+
+```c
+// Overwrite some of the default configurations for the BLE stack.
+ble_cfg_t ble_cfg;
+
+memset(&ble_cfg, 0, sizeof(ble_cfg));
+ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 1;
+err_code = sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, &ble_cfg, ram_start);
+APP_ERROR_CHECK(err_code);
+```
+Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x20001FD0 and size 0xE030, as shown in the screenshot below
+
+- [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
+- [ ] Add screenshot of Memory Settings here.
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
