@@ -136,7 +136,6 @@ After verifying that the pointers are valid we can initialize the Custom Service
 
 ```c
 // Initialize service structure
-p_cus->evt_handler               = p_cus_init->evt_handler;
 p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 ```
 
@@ -177,7 +176,6 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
     ble_uuid_t ble_uuid;
 
     // Initialize service structure
-    p_cus->evt_handler               = p_cus_init->evt_handler;
     p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 
     // Add Custom Service UUID
