@@ -309,12 +309,23 @@ The final step we have to do is to change the calling order in  main() so that s
 
 That should be it, compile the ble_app_template project, flash the S132 v4.0.2 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to view the content of the advertisment package. 
 
-
-- [ ] Verify that attempting to connect is possible all though we have not implemented any event handling. 
-
 ### Step 4 - Adding a Custom Value Characteristic to the Custom Service.
 
-A service is nothing with out a characteristic, so lets add one of those by creating the custom_value_char_add function that we declared in the header file. The first thing we have to do is to add several metadata variables that we will later populate. 
+A service is nothing with out a characteristic, so lets add one of those by creating the custom_value_char_add function. As this is a function that we want to be public, i.e. available to the application, we need to declare it in the ble_cus.h 
+
+
+```c
+/**@brief Function for adding the Custom Value characteristic.
+ *
+ * @param[in]   p_cus        Custom Service structure.
+ * @param[in]   p_cus_init   Information needed to initialize the service.
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
+```
+Now, back in ble_cus.c, the first thing we have to do is to add several metadata variables that we will later populate. 
+
 
 ```c
 /**@brief Function for adding the Custom Value characteristic.
@@ -699,6 +710,17 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
     }
 ```
 
+We'we now implemented the necessary event handling, but we have to allow the peer to actually write and/or read from the characteristic value. This is done by adding two lines to services_init() in main.c before we call ble_cus_init(). 
+
+```c
+BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.read_perm);
+BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.write_perm);
+```
+
+These two lines sets the write and read permissions to the characteristic value attribute to open, i.e. the peer is allowed to write/read the value without encrypting the link first. Now, try writting to the characteristic using nRF Connect for Desktop or Android/iOS. Every time a value is written to the characteristic, LED4 on the nRF5x Dk should toogle. 
+
+- [ ] Add screenshot from nRF Connect. 
+
 Challenge 1: p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
 
 ### Step 7 - Propagating Custom Service events to the application
@@ -870,7 +892,7 @@ if (err_code != NRF_SUCCESS)
 }
 ```
 
-After updating the value in the GATT table we're ready to notify our peer that the value of our Custom Value Characteristic has changed. T
+After updating the value in the GATT table we're ready to notify our peer that the value of our Custom Value Characteristic has changed. 
 
 ```c
 // Send value if connected and notifying.
@@ -962,7 +984,6 @@ Like the characteristic metadata we need to set the metadata of the CCCD in cust
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
     
-    cccd_md.write_perm = p_cus_init->custom_value_char_attr_md.cccd_write_perm;
     cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
 ```
 We're setting the read and write permissions to the CCCD to open, i.e. no encryption is needed to write or read from the CCCD. 
