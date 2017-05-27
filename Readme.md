@@ -303,8 +303,9 @@ Now, adding a vendor-specific UUID to the BLE stack results in the RAM requireme
 <!---
 - [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
 --->
-
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings.JPG" width="1000"> 
+Memory Settings  | 
+------------ |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings.JPG" width="1000"> |
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
@@ -507,7 +508,9 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 ```
 Compile the project and flash it to you nRF5x DK. If you open the nRF Connect app on your smartphone, scan and connect to the device, you should see that the characteristic has been added by clicking on the service, as shown in the screenshot below.
 
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_and_char.png" width="250">
+Service and Characteristic  | 
+------------ |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_and_char.png" width="250"> |
 
 
 ### Step 5 - Handling events from the SoftDevice.
@@ -1154,4 +1157,6 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
 ```
 Compile the project and flash it to you nRF5x DK. If you open the nRF Connect app and connect to the device you should see that a Client Characteristic Configuration Descriptor has been added under the characteristic as shown in the screen shot below.
 
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/service_char_desc.png" width="500">
+Service, Characteristic and Descriptor  | 
+------------ |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/service_char_desc.png" width="500"> |
