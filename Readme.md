@@ -308,7 +308,14 @@ Now, adding a vendor-specific UUID to the BLE stack results in the RAM requireme
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
-That should be it, compile the ble_app_template project, flash the S132 v4.0.2 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to view the content of the advertisment package. 
+That should be it, compile the ble_app_template project, flash the S132 v4.0.2 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to scan for the device and view the content of the advertisment package. If you connect to the device you should see the service listed as an "Unknow Service" since we're using a vendor-specific UUID.
+
+Advertising Device  | Content of Advertisment Packet    | Service listed in the GATT table    |
+------------ | ------------- | 
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/advertising_device.png" width="500">  | 
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/advertisement_packet.png" width="500"> | 
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service.png" width="500"> |
+
 
 ### Step 4 - Adding a Custom Value Characteristic to the Custom Service.
 
@@ -500,6 +507,9 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
     return custom_value_char_add(p_cus, p_cus_init);
 }
 ```
+Compile the project and flash it to you nRF5x DK. If you open the nRF Connect app on your smartphone, scan and connect to the device, you should see that the characteristic has been added by clicking on the service, as shown in the screenshot below.
+
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_and_char.png" width="500">
 
 
 ### Step 5 - Handling events from the SoftDevice.
@@ -635,6 +645,8 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 }
 ```
 
+Compile your project and verify that there are no errors before you proceed to the next step. 
+
 ### Step 6 - Handling the Write event from the SoftDevice.
 
  Ok, now we really want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. How are we going to that? You guessed it! More event handling!
@@ -752,9 +764,13 @@ BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.write_perm);
 
 These two lines sets the write and read permissions to the characteristic value attribute to open, i.e. the peer is allowed to write/read the value without encrypting the link first. Now, try writting to the characteristic using nRF Connect for Desktop or Android/iOS. Every time a value is written to the characteristic, LED4 on the nRF5x DK should toogle. 
 
-- [ ] Add screenshot from nRF Connect. 
+Write button  | Write value   | 
+------------ | ------------- | 
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/write_to_char_1.png" width="500">  | 
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/write_to_char_2.png" width="500"> | 
 
-Challenge 1: p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
+
+**Challenge 1:** p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
 
 ### Step 7 - Propagating Custom Service events to the application
 
@@ -1139,3 +1155,6 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
     }
 }
 ```
+Compile the project and flash it to you nRF5x DK. If you open the nRF Connect app and connect to the device you should see that a Client Characteristic Configuration Descriptor has been added under the characteristic as shown in the screen shot below.
+
+src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/service_char_desc.png" width="500">
