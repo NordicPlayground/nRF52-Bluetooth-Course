@@ -55,10 +55,7 @@ Now that we have defined our Base UUID, we need to define a 16-bit UUID for the 
 #define CUSTOM_SERVICE_UUID               0x1400
 #define CUSTOM_VALUE_CHAR_UUID            0x1401
 ```
-The values for the 16-bit UUIDs can pretty much be choosen by random. 
-
-- [ ] Look up if the 16-bit UUIDs can be chosen randomly or if any rules apply. 
-
+The values for the 16-bit UUIDs that will be inserted into the base UUID can be choosen by random. 
 
 ### Step 2 - Implementing the Custom Service 
 
@@ -303,9 +300,11 @@ err_code = sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, &ble_cfg, ram_start);
 APP_ERROR_CHECK(err_code);
 ```
 Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x20001FD0 and size 0xE030, as shown in the screenshot below
-
+<!---
 - [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
-- [ ] Add screenshot of Memory Settings here.
+--->
+
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings.JPG" width="1000"> 
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
