@@ -1159,4 +1159,4 @@ Compile the project and flash it to you nRF5x DK. If you open the nRF Connect ap
 
 Service, Characteristic and Descriptor  | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/service_char_desc.png" width="500"> |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_char_desc.png" width="500"> |
