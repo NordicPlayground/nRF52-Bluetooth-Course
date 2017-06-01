@@ -257,15 +257,12 @@ static void services_init(void)
 
      // Initialize CUS Service init structure to zero.
     memset(&cus_init, 0, sizeof(cus_init));
-    
-    // Set the cus event handler
-    cus_init.evt_handler                = NULL;
 	
     err_code = ble_cus_init(&m_cus, &cus_init);
     APP_ERROR_CHECK(err_code);	
 }
 ```
-We're setting the event handler to NULL as we have not created a event handler function yet, but do not worry we will do that in one of the steps ahead.Now that we have initialized the service we have to add the 128bit UUID to the advertisement packet. If you navigate to the top of main.c you should find the m_adv_uuids array.
+Now that we have initialized the service we have to add the 128bit UUID to the advertisement packet. If you navigate to the top of main.c you should find the m_adv_uuids array.
 
 ```c
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
