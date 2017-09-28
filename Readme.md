@@ -1,7 +1,7 @@
 Custom Service Tutorial
 -------
 
-This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v13.0.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial.
+This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v14.0.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial.
 
 The aim of this tutorial is simply to create one service with one characteristic without too much theory in between the steps. There are no .c or .h files that needs to be downloaded as we will be starting from scratch in the ble_app_template project. 
 
@@ -15,7 +15,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 - nRF5 SDK v14.0.0
 - nRF51 DK or nRF52 DK
-- Keil ARM MKD v5.22 (strictly speaking you can use any IDE you want)
+- Latest version of Keil ARM MKD 
 - nRF Commandline Tools
 
 ## Tutorial Steps
