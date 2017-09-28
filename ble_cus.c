@@ -11,7 +11,7 @@
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
 
@@ -27,7 +27,7 @@ static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_disconnect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     UNUSED_PARAMETER(p_ble_evt);
     p_cus->conn_handle = BLE_CONN_HANDLE_INVALID;
@@ -44,9 +44,9 @@ static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
-    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
     // Custom Value Characteristic Written to.
     if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
@@ -93,8 +93,10 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 
 }
 
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+    
     NRF_LOG_INFO("BLE event received. Event type = %d\r\n", p_ble_evt->header.evt_id); 
     if (p_cus == NULL || p_ble_evt == NULL)
     {

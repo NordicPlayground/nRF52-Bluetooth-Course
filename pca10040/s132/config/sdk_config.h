@@ -1,3 +1,43 @@
+/**
+ * Copyright (c) 2017 - 2017, Nordic Semiconductor ASA
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form, except as embedded into a Nordic
+ *    Semiconductor ASA integrated circuit in a product or a software update for
+ *    such product, must reproduce the above copyright notice, this list of
+ *    conditions and the following disclaimer in the documentation and/or other
+ *    materials provided with the distribution.
+ * 
+ * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ * 
+ * 4. This software, with or without modification, must only be used with a
+ *    Nordic Semiconductor ASA integrated circuit.
+ * 
+ * 5. Any software provided in binary form under this license must not be reverse
+ *    engineered, decompiled, modified and/or disassembled.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+
 
 
 #ifndef SDK_CONFIG_H
@@ -6,6 +46,19 @@
 #ifdef USE_APP_CONFIG
 #include "app_config.h"
 #endif
+// <h> Board Support 
+
+//==========================================================
+// <q> BSP_BTN_BLE_ENABLED  - bsp_btn_ble - Button Control for BLE
+ 
+
+#ifndef BSP_BTN_BLE_ENABLED
+#define BSP_BTN_BLE_ENABLED 1
+#endif
+
+// </h> 
+//==========================================================
+
 // <h> nRF_BLE 
 
 //==========================================================
@@ -30,19 +83,33 @@
 #define BLE_RACP_ENABLED 0
 #endif
 
-// <e> NRF_BLE_GATT_ENABLED - nrf_ble_gatt - GATT module
+// <e> NRF_BLE_CONN_PARAMS_ENABLED - ble_conn_params - Initiating and executing a connection parameters negotiation procedure
 //==========================================================
+#ifndef NRF_BLE_CONN_PARAMS_ENABLED
+#define NRF_BLE_CONN_PARAMS_ENABLED 1
+#endif
+// <o> NRF_BLE_CONN_PARAMS_MAX_SLAVE_LATENCY_DEVIATION - The largest acceptable deviation in slave latency. 
+// <i> The largest deviation (+ or -) from the requested slave latency that will not be renegotiated.
+
+#ifndef NRF_BLE_CONN_PARAMS_MAX_SLAVE_LATENCY_DEVIATION
+#define NRF_BLE_CONN_PARAMS_MAX_SLAVE_LATENCY_DEVIATION 499
+#endif
+
+// <o> NRF_BLE_CONN_PARAMS_MAX_SUPERVISION_TIMEOUT_DEVIATION - The largest acceptable deviation (in 10 ms units) in supervision timeout. 
+// <i> The largest deviation (+ or -, in 10 ms units) from the requested supervision timeout that will not be renegotiated.
+
+#ifndef NRF_BLE_CONN_PARAMS_MAX_SUPERVISION_TIMEOUT_DEVIATION
+#define NRF_BLE_CONN_PARAMS_MAX_SUPERVISION_TIMEOUT_DEVIATION 65535
+#endif
+
+// </e>
+
+// <q> NRF_BLE_GATT_ENABLED  - nrf_ble_gatt - GATT module
+ 
+
 #ifndef NRF_BLE_GATT_ENABLED
 #define NRF_BLE_GATT_ENABLED 1
 #endif
-#if  NRF_BLE_GATT_ENABLED
-// <o> NRF_BLE_GATT_MAX_MTU_SIZE - Static maximum MTU size that is passed to the @ref sd_ble_enable function. 
-#ifndef NRF_BLE_GATT_MAX_MTU_SIZE
-#define NRF_BLE_GATT_MAX_MTU_SIZE 23
-#endif
-
-#endif //NRF_BLE_GATT_ENABLED
-// </e>
 
 // <q> NRF_BLE_QWR_ENABLED  - nrf_ble_qwr - Queued writes support module (prepare/execute write)
  
@@ -51,12 +118,27 @@
 #define NRF_BLE_QWR_ENABLED 0
 #endif
 
-// <q> PEER_MANAGER_ENABLED  - peer_manager - Peer Manager
- 
-
+// <e> PEER_MANAGER_ENABLED - peer_manager - Peer Manager
+//==========================================================
 #ifndef PEER_MANAGER_ENABLED
 #define PEER_MANAGER_ENABLED 1
 #endif
+// <o> PM_MAX_REGISTRANTS  
+// <i> Number of event handlers that can be registered.
+
+#ifndef PM_MAX_REGISTRANTS
+#define PM_MAX_REGISTRANTS 3
+#endif
+
+// <o> PM_FLASH_BUFFERS  
+// <i> Number of internal buffers for flash operations.
+// <i> Decrease this value to lower RAM usage.
+
+#ifndef PM_FLASH_BUFFERS
+#define PM_FLASH_BUFFERS 8
+#endif
+
+// </e>
 
 // </h> 
 //==========================================================
@@ -127,19 +209,12 @@
 #define BLE_HIDS_ENABLED 0
 #endif
 
-// <e> BLE_HRS_C_ENABLED - ble_hrs_c - Heart Rate Service Client
-//==========================================================
+// <q> BLE_HRS_C_ENABLED  - ble_hrs_c - Heart Rate Service Client
+ 
+
 #ifndef BLE_HRS_C_ENABLED
 #define BLE_HRS_C_ENABLED 0
 #endif
-#if  BLE_HRS_C_ENABLED
-// <o> BLE_HRS_C_RR_INTERVALS_MAX_CNT - Maximum number of RR_INTERVALS per notification to be decoded 
-#ifndef BLE_HRS_C_RR_INTERVALS_MAX_CNT
-#define BLE_HRS_C_RR_INTERVALS_MAX_CNT 30
-#endif
-
-#endif //BLE_HRS_C_ENABLED
-// </e>
 
 // <q> BLE_HRS_ENABLED  - ble_hrs - Heart Rate Service
  
@@ -228,6 +303,32 @@
 // </h> 
 //==========================================================
 
+// <h> nRF_DFU 
+
+//==========================================================
+// <h> ble_dfu - Device Firmware Update
+
+//==========================================================
+// <q> BLE_DFU_ENABLED  - Enable DFU Service.
+ 
+
+#ifndef BLE_DFU_ENABLED
+#define BLE_DFU_ENABLED 0
+#endif
+
+// <q> NRF_DFU_BLE_BUTTONLESS_SUPPORTS_BONDS  - Buttonless DFU supports bonds.
+ 
+
+#ifndef NRF_DFU_BLE_BUTTONLESS_SUPPORTS_BONDS
+#define NRF_DFU_BLE_BUTTONLESS_SUPPORTS_BONDS 0
+#endif
+
+// </h> 
+//==========================================================
+
+// </h> 
+//==========================================================
+
 // <h> nRF_Drivers 
 
 //==========================================================
@@ -236,7 +337,6 @@
 #ifndef APP_USBD_ENABLED
 #define APP_USBD_ENABLED 0
 #endif
-#if  APP_USBD_ENABLED
 // <o> APP_USBD_VID - Vendor ID  <0x0000-0xFFFF> 
 
 
@@ -273,7 +373,78 @@
 #define APP_USBD_DEVICE_VER_MINOR 0
 #endif
 
-#endif //APP_USBD_ENABLED
+// <e> APP_USBD_EVENT_QUEUE_ENABLE - Enable event queue
+
+// <i> This is the default configuration when all the events are placed into internal queue.
+// <i> Disable it when external queue is used like app_scheduler or if you wish to process all events inside interrupts.
+// <i> Processing all events from the interrupt level adds requirement not to call any functions that modifies the USBD library state from the context higher than USB interrupt context.
+// <i> Functions that modify USBD state are functions for sleep, wakeup, start, stop, enable and disable.
+//==========================================================
+#ifndef APP_USBD_EVENT_QUEUE_ENABLE
+#define APP_USBD_EVENT_QUEUE_ENABLE 1
+#endif
+// <o> APP_USBD_EVENT_QUEUE_SIZE - The size of event queue  <16-64> 
+
+
+// <i> The size of the queue for the events that would be processed in the main loop.
+
+#ifndef APP_USBD_EVENT_QUEUE_SIZE
+#define APP_USBD_EVENT_QUEUE_SIZE 32
+#endif
+
+// </e>
+
+// <e> APP_USBD_CONFIG_LOG_ENABLED - Enable logging in the module
+//==========================================================
+#ifndef APP_USBD_CONFIG_LOG_ENABLED
+#define APP_USBD_CONFIG_LOG_ENABLED 0
+#endif
+// <o> APP_USBD_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef APP_USBD_CONFIG_LOG_LEVEL
+#define APP_USBD_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> APP_USBD_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_CONFIG_INFO_COLOR
+#define APP_USBD_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> APP_USBD_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_CONFIG_DEBUG_COLOR
+#define APP_USBD_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
 // </e>
 
 // <e> CLOCK_ENABLED - nrf_drv_clock - CLOCK peripheral driver
@@ -281,7 +452,6 @@
 #ifndef CLOCK_ENABLED
 #define CLOCK_ENABLED 1
 #endif
-#if  CLOCK_ENABLED
 // <o> CLOCK_CONFIG_XTAL_FREQ  - HF XTAL Frequency
  
 // <0=> Default (64 MHz) 
@@ -317,60 +487,6 @@
 #define CLOCK_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> CLOCK_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef CLOCK_CONFIG_LOG_ENABLED
-#define CLOCK_CONFIG_LOG_ENABLED 0
-#endif
-#if  CLOCK_CONFIG_LOG_ENABLED
-// <o> CLOCK_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef CLOCK_CONFIG_LOG_LEVEL
-#define CLOCK_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> CLOCK_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef CLOCK_CONFIG_INFO_COLOR
-#define CLOCK_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> CLOCK_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef CLOCK_CONFIG_DEBUG_COLOR
-#define CLOCK_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //CLOCK_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //CLOCK_ENABLED
 // </e>
 
 // <e> COMP_ENABLED - nrf_drv_comp - COMP peripheral driver
@@ -378,7 +494,6 @@
 #ifndef COMP_ENABLED
 #define COMP_ENABLED 0
 #endif
-#if  COMP_ENABLED
 // <o> COMP_CONFIG_REF  - Reference voltage
  
 // <0=> Internal 1.2V 
@@ -462,130 +577,20 @@
 #define COMP_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> COMP_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef COMP_CONFIG_LOG_ENABLED
-#define COMP_CONFIG_LOG_ENABLED 0
-#endif
-#if  COMP_CONFIG_LOG_ENABLED
-// <o> COMP_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef COMP_CONFIG_LOG_LEVEL
-#define COMP_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> COMP_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef COMP_CONFIG_INFO_COLOR
-#define COMP_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> COMP_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef COMP_CONFIG_DEBUG_COLOR
-#define COMP_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //COMP_CONFIG_LOG_ENABLED
 // </e>
 
-#endif //COMP_ENABLED
-// </e>
+// <q> EGU_ENABLED  - nrf_drv_swi - SWI(EGU) peripheral driver
+ 
 
-// <e> EGU_ENABLED - nrf_drv_swi - SWI(EGU) peripheral driver
-//==========================================================
 #ifndef EGU_ENABLED
 #define EGU_ENABLED 0
 #endif
-#if  EGU_ENABLED
-// <e> SWI_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef SWI_CONFIG_LOG_ENABLED
-#define SWI_CONFIG_LOG_ENABLED 0
-#endif
-#if  SWI_CONFIG_LOG_ENABLED
-// <o> SWI_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef SWI_CONFIG_LOG_LEVEL
-#define SWI_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> SWI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SWI_CONFIG_INFO_COLOR
-#define SWI_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> SWI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SWI_CONFIG_DEBUG_COLOR
-#define SWI_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //SWI_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //EGU_ENABLED
-// </e>
 
 // <e> GPIOTE_ENABLED - nrf_drv_gpiote - GPIOTE peripheral driver
 //==========================================================
 #ifndef GPIOTE_ENABLED
 #define GPIOTE_ENABLED 1
 #endif
-#if  GPIOTE_ENABLED
 // <o> GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS - Number of lower power input pins 
 #ifndef GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS
 #define GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 4
@@ -608,60 +613,6 @@
 #define GPIOTE_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> GPIOTE_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef GPIOTE_CONFIG_LOG_ENABLED
-#define GPIOTE_CONFIG_LOG_ENABLED 0
-#endif
-#if  GPIOTE_CONFIG_LOG_ENABLED
-// <o> GPIOTE_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef GPIOTE_CONFIG_LOG_LEVEL
-#define GPIOTE_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> GPIOTE_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef GPIOTE_CONFIG_INFO_COLOR
-#define GPIOTE_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> GPIOTE_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef GPIOTE_CONFIG_DEBUG_COLOR
-#define GPIOTE_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //GPIOTE_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //GPIOTE_ENABLED
 // </e>
 
 // <e> I2S_ENABLED - nrf_drv_i2s - I2S peripheral driver
@@ -669,7 +620,6 @@
 #ifndef I2S_ENABLED
 #define I2S_ENABLED 0
 #endif
-#if  I2S_ENABLED
 // <o> I2S_CONFIG_SCK_PIN - SCK pin  <0-31> 
 
 
@@ -809,60 +759,6 @@
 #define I2S_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> I2S_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef I2S_CONFIG_LOG_ENABLED
-#define I2S_CONFIG_LOG_ENABLED 0
-#endif
-#if  I2S_CONFIG_LOG_ENABLED
-// <o> I2S_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef I2S_CONFIG_LOG_LEVEL
-#define I2S_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> I2S_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef I2S_CONFIG_INFO_COLOR
-#define I2S_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> I2S_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef I2S_CONFIG_DEBUG_COLOR
-#define I2S_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //I2S_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //I2S_ENABLED
 // </e>
 
 // <e> LPCOMP_ENABLED - nrf_drv_lpcomp - LPCOMP peripheral driver
@@ -870,7 +766,6 @@
 #ifndef LPCOMP_ENABLED
 #define LPCOMP_ENABLED 0
 #endif
-#if  LPCOMP_ENABLED
 // <o> LPCOMP_CONFIG_REFERENCE  - Reference voltage
  
 // <0=> Supply 1/8 
@@ -944,60 +839,6 @@
 #define LPCOMP_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> LPCOMP_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef LPCOMP_CONFIG_LOG_ENABLED
-#define LPCOMP_CONFIG_LOG_ENABLED 0
-#endif
-#if  LPCOMP_CONFIG_LOG_ENABLED
-// <o> LPCOMP_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef LPCOMP_CONFIG_LOG_LEVEL
-#define LPCOMP_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> LPCOMP_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef LPCOMP_CONFIG_INFO_COLOR
-#define LPCOMP_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> LPCOMP_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef LPCOMP_CONFIG_DEBUG_COLOR
-#define LPCOMP_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //LPCOMP_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //LPCOMP_ENABLED
 // </e>
 
 // <e> PDM_ENABLED - nrf_drv_pdm - PDM peripheral driver
@@ -1005,7 +846,6 @@
 #ifndef PDM_ENABLED
 #define PDM_ENABLED 0
 #endif
-#if  PDM_ENABLED
 // <o> PDM_CONFIG_MODE  - Mode
  
 // <0=> Stereo 
@@ -1051,130 +891,20 @@
 #define PDM_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> PDM_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef PDM_CONFIG_LOG_ENABLED
-#define PDM_CONFIG_LOG_ENABLED 0
-#endif
-#if  PDM_CONFIG_LOG_ENABLED
-// <o> PDM_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef PDM_CONFIG_LOG_LEVEL
-#define PDM_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> PDM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PDM_CONFIG_INFO_COLOR
-#define PDM_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> PDM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PDM_CONFIG_DEBUG_COLOR
-#define PDM_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //PDM_CONFIG_LOG_ENABLED
 // </e>
 
-#endif //PDM_ENABLED
-// </e>
+// <q> PERIPHERAL_RESOURCE_SHARING_ENABLED  - nrf_drv_common - Peripheral drivers common module
+ 
 
-// <e> PERIPHERAL_RESOURCE_SHARING_ENABLED - nrf_drv_common - Peripheral drivers common module
-//==========================================================
 #ifndef PERIPHERAL_RESOURCE_SHARING_ENABLED
 #define PERIPHERAL_RESOURCE_SHARING_ENABLED 0
 #endif
-#if  PERIPHERAL_RESOURCE_SHARING_ENABLED
-// <e> COMMON_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef COMMON_CONFIG_LOG_ENABLED
-#define COMMON_CONFIG_LOG_ENABLED 0
-#endif
-#if  COMMON_CONFIG_LOG_ENABLED
-// <o> COMMON_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef COMMON_CONFIG_LOG_LEVEL
-#define COMMON_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> COMMON_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef COMMON_CONFIG_INFO_COLOR
-#define COMMON_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> COMMON_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef COMMON_CONFIG_DEBUG_COLOR
-#define COMMON_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //COMMON_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //PERIPHERAL_RESOURCE_SHARING_ENABLED
-// </e>
 
 // <e> POWER_ENABLED - nrf_drv_power - POWER peripheral driver
 //==========================================================
 #ifndef POWER_ENABLED
 #define POWER_ENABLED 0
 #endif
-#if  POWER_ENABLED
 // <o> POWER_CONFIG_IRQ_PRIORITY  - Interrupt priority
  
 
@@ -1210,77 +940,20 @@
 #define POWER_CONFIG_DEFAULT_DCDCENHV 0
 #endif
 
-#endif //POWER_ENABLED
 // </e>
 
-// <e> PPI_ENABLED - nrf_drv_ppi - PPI peripheral driver
-//==========================================================
+// <q> PPI_ENABLED  - nrf_drv_ppi - PPI peripheral driver
+ 
+
 #ifndef PPI_ENABLED
 #define PPI_ENABLED 0
 #endif
-#if  PPI_ENABLED
-// <e> PPI_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef PPI_CONFIG_LOG_ENABLED
-#define PPI_CONFIG_LOG_ENABLED 0
-#endif
-#if  PPI_CONFIG_LOG_ENABLED
-// <o> PPI_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef PPI_CONFIG_LOG_LEVEL
-#define PPI_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> PPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PPI_CONFIG_INFO_COLOR
-#define PPI_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> PPI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PPI_CONFIG_DEBUG_COLOR
-#define PPI_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //PPI_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //PPI_ENABLED
-// </e>
 
 // <e> PWM_ENABLED - nrf_drv_pwm - PWM peripheral driver
 //==========================================================
 #ifndef PWM_ENABLED
 #define PWM_ENABLED 0
 #endif
-#if  PWM_ENABLED
 // <o> PWM_DEFAULT_CONFIG_OUT0_PIN - Out0 pin  <0-31> 
 
 
@@ -1318,7 +991,7 @@
 // <4=> 1 MHz 
 // <5=> 500 kHz 
 // <6=> 250 kHz 
-// <7=> 125 MHz 
+// <7=> 125 kHz 
 
 #ifndef PWM_DEFAULT_CONFIG_BASE_CLOCK
 #define PWM_DEFAULT_CONFIG_BASE_CLOCK 4
@@ -1396,59 +1069,6 @@
 #define PWM2_ENABLED 0
 #endif
 
-// <e> PWM_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef PWM_CONFIG_LOG_ENABLED
-#define PWM_CONFIG_LOG_ENABLED 0
-#endif
-#if  PWM_CONFIG_LOG_ENABLED
-// <o> PWM_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef PWM_CONFIG_LOG_LEVEL
-#define PWM_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> PWM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PWM_CONFIG_INFO_COLOR
-#define PWM_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> PWM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef PWM_CONFIG_DEBUG_COLOR
-#define PWM_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //PWM_CONFIG_LOG_ENABLED
-// </e>
-
 // <e> PWM_NRF52_ANOMALY_109_WORKAROUND_ENABLED - Enables nRF52 Anomaly 109 workaround for PWM.
 
 // <i> The workaround uses interrupts to wake up the CPU and ensure
@@ -1462,7 +1082,6 @@
 #ifndef PWM_NRF52_ANOMALY_109_WORKAROUND_ENABLED
 #define PWM_NRF52_ANOMALY_109_WORKAROUND_ENABLED 0
 #endif
-#if  PWM_NRF52_ANOMALY_109_WORKAROUND_ENABLED
 // <o> PWM_NRF52_ANOMALY_109_EGU_INSTANCE  - EGU instance used by the nRF52 Anomaly 109 workaround for PWM.
  
 // <0=> EGU0 
@@ -1476,10 +1095,8 @@
 #define PWM_NRF52_ANOMALY_109_EGU_INSTANCE 5
 #endif
 
-#endif //PWM_NRF52_ANOMALY_109_WORKAROUND_ENABLED
 // </e>
 
-#endif //PWM_ENABLED
 // </e>
 
 // <e> QDEC_ENABLED - nrf_drv_qdec - QDEC peripheral driver
@@ -1487,7 +1104,6 @@
 #ifndef QDEC_ENABLED
 #define QDEC_ENABLED 0
 #endif
-#if  QDEC_ENABLED
 // <o> QDEC_CONFIG_REPORTPER  - Report period
  
 // <0=> 10 Samples 
@@ -1584,60 +1200,6 @@
 #define QDEC_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> QDEC_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef QDEC_CONFIG_LOG_ENABLED
-#define QDEC_CONFIG_LOG_ENABLED 0
-#endif
-#if  QDEC_CONFIG_LOG_ENABLED
-// <o> QDEC_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef QDEC_CONFIG_LOG_LEVEL
-#define QDEC_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> QDEC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef QDEC_CONFIG_INFO_COLOR
-#define QDEC_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> QDEC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef QDEC_CONFIG_DEBUG_COLOR
-#define QDEC_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //QDEC_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //QDEC_ENABLED
 // </e>
 
 // <e> RNG_ENABLED - nrf_drv_rng - RNG peripheral driver
@@ -1645,7 +1207,6 @@
 #ifndef RNG_ENABLED
 #define RNG_ENABLED 0
 #endif
-#if  RNG_ENABLED
 // <q> RNG_CONFIG_ERROR_CORRECTION  - Error correction
  
 
@@ -1675,75 +1236,13 @@
 #define RNG_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> RNG_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef RNG_CONFIG_LOG_ENABLED
-#define RNG_CONFIG_LOG_ENABLED 0
-#endif
-#if  RNG_CONFIG_LOG_ENABLED
-// <o> RNG_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef RNG_CONFIG_LOG_LEVEL
-#define RNG_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> RNG_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef RNG_CONFIG_INFO_COLOR
-#define RNG_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> RNG_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef RNG_CONFIG_DEBUG_COLOR
-#define RNG_CONFIG_DEBUG_COLOR 0
-#endif
-
-// <q> RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED  - Enables logging of random numbers.
- 
-
-#ifndef RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED
-#define RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED 0
-#endif
-
-#endif //RNG_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //RNG_ENABLED
 // </e>
 
 // <e> RTC_ENABLED - nrf_drv_rtc - RTC peripheral driver
 //==========================================================
 #ifndef RTC_ENABLED
-#define RTC_ENABLED 1
+#define RTC_ENABLED 0
 #endif
-#if  RTC_ENABLED
 // <o> RTC_DEFAULT_CONFIG_FREQUENCY - Frequency  <16-32768> 
 
 
@@ -1786,7 +1285,7 @@
  
 
 #ifndef RTC1_ENABLED
-#define RTC1_ENABLED 1
+#define RTC1_ENABLED 0
 #endif
 
 // <q> RTC2_ENABLED  - Enable RTC2 instance
@@ -1801,60 +1300,6 @@
 #define NRF_MAXIMUM_LATENCY_US 2000
 #endif
 
-// <e> RTC_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef RTC_CONFIG_LOG_ENABLED
-#define RTC_CONFIG_LOG_ENABLED 0
-#endif
-#if  RTC_CONFIG_LOG_ENABLED
-// <o> RTC_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef RTC_CONFIG_LOG_LEVEL
-#define RTC_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> RTC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef RTC_CONFIG_INFO_COLOR
-#define RTC_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> RTC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef RTC_CONFIG_DEBUG_COLOR
-#define RTC_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //RTC_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //RTC_ENABLED
 // </e>
 
 // <e> SAADC_ENABLED - nrf_drv_saadc - SAADC peripheral driver
@@ -1862,7 +1307,6 @@
 #ifndef SAADC_ENABLED
 #define SAADC_ENABLED 0
 #endif
-#if  SAADC_ENABLED
 // <o> SAADC_CONFIG_RESOLUTION  - Resolution
  
 // <0=> 8 bit 
@@ -1914,60 +1358,6 @@
 #define SAADC_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef SAADC_CONFIG_LOG_ENABLED
-#define SAADC_CONFIG_LOG_ENABLED 0
-#endif
-#if  SAADC_CONFIG_LOG_ENABLED
-// <o> SAADC_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef SAADC_CONFIG_LOG_LEVEL
-#define SAADC_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> SAADC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SAADC_CONFIG_INFO_COLOR
-#define SAADC_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> SAADC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SAADC_CONFIG_DEBUG_COLOR
-#define SAADC_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //SAADC_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //SAADC_ENABLED
 // </e>
 
 // <e> SPIS_ENABLED - nrf_drv_spis - SPI Slave driver
@@ -1975,7 +1365,6 @@
 #ifndef SPIS_ENABLED
 #define SPIS_ENABLED 0
 #endif
-#if  SPIS_ENABLED
 // <o> SPIS_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
  
 
@@ -2048,59 +1437,6 @@
 #define SPIS2_ENABLED 0
 #endif
 
-// <e> SPIS_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef SPIS_CONFIG_LOG_ENABLED
-#define SPIS_CONFIG_LOG_ENABLED 0
-#endif
-#if  SPIS_CONFIG_LOG_ENABLED
-// <o> SPIS_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef SPIS_CONFIG_LOG_LEVEL
-#define SPIS_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> SPIS_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SPIS_CONFIG_INFO_COLOR
-#define SPIS_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> SPIS_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SPIS_CONFIG_DEBUG_COLOR
-#define SPIS_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //SPIS_CONFIG_LOG_ENABLED
-// </e>
-
 // <q> SPIS_NRF52_ANOMALY_109_WORKAROUND_ENABLED  - Enables nRF52 Anomaly 109 workaround for SPIS.
  
 
@@ -2115,7 +1451,6 @@
 #define SPIS_NRF52_ANOMALY_109_WORKAROUND_ENABLED 0
 #endif
 
-#endif //SPIS_ENABLED
 // </e>
 
 // <e> SPI_ENABLED - nrf_drv_spi - SPI/SPIM peripheral driver
@@ -2123,7 +1458,6 @@
 #ifndef SPI_ENABLED
 #define SPI_ENABLED 0
 #endif
-#if  SPI_ENABLED
 // <o> SPI_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
  
 
@@ -2146,7 +1480,6 @@
 #ifndef SPI0_ENABLED
 #define SPI0_ENABLED 0
 #endif
-#if  SPI0_ENABLED
 // <q> SPI0_USE_EASY_DMA  - Use EasyDMA
  
 
@@ -2168,7 +1501,6 @@
 #define SPI0_DEFAULT_FREQUENCY 1073741824
 #endif
 
-#endif //SPI0_ENABLED
 // </e>
 
 // <e> SPI1_ENABLED - Enable SPI1 instance
@@ -2176,7 +1508,6 @@
 #ifndef SPI1_ENABLED
 #define SPI1_ENABLED 0
 #endif
-#if  SPI1_ENABLED
 // <q> SPI1_USE_EASY_DMA  - Use EasyDMA
  
 
@@ -2198,7 +1529,6 @@
 #define SPI1_DEFAULT_FREQUENCY 1073741824
 #endif
 
-#endif //SPI1_ENABLED
 // </e>
 
 // <e> SPI2_ENABLED - Enable SPI2 instance
@@ -2206,7 +1536,6 @@
 #ifndef SPI2_ENABLED
 #define SPI2_ENABLED 0
 #endif
-#if  SPI2_ENABLED
 // <q> SPI2_USE_EASY_DMA  - Use EasyDMA
  
 
@@ -2214,67 +1543,20 @@
 #define SPI2_USE_EASY_DMA 1
 #endif
 
-// <q> SPI2_DEFAULT_FREQUENCY  - Use EasyDMA
+// <o> SPI2_DEFAULT_FREQUENCY  - SPI frequency
  
+// <33554432=> 125 kHz 
+// <67108864=> 250 kHz 
+// <134217728=> 500 kHz 
+// <268435456=> 1 MHz 
+// <536870912=> 2 MHz 
+// <1073741824=> 4 MHz 
+// <2147483648=> 8 MHz 
 
 #ifndef SPI2_DEFAULT_FREQUENCY
-#define SPI2_DEFAULT_FREQUENCY 1
+#define SPI2_DEFAULT_FREQUENCY 1073741824
 #endif
 
-#endif //SPI2_ENABLED
-// </e>
-
-// <e> SPI_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef SPI_CONFIG_LOG_ENABLED
-#define SPI_CONFIG_LOG_ENABLED 0
-#endif
-#if  SPI_CONFIG_LOG_ENABLED
-// <o> SPI_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef SPI_CONFIG_LOG_LEVEL
-#define SPI_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> SPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SPI_CONFIG_INFO_COLOR
-#define SPI_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> SPI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef SPI_CONFIG_DEBUG_COLOR
-#define SPI_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //SPI_CONFIG_LOG_ENABLED
 // </e>
 
 // <q> SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED  - Enables nRF52 anomaly 109 workaround for SPIM.
@@ -2291,7 +1573,6 @@
 #define SPIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED 0
 #endif
 
-#endif //SPI_ENABLED
 // </e>
 
 // <e> TIMER_ENABLED - nrf_drv_timer - TIMER periperal driver
@@ -2299,7 +1580,6 @@
 #ifndef TIMER_ENABLED
 #define TIMER_ENABLED 0
 #endif
-#if  TIMER_ENABLED
 // <o> TIMER_DEFAULT_CONFIG_FREQUENCY  - Timer frequency if in Timer mode
  
 // <0=> 16 MHz 
@@ -2389,60 +1669,6 @@
 #define TIMER4_ENABLED 0
 #endif
 
-// <e> TIMER_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef TIMER_CONFIG_LOG_ENABLED
-#define TIMER_CONFIG_LOG_ENABLED 0
-#endif
-#if  TIMER_CONFIG_LOG_ENABLED
-// <o> TIMER_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef TIMER_CONFIG_LOG_LEVEL
-#define TIMER_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> TIMER_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TIMER_CONFIG_INFO_COLOR
-#define TIMER_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> TIMER_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TIMER_CONFIG_DEBUG_COLOR
-#define TIMER_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //TIMER_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //TIMER_ENABLED
 // </e>
 
 // <e> TWIS_ENABLED - nrf_drv_twis - TWIS peripheral driver
@@ -2450,7 +1676,6 @@
 #ifndef TWIS_ENABLED
 #define TWIS_ENABLED 0
 #endif
-#if  TWIS_ENABLED
 // <o> TWIS_DEFAULT_CONFIG_ADDR0 - Address0 
 #ifndef TWIS_DEFAULT_CONFIG_ADDR0
 #define TWIS_DEFAULT_CONFIG_ADDR0 0
@@ -2530,68 +1755,13 @@
 #define TWIS_NO_SYNC_MODE 0
 #endif
 
-// <e> TWIS_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef TWIS_CONFIG_LOG_ENABLED
-#define TWIS_CONFIG_LOG_ENABLED 0
-#endif
-#if  TWIS_CONFIG_LOG_ENABLED
-// <o> TWIS_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef TWIS_CONFIG_LOG_LEVEL
-#define TWIS_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> TWIS_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TWIS_CONFIG_INFO_COLOR
-#define TWIS_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> TWIS_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TWIS_CONFIG_DEBUG_COLOR
-#define TWIS_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //TWIS_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //TWIS_ENABLED
 // </e>
 
 // <e> TWI_ENABLED - nrf_drv_twi - TWI/TWIM peripheral driver
 //==========================================================
 #ifndef TWI_ENABLED
-#define TWI_ENABLED 1
+#define TWI_ENABLED 0
 #endif
-#if  TWI_ENABLED
 // <o> TWI_DEFAULT_CONFIG_FREQUENCY  - Frequency
  
 // <26738688=> 100k 
@@ -2636,9 +1806,8 @@
 // <e> TWI0_ENABLED - Enable TWI0 instance
 //==========================================================
 #ifndef TWI0_ENABLED
-#define TWI0_ENABLED 1
+#define TWI0_ENABLED 0
 #endif
-#if  TWI0_ENABLED
 // <q> TWI0_USE_EASY_DMA  - Use EasyDMA (if present)
  
 
@@ -2646,7 +1815,6 @@
 #define TWI0_USE_EASY_DMA 0
 #endif
 
-#endif //TWI0_ENABLED
 // </e>
 
 // <e> TWI1_ENABLED - Enable TWI1 instance
@@ -2654,7 +1822,6 @@
 #ifndef TWI1_ENABLED
 #define TWI1_ENABLED 0
 #endif
-#if  TWI1_ENABLED
 // <q> TWI1_USE_EASY_DMA  - Use EasyDMA (if present)
  
 
@@ -2662,60 +1829,6 @@
 #define TWI1_USE_EASY_DMA 0
 #endif
 
-#endif //TWI1_ENABLED
-// </e>
-
-// <e> TWI_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef TWI_CONFIG_LOG_ENABLED
-#define TWI_CONFIG_LOG_ENABLED 0
-#endif
-#if  TWI_CONFIG_LOG_ENABLED
-// <o> TWI_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef TWI_CONFIG_LOG_LEVEL
-#define TWI_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> TWI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TWI_CONFIG_INFO_COLOR
-#define TWI_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> TWI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef TWI_CONFIG_DEBUG_COLOR
-#define TWI_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //TWI_CONFIG_LOG_ENABLED
 // </e>
 
 // <q> TWIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED  - Enables nRF52 anomaly 109 workaround for TWIM.
@@ -2731,7 +1844,6 @@
 #define TWIM_NRF52_ANOMALY_109_WORKAROUND_ENABLED 0
 #endif
 
-#endif //TWI_ENABLED
 // </e>
 
 // <e> UART_ENABLED - nrf_drv_uart - UART/UARTE peripheral driver
@@ -2739,7 +1851,6 @@
 #ifndef UART_ENABLED
 #define UART_ENABLED 1
 #endif
-#if  UART_ENABLED
 // <o> UART_DEFAULT_CONFIG_HWFC  - Hardware Flow Control
  
 // <0=> Disabled 
@@ -2775,7 +1886,7 @@
 // <67108864=> 250000 baud 
 // <121634816=> 460800 baud 
 // <251658240=> 921600 baud 
-// <268435456=> 57600 baud 
+// <268435456=> 1000000 baud 
 
 #ifndef UART_DEFAULT_CONFIG_BAUDRATE
 #define UART_DEFAULT_CONFIG_BAUDRATE 30801920
@@ -2817,7 +1928,6 @@
 #ifndef UART0_ENABLED
 #define UART0_ENABLED 1
 #endif
-#if  UART0_ENABLED
 // <q> UART0_CONFIG_USE_EASY_DMA  - Default setting for using EasyDMA
  
 
@@ -2825,63 +1935,8 @@
 #define UART0_CONFIG_USE_EASY_DMA 1
 #endif
 
-#endif //UART0_ENABLED
 // </e>
 
-// <e> UART_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef UART_CONFIG_LOG_ENABLED
-#define UART_CONFIG_LOG_ENABLED 0
-#endif
-#if  UART_CONFIG_LOG_ENABLED
-// <o> UART_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef UART_CONFIG_LOG_LEVEL
-#define UART_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> UART_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef UART_CONFIG_INFO_COLOR
-#define UART_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> UART_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef UART_CONFIG_DEBUG_COLOR
-#define UART_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //UART_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //UART_ENABLED
 // </e>
 
 // <e> USBD_ENABLED - nrf_drv_usbd - USB driver
@@ -2889,7 +1944,6 @@
 #ifndef USBD_ENABLED
 #define USBD_ENABLED 0
 #endif
-#if  USBD_ENABLED
 // <o> USBD_CONFIG_IRQ_PRIORITY  - Interrupt priority
  
 
@@ -2916,14 +1970,6 @@
 #define NRF_DRV_USBD_DMASCHEDULER_MODE 0
 #endif
 
-// <q> NRF_USBD_DRV_LOG_ENABLED  - Enable logging
- 
-
-#ifndef NRF_USBD_DRV_LOG_ENABLED
-#define NRF_USBD_DRV_LOG_ENABLED 0
-#endif
-
-#endif //USBD_ENABLED
 // </e>
 
 // <e> WDT_ENABLED - nrf_drv_wdt - WDT peripheral driver
@@ -2931,7 +1977,6 @@
 #ifndef WDT_ENABLED
 #define WDT_ENABLED 0
 #endif
-#if  WDT_ENABLED
 // <o> WDT_CONFIG_BEHAVIOUR  - WDT behavior in CPU SLEEP or HALT mode
  
 // <1=> Run in SLEEP, Pause in HALT 
@@ -2967,60 +2012,6 @@
 #define WDT_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> WDT_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef WDT_CONFIG_LOG_ENABLED
-#define WDT_CONFIG_LOG_ENABLED 0
-#endif
-#if  WDT_CONFIG_LOG_ENABLED
-// <o> WDT_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef WDT_CONFIG_LOG_LEVEL
-#define WDT_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> WDT_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef WDT_CONFIG_INFO_COLOR
-#define WDT_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> WDT_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef WDT_CONFIG_DEBUG_COLOR
-#define WDT_CONFIG_DEBUG_COLOR 0
-#endif
-
-#endif //WDT_CONFIG_LOG_ENABLED
-// </e>
-
-#endif //WDT_ENABLED
 // </e>
 
 // </h> 
@@ -3048,7 +2039,6 @@
 #ifndef APP_SCHEDULER_ENABLED
 #define APP_SCHEDULER_ENABLED 1
 #endif
-#if  APP_SCHEDULER_ENABLED
 // <q> APP_SCHEDULER_WITH_PAUSE  - Enabling pause feature
  
 
@@ -3063,7 +2053,6 @@
 #define APP_SCHEDULER_WITH_PROFILER 0
 #endif
 
-#endif //APP_SCHEDULER_ENABLED
 // </e>
 
 // <e> APP_TIMER_ENABLED - app_timer - Application timer functionality
@@ -3071,7 +2060,6 @@
 #ifndef APP_TIMER_ENABLED
 #define APP_TIMER_ENABLED 1
 #endif
-#if  APP_TIMER_ENABLED
 // <o> APP_TIMER_CONFIG_RTC_FREQUENCY  - Configure RTC prescaler.
  
 // <0=> 32768 Hz 
@@ -3145,7 +2133,6 @@
 #define APP_TIMER_CONFIG_SWI_NUMBER 0
 #endif
 
-#endif //APP_TIMER_ENABLED
 // </e>
 
 // <q> APP_TWI_ENABLED  - app_twi - TWI transaction manager
@@ -3160,7 +2147,6 @@
 #ifndef APP_UART_ENABLED
 #define APP_UART_ENABLED 0
 #endif
-#if  APP_UART_ENABLED
 // <o> APP_UART_DRIVER_INSTANCE  - UART instance used
  
 // <0=> 0 
@@ -3169,7 +2155,6 @@
 #define APP_UART_DRIVER_INSTANCE 0
 #endif
 
-#endif //APP_UART_ENABLED
 // </e>
 
 // <q> APP_USBD_CLASS_AUDIO_ENABLED  - app_usbd_audio - USB AUDIO class
@@ -3177,6 +2162,13 @@
 
 #ifndef APP_USBD_CLASS_AUDIO_ENABLED
 #define APP_USBD_CLASS_AUDIO_ENABLED 0
+#endif
+
+// <q> APP_USBD_CLASS_CDC_ACM_ENABLED  - app_usbd_cdc_acm - USB CDC ACM class
+ 
+
+#ifndef APP_USBD_CLASS_CDC_ACM_ENABLED
+#define APP_USBD_CLASS_CDC_ACM_ENABLED 0
 #endif
 
 // <q> APP_USBD_CLASS_HID_ENABLED  - app_usbd_hid - USB HID class
@@ -3205,6 +2197,13 @@
 
 #ifndef APP_USBD_HID_MOUSE_ENABLED
 #define APP_USBD_HID_MOUSE_ENABLED 0
+#endif
+
+// <q> APP_USBD_MSC_ENABLED  - app_usbd_msc - USB MSC class
+ 
+
+#ifndef APP_USBD_MSC_ENABLED
+#define APP_USBD_MSC_ENABLED 0
 #endif
 
 // <q> BUTTON_ENABLED  - app_button - buttons handling module
@@ -3240,36 +2239,23 @@
 #ifndef FDS_ENABLED
 #define FDS_ENABLED 1
 #endif
-#if  FDS_ENABLED
-// <o> FDS_OP_QUEUE_SIZE - Size of the internal queue. 
-#ifndef FDS_OP_QUEUE_SIZE
-#define FDS_OP_QUEUE_SIZE 4
-#endif
+// <h> Pages - Virtual page settings
 
-// <o> FDS_CHUNK_QUEUE_SIZE - Determines how many @ref fds_record_chunk_t structures can be buffered at any time. 
-#ifndef FDS_CHUNK_QUEUE_SIZE
-#define FDS_CHUNK_QUEUE_SIZE 8
-#endif
-
-// <o> FDS_MAX_USERS - Maximum number of callbacks that can be registered. 
-#ifndef FDS_MAX_USERS
-#define FDS_MAX_USERS 8
-#endif
-
+// <i> Configure the number of virtual pages to use and their size.
+//==========================================================
 // <o> FDS_VIRTUAL_PAGES - Number of virtual flash pages to use. 
 // <i> One of the virtual pages is reserved by the system for garbage collection.
-// <i> Therefore, the minimum is two virtual pages: one page to store data and
-// <i> one page to be used by the system for garbage collection. The total amount
-// <i> of flash memory that is used by FDS amounts to @ref FDS_VIRTUAL_PAGES
-// <i> @ref FDS_VIRTUAL_PAGE_SIZE * 4 bytes.
+// <i> Therefore, the minimum is two virtual pages: one page to store data and one page to be used by the system for garbage collection.
+// <i> The total amount of flash memory that is used by FDS amounts to @ref FDS_VIRTUAL_PAGES * @ref FDS_VIRTUAL_PAGE_SIZE * 4 bytes.
 
 #ifndef FDS_VIRTUAL_PAGES
 #define FDS_VIRTUAL_PAGES 3
 #endif
 
-// <o> FDS_VIRTUAL_PAGE_SIZE  - The size of a virtual page of flash memory, expressed in number of 4-byte words.
+// <o> FDS_VIRTUAL_PAGE_SIZE  - The size of a virtual flash page.
  
 
+// <i> Expressed in number of 4-byte words.
 // <i> By default, a virtual page is the same size as a physical page.
 // <i> The size of a virtual page must be a multiple of the size of a physical page.
 // <1024=> 1024 
@@ -3279,59 +2265,110 @@
 #define FDS_VIRTUAL_PAGE_SIZE 1024
 #endif
 
-#endif //FDS_ENABLED
-// </e>
-
-// <e> FSTORAGE_ENABLED - fstorage - Flash storage module
+// </h> 
 //==========================================================
-#ifndef FSTORAGE_ENABLED
-#define FSTORAGE_ENABLED 1
-#endif
-#if  FSTORAGE_ENABLED
-// <o> FS_QUEUE_SIZE - Configures the size of the internal queue. 
-// <i> Increase this if there are many users, or if it is likely that many
-// <i> operation will be queued at once without waiting for the previous operations
-// <i> to complete. In general, increase the queue size if you frequently receive
-// <i> @ref FS_ERR_QUEUE_FULL errors when calling @ref fs_store or @ref fs_erase.
 
-#ifndef FS_QUEUE_SIZE
-#define FS_QUEUE_SIZE 4
-#endif
+// <h> Backend - Backend configuration
 
-// <o> FS_OP_MAX_RETRIES - Number attempts to execute an operation if the SoftDevice fails. 
-// <i> Increase this value if events return the @ref FS_ERR_OPERATION_TIMEOUT
-// <i> error often. The SoftDevice may fail to schedule flash access due to high BLE activity.
-
-#ifndef FS_OP_MAX_RETRIES
-#define FS_OP_MAX_RETRIES 3
-#endif
-
-// <o> FS_MAX_WRITE_SIZE_WORDS - Maximum number of words to be written to flash in a single operation. 
-// <i> Tweaking this value can increase the chances of the SoftDevice being
-// <i> able to fit flash operations in between radio activity. This value is bound by the
-// <i> maximum number of words which the SoftDevice can write to flash in a single call to
-// <i> @ref sd_flash_write, which is 256 words for nRF51 ICs and 1024 words for nRF52 ICs.
-
-#ifndef FS_MAX_WRITE_SIZE_WORDS
-#define FS_MAX_WRITE_SIZE_WORDS 1024
-#endif
-
-#endif //FSTORAGE_ENABLED
-// </e>
-
-// <q> HARDFAULT_HANDLER_ENABLED  - hardfault_default - HardFault default handler for debugging and release
+// <i> Configure which nrf_fstorage backend is used by FDS to write to flash.
+//==========================================================
+// <o> FDS_BACKEND  - FDS flash backend.
  
 
+// <i> NRF_FSTORAGE_SD uses the nrf_fstorage_sd backend implementation using the SoftDevice API. Use this if you have a SoftDevice present.
+// <i> NRF_FSTORAGE_NVMC uses the nrf_fstorage_nvmc implementation. Use this setting if you don't use the SoftDevice.
+// <1=> NRF_FSTORAGE_NVMC 
+// <2=> NRF_FSTORAGE_SD 
+
+#ifndef FDS_BACKEND
+#define FDS_BACKEND 2
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> Queue - Queue settings
+
+//==========================================================
+// <o> FDS_OP_QUEUE_SIZE - Size of the internal queue. 
+// <i> Increase this value if you frequently get synchronous FDS_ERR_NO_SPACE_IN_QUEUES errors.
+
+#ifndef FDS_OP_QUEUE_SIZE
+#define FDS_OP_QUEUE_SIZE 4
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> CRC - CRC functionality
+
+//==========================================================
+// <e> FDS_CRC_CHECK_ON_READ - Enable CRC checks.
+
+// <i> Save a record's CRC when it is written to flash and check it when the record is opened.
+// <i> Records with an incorrect CRC can still be 'seen' by the user using FDS functions, but they cannot be opened.
+// <i> Additionally, they will not be garbage collected until they are deleted.
+//==========================================================
+#ifndef FDS_CRC_CHECK_ON_READ
+#define FDS_CRC_CHECK_ON_READ 0
+#endif
+// <o> FDS_CRC_CHECK_ON_WRITE  - Perform a CRC check on newly written records.
+ 
+
+// <i> Perform a CRC check on newly written records.
+// <i> This setting can be used to make sure that the record data was not altered while being written to flash.
+// <1=> Enabled 
+// <0=> Disabled 
+
+#ifndef FDS_CRC_CHECK_ON_WRITE
+#define FDS_CRC_CHECK_ON_WRITE 0
+#endif
+
+// </e>
+
+// </h> 
+//==========================================================
+
+// <h> Users - Number of users
+
+//==========================================================
+// <o> FDS_MAX_USERS - Maximum number of callbacks that can be registered. 
+#ifndef FDS_MAX_USERS
+#define FDS_MAX_USERS 4
+#endif
+
+// </h> 
+//==========================================================
+
+// </e>
+
+// <e> HARDFAULT_HANDLER_ENABLED - hardfault_default - HardFault default handler for debugging and release
+//==========================================================
 #ifndef HARDFAULT_HANDLER_ENABLED
 #define HARDFAULT_HANDLER_ENABLED 0
 #endif
+// <q> HARDFAULT_HANDLER_GDB_PSP_BACKTRACE  - Bypass the GDB problem with multiple stack pointers backtrace
+ 
+
+// <i> There is a known bug in GDB which causes it to incorrectly backtrace the code
+// <i> when multiple stack pointers are used (main and process stack pointers).
+// <i> This option enables the fix for that problem and allows to see the proper backtrace info.
+// <i> It makes it possible to trace the code to the exact point where a HardFault appeared.
+// <i> This option requires additional commands and may temporarily switch MSP stack to store data on PSP space.
+// <i> This is an optional parameter - enable it while debugging.
+// <i> Before a HardFault handler exits, the stack will be reverted to its previous value.
+
+#ifndef HARDFAULT_HANDLER_GDB_PSP_BACKTRACE
+#define HARDFAULT_HANDLER_GDB_PSP_BACKTRACE 1
+#endif
+
+// </e>
 
 // <e> HCI_MEM_POOL_ENABLED - hci_mem_pool - memory pool implementation used by HCI
 //==========================================================
 #ifndef HCI_MEM_POOL_ENABLED
 #define HCI_MEM_POOL_ENABLED 0
 #endif
-#if  HCI_MEM_POOL_ENABLED
 // <o> HCI_TX_BUF_SIZE - TX buffer size in bytes. 
 #ifndef HCI_TX_BUF_SIZE
 #define HCI_TX_BUF_SIZE 600
@@ -3347,7 +2384,6 @@
 #define HCI_RX_BUF_QUEUE_SIZE 4
 #endif
 
-#endif //HCI_MEM_POOL_ENABLED
 // </e>
 
 // <e> HCI_SLIP_ENABLED - hci_slip - SLIP protocol implementation used by HCI
@@ -3355,7 +2391,6 @@
 #ifndef HCI_SLIP_ENABLED
 #define HCI_SLIP_ENABLED 0
 #endif
-#if  HCI_SLIP_ENABLED
 // <o> HCI_UART_BAUDRATE  - Default Baudrate
  
 // <323584=> 1200 baud 
@@ -3373,7 +2408,7 @@
 // <67108864=> 250000 baud 
 // <121634816=> 460800 baud 
 // <251658240=> 921600 baud 
-// <268435456=> 57600 baud 
+// <268435456=> 1000000 baud 
 
 #ifndef HCI_UART_BAUDRATE
 #define HCI_UART_BAUDRATE 30801920
@@ -3408,7 +2443,6 @@
 #define HCI_UART_CTS_PIN 7
 #endif
 
-#endif //HCI_SLIP_ENABLED
 // </e>
 
 // <e> HCI_TRANSPORT_ENABLED - hci_transport - HCI transport
@@ -3416,13 +2450,11 @@
 #ifndef HCI_TRANSPORT_ENABLED
 #define HCI_TRANSPORT_ENABLED 0
 #endif
-#if  HCI_TRANSPORT_ENABLED
 // <o> HCI_MAX_PACKET_SIZE_IN_BITS - Maximum size of a single application packet in bits. 
 #ifndef HCI_MAX_PACKET_SIZE_IN_BITS
 #define HCI_MAX_PACKET_SIZE_IN_BITS 8000
 #endif
 
-#endif //HCI_TRANSPORT_ENABLED
 // </e>
 
 // <q> LED_SOFTBLINK_ENABLED  - led_softblink - led_softblink module
@@ -3444,7 +2476,6 @@
 #ifndef MEM_MANAGER_ENABLED
 #define MEM_MANAGER_ENABLED 0
 #endif
-#if  MEM_MANAGER_ENABLED
 // <o> MEMORY_MANAGER_SMALL_BLOCK_COUNT - Size of each memory blocks identified as 'small' block.  <0-255> 
 
 
@@ -3543,13 +2574,6 @@
 #define MEMORY_MANAGER_XXSMALL_BLOCK_SIZE 32
 #endif
 
-// <q> MEM_MANAGER_ENABLE_LOGS  - Enable debug trace in the module.
- 
-
-#ifndef MEM_MANAGER_ENABLE_LOGS
-#define MEM_MANAGER_ENABLE_LOGS 0
-#endif
-
 // <q> MEM_MANAGER_DISABLE_API_PARAM_CHECK  - Disable API parameter checks in the module.
  
 
@@ -3557,7 +2581,55 @@
 #define MEM_MANAGER_DISABLE_API_PARAM_CHECK 0
 #endif
 
-#endif //MEM_MANAGER_ENABLED
+// </e>
+
+// <e> NRF_BALLOC_ENABLED - nrf_balloc - Block allocator module
+//==========================================================
+#ifndef NRF_BALLOC_ENABLED
+#define NRF_BALLOC_ENABLED 1
+#endif
+// <e> NRF_BALLOC_CONFIG_DEBUG_ENABLED - Enables debug mode in the module.
+//==========================================================
+#ifndef NRF_BALLOC_CONFIG_DEBUG_ENABLED
+#define NRF_BALLOC_CONFIG_DEBUG_ENABLED 0
+#endif
+// <o> NRF_BALLOC_CONFIG_HEAD_GUARD_WORDS - Number of words used as head guard.  <0-255> 
+
+
+#ifndef NRF_BALLOC_CONFIG_HEAD_GUARD_WORDS
+#define NRF_BALLOC_CONFIG_HEAD_GUARD_WORDS 1
+#endif
+
+// <o> NRF_BALLOC_CONFIG_TAIL_GUARD_WORDS - Number of words used as tail guard.  <0-255> 
+
+
+#ifndef NRF_BALLOC_CONFIG_TAIL_GUARD_WORDS
+#define NRF_BALLOC_CONFIG_TAIL_GUARD_WORDS 1
+#endif
+
+// <q> NRF_BALLOC_CONFIG_BASIC_CHECKS_ENABLED  - Enables basic checks in this module.
+ 
+
+#ifndef NRF_BALLOC_CONFIG_BASIC_CHECKS_ENABLED
+#define NRF_BALLOC_CONFIG_BASIC_CHECKS_ENABLED 0
+#endif
+
+// <q> NRF_BALLOC_CONFIG_DOUBLE_FREE_CHECK_ENABLED  - Enables double memory free check in this module.
+ 
+
+#ifndef NRF_BALLOC_CONFIG_DOUBLE_FREE_CHECK_ENABLED
+#define NRF_BALLOC_CONFIG_DOUBLE_FREE_CHECK_ENABLED 0
+#endif
+
+// <q> NRF_BALLOC_CONFIG_DATA_TRASHING_CHECK_ENABLED  - Enables free memory corruption check in this module.
+ 
+
+#ifndef NRF_BALLOC_CONFIG_DATA_TRASHING_CHECK_ENABLED
+#define NRF_BALLOC_CONFIG_DATA_TRASHING_CHECK_ENABLED 0
+#endif
+
+// </e>
+
 // </e>
 
 // <e> NRF_CSENSE_ENABLED - nrf_csense - Capacitive sensor module
@@ -3565,7 +2637,6 @@
 #ifndef NRF_CSENSE_ENABLED
 #define NRF_CSENSE_ENABLED 0
 #endif
-#if  NRF_CSENSE_ENABLED
 // <o> NRF_CSENSE_PAD_HYSTERESIS - Minimum value of change required to determine that a pad was touched. 
 #ifndef NRF_CSENSE_PAD_HYSTERESIS
 #define NRF_CSENSE_PAD_HYSTERESIS 15
@@ -3598,7 +2669,6 @@
 #define NRF_CSENSE_OUTPUT_PIN 26
 #endif
 
-#endif //NRF_CSENSE_ENABLED
 // </e>
 
 // <e> NRF_DRV_CSENSE_ENABLED - nrf_drv_csense - Capacitive sensor low-level module
@@ -3606,7 +2676,6 @@
 #ifndef NRF_DRV_CSENSE_ENABLED
 #define NRF_DRV_CSENSE_ENABLED 0
 #endif
-#if  NRF_DRV_CSENSE_ENABLED
 // <e> USE_COMP - Use the comparator to implement the capacitive sensor driver.
 
 // <i> Due to Anomaly 84, COMP I_SOURCE is not functional. It has too high a varation.
@@ -3614,7 +2683,6 @@
 #ifndef USE_COMP
 #define USE_COMP 0
 #endif
-#if  USE_COMP
 // <o> TIMER0_FOR_CSENSE - First TIMER instance used by the driver (not used on nRF51). 
 #ifndef TIMER0_FOR_CSENSE
 #define TIMER0_FOR_CSENSE 1
@@ -3634,10 +2702,168 @@
 #define MEASUREMENT_PERIOD 20
 #endif
 
-#endif //USE_COMP
 // </e>
 
-#endif //NRF_DRV_CSENSE_ENABLED
+// </e>
+
+// <q> NRF_FPRINTF_ENABLED  - nrf_fprintf - fprintf function.
+ 
+
+#ifndef NRF_FPRINTF_ENABLED
+#define NRF_FPRINTF_ENABLED 1
+#endif
+
+// <e> NRF_FSTORAGE_ENABLED - nrf_fstorage - Flash abstraction library
+//==========================================================
+#ifndef NRF_FSTORAGE_ENABLED
+#define NRF_FSTORAGE_ENABLED 1
+#endif
+// <h> nrf_fstorage_sd - Implementation using the SoftDevice.
+
+// <i> Configuration options for the fstorage implementation using the SoftDevice.
+//==========================================================
+// <o> NRF_FSTORAGE_SD_QUEUE_SIZE - Size of the internal queue of operations. 
+// <i> Increase this value if API calls frequently return the error @ref NRF_ERROR_NO_MEM.
+
+#ifndef NRF_FSTORAGE_SD_QUEUE_SIZE
+#define NRF_FSTORAGE_SD_QUEUE_SIZE 4
+#endif
+
+// <o> NRF_FSTORAGE_SD_MAX_RETRIES - Maximum number of attempts at executing an operation when the SoftDevice is busy. 
+// <i> Increase this value if events frequently return the @ref NRF_ERROR_TIMEOUT error.
+// <i> The SoftDevice might fail to schedule flash access due to high BLE activity.
+
+#ifndef NRF_FSTORAGE_SD_MAX_RETRIES
+#define NRF_FSTORAGE_SD_MAX_RETRIES 8
+#endif
+
+// <o> NRF_FSTORAGE_SD_MAX_WRITE_SIZE - Maximum number of bytes to be written to flash in a single operation. 
+// <i> This value must be a multiple of four.
+// <i> Lowering this value can increase the chances of the SoftDevice being able to execute flash operations in between radio activity.
+// <i> This value is bound by the maximum number of bytes that can be written to flash in a single call to @ref sd_flash_write.
+// <i> That is 1024 bytes for nRF51 ICs and 4096 bytes for nRF52 ICs.
+
+#ifndef NRF_FSTORAGE_SD_MAX_WRITE_SIZE
+#define NRF_FSTORAGE_SD_MAX_WRITE_SIZE 4096
+#endif
+
+// </h> 
+//==========================================================
+
+// </e>
+
+// <q> NRF_MEMOBJ_ENABLED  - nrf_memobj - Linked memory allocator module
+ 
+
+#ifndef NRF_MEMOBJ_ENABLED
+#define NRF_MEMOBJ_ENABLED 1
+#endif
+
+// <e> NRF_PWR_MGMT_ENABLED - nrf_pwr_mgmt - Power management module
+//==========================================================
+#ifndef NRF_PWR_MGMT_ENABLED
+#define NRF_PWR_MGMT_ENABLED 1
+#endif
+// <e> NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED - Enables pin debug in the module.
+
+// <i> Selected pin will be set when CPU is in sleep mode.
+//==========================================================
+#ifndef NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED
+#define NRF_PWR_MGMT_CONFIG_DEBUG_PIN_ENABLED 0
+#endif
+// <o> NRF_PWR_MGMT_SLEEP_DEBUG_PIN  - Pin number
+ 
+// <0=> 0 (P0.0) 
+// <1=> 1 (P0.1) 
+// <2=> 2 (P0.2) 
+// <3=> 3 (P0.3) 
+// <4=> 4 (P0.4) 
+// <5=> 5 (P0.5) 
+// <6=> 6 (P0.6) 
+// <7=> 7 (P0.7) 
+// <8=> 8 (P0.8) 
+// <9=> 9 (P0.9) 
+// <10=> 10 (P0.10) 
+// <11=> 11 (P0.11) 
+// <12=> 12 (P0.12) 
+// <13=> 13 (P0.13) 
+// <14=> 14 (P0.14) 
+// <15=> 15 (P0.15) 
+// <16=> 16 (P0.16) 
+// <17=> 17 (P0.17) 
+// <18=> 18 (P0.18) 
+// <19=> 19 (P0.19) 
+// <20=> 20 (P0.20) 
+// <21=> 21 (P0.21) 
+// <22=> 22 (P0.22) 
+// <23=> 23 (P0.23) 
+// <24=> 24 (P0.24) 
+// <25=> 25 (P0.25) 
+// <26=> 26 (P0.26) 
+// <27=> 27 (P0.27) 
+// <28=> 28 (P0.28) 
+// <29=> 29 (P0.29) 
+// <30=> 30 (P0.30) 
+// <31=> 31 (P0.31) 
+// <4294967295=> Not connected 
+
+#ifndef NRF_PWR_MGMT_SLEEP_DEBUG_PIN
+#define NRF_PWR_MGMT_SLEEP_DEBUG_PIN 31
+#endif
+
+// </e>
+
+// <q> NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED  - Enables CPU usage monitor.
+ 
+
+// <i> Module will trace percentage of CPU usage in one second intervals.
+
+#ifndef NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED
+#define NRF_PWR_MGMT_CONFIG_CPU_USAGE_MONITOR_ENABLED 0
+#endif
+
+// <e> NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED - Enable standby timeout.
+//==========================================================
+#ifndef NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED
+#define NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_ENABLED 0
+#endif
+// <o> NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S - Standby timeout (in seconds). 
+// <i> Shutdown procedure will begin no earlier than after this number of seconds.
+
+#ifndef NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S
+#define NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S 3
+#endif
+
+// </e>
+
+// <q> NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED  - Enables FPU event cleaning.
+ 
+
+#ifndef NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED
+#define NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED 1
+#endif
+
+// <q> NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY  - Blocked shutdown procedure will be retried every second.
+ 
+
+#ifndef NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY
+#define NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY 0
+#endif
+
+// <q> NRF_PWR_MGMT_CONFIG_USE_SCHEDULER  - Module will use @ref app_scheduler.
+ 
+
+#ifndef NRF_PWR_MGMT_CONFIG_USE_SCHEDULER
+#define NRF_PWR_MGMT_CONFIG_USE_SCHEDULER 0
+#endif
+
+// <o> NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT - The number of priorities for module handlers. 
+// <i> The number of stages of the shutdown process.
+
+#ifndef NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT
+#define NRF_PWR_MGMT_CONFIG_HANDLER_PRIORITY_COUNT 3
+#endif
+
 // </e>
 
 // <q> NRF_QUEUE_ENABLED  - nrf_queue - Queue module
@@ -3645,6 +2871,13 @@
 
 #ifndef NRF_QUEUE_ENABLED
 #define NRF_QUEUE_ENABLED 0
+#endif
+
+// <q> NRF_SECTION_ITER_ENABLED  - nrf_section_iter - Section iterator
+ 
+
+#ifndef NRF_SECTION_ITER_ENABLED
+#define NRF_SECTION_ITER_ENABLED 1
 #endif
 
 // <q> NRF_STRERROR_ENABLED  - nrf_strerror - Library for converting error code to string.
@@ -3661,41 +2894,74 @@
 #define SLIP_ENABLED 0
 #endif
 
-// <h> app_usbd_cdc_acm - USB CDC ACM class
+// <h> nrf_cli - Command line interface.
 
 //==========================================================
-// <q> APP_USBD_CLASS_CDC_ACM_ENABLED  - Enabling USBD CDC ACM Class library
+// <q> NRF_CLI_ENABLED  - Enable/disable CLI module.
  
 
-#ifndef APP_USBD_CLASS_CDC_ACM_ENABLED
-#define APP_USBD_CLASS_CDC_ACM_ENABLED 0
+#ifndef NRF_CLI_ENABLED
+#define NRF_CLI_ENABLED 0
 #endif
 
-// <q> APP_USBD_CDC_ACM_LOG_ENABLED  - Enables logging in the module.
+// <o> NRF_CLI_ARGC_MAX - Maximum number of parameters passed to command handler. 
+#ifndef NRF_CLI_ARGC_MAX
+#define NRF_CLI_ARGC_MAX 12
+#endif
+
+// <q> NRF_CLI_BUILD_IN_CMDS_ENABLED  - CLI build in commands.
  
 
-#ifndef APP_USBD_CDC_ACM_LOG_ENABLED
-#define APP_USBD_CDC_ACM_LOG_ENABLED 0
+#ifndef NRF_CLI_BUILD_IN_CMDS_ENABLED
+#define NRF_CLI_BUILD_IN_CMDS_ENABLED 1
 #endif
 
-// </h> 
+// <o> NRF_CLI_CMD_BUFF_SIZE - Maximum buffer size for single command. 
+#ifndef NRF_CLI_CMD_BUFF_SIZE
+#define NRF_CLI_CMD_BUFF_SIZE 128
+#endif
+
+// <o> NRF_CLI_PRINTF_BUFF_SIZE - Maximum print buffer size. 
+#ifndef NRF_CLI_PRINTF_BUFF_SIZE
+#define NRF_CLI_PRINTF_BUFF_SIZE 23
+#endif
+
+// <e> NRF_CLI_HISTORY_ENABLED - Enable CLI history mode.
 //==========================================================
-
-// <h> app_usbd_msc - USB MSC class
-
-//==========================================================
-// <q> APP_USBD_CLASS_MSC_ENABLED  - Enabling USBD MSC Class library
- 
-
-#ifndef APP_USBD_CLASS_MSC_ENABLED
-#define APP_USBD_CLASS_MSC_ENABLED 0
+#ifndef NRF_CLI_HISTORY_ENABLED
+#define NRF_CLI_HISTORY_ENABLED 1
+#endif
+// <o> NRF_CLI_HISTORY_ELEMENT_SIZE - Size of one memory object reserved for CLI history 
+#ifndef NRF_CLI_HISTORY_ELEMENT_SIZE
+#define NRF_CLI_HISTORY_ELEMENT_SIZE 32
 #endif
 
-// <q> APP_USBD_MSC_CLASS_LOG_ENABLED  - Enables logging in the module.
+// <o> NRF_CLI_HISTORY_ELEMENT_COUNT - Number of history memory objects 
+#ifndef NRF_CLI_HISTORY_ELEMENT_COUNT
+#define NRF_CLI_HISTORY_ELEMENT_COUNT 8
+#endif
+
+// </e>
+
+// <q> NRF_CLI_VT100_COLORS_ENABLED  - CLI VT100 colors.
  
 
-#ifndef APP_USBD_MSC_CLASS_LOG_ENABLED
-#define APP_USBD_MSC_CLASS_LOG_ENABLED 0
+#ifndef NRF_CLI_VT100_COLORS_ENABLED
+#define NRF_CLI_VT100_COLORS_ENABLED 1
+#endif
+
+// <q> NRF_CLI_LOG_BACKEND  - Enable logger backend interface.
+ 
+
+#ifndef NRF_CLI_LOG_BACKEND
+#define NRF_CLI_LOG_BACKEND 1
+#endif
+
+// <q> NRF_CLI_USES_TASK_MANAGER_ENABLED  - Enable CLI to use task_manager
+ 
+
+#ifndef NRF_CLI_USES_TASK_MANAGER_ENABLED
+#define NRF_CLI_USES_TASK_MANAGER_ENABLED 0
 #endif
 
 // </h> 
@@ -3707,18 +2973,81 @@
 // <h> nRF_Log 
 
 //==========================================================
-// <e> NRF_LOG_ENABLED - nrf_log - Logging
+// <e> NRF_LOG_BACKEND_RTT_ENABLED - nrf_log_backend_rtt - Log RTT backend
+//==========================================================
+#ifndef NRF_LOG_BACKEND_RTT_ENABLED
+#define NRF_LOG_BACKEND_RTT_ENABLED 0
+#endif
+// <o> NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE - Size of buffer for partially processed strings. 
+// <i> Size of the buffer is a trade-off between RAM usage and processing.
+// <i> if buffer is smaller then strings will often be fragmented.
+// <i> It is recommended to use size which will fit typical log and only the
+// <i> longer one will be fragmented.
+
+#ifndef NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE
+#define NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE 64
+#endif
+
+// </e>
+
+// <e> NRF_LOG_BACKEND_UART_ENABLED - nrf_log_backend_uart - Log UART backend
+//==========================================================
+#ifndef NRF_LOG_BACKEND_UART_ENABLED
+#define NRF_LOG_BACKEND_UART_ENABLED 1
+#endif
+// <o> NRF_LOG_BACKEND_UART_TX_PIN - UART TX pin 
+#ifndef NRF_LOG_BACKEND_UART_TX_PIN
+#define NRF_LOG_BACKEND_UART_TX_PIN 6
+#endif
+
+// <o> NRF_LOG_BACKEND_UART_BAUDRATE  - Default Baudrate
+ 
+// <323584=> 1200 baud 
+// <643072=> 2400 baud 
+// <1290240=> 4800 baud 
+// <2576384=> 9600 baud 
+// <3862528=> 14400 baud 
+// <5152768=> 19200 baud 
+// <7716864=> 28800 baud 
+// <10289152=> 38400 baud 
+// <15400960=> 57600 baud 
+// <20615168=> 76800 baud 
+// <30801920=> 115200 baud 
+// <61865984=> 230400 baud 
+// <67108864=> 250000 baud 
+// <121634816=> 460800 baud 
+// <251658240=> 921600 baud 
+// <268435456=> 1000000 baud 
+
+#ifndef NRF_LOG_BACKEND_UART_BAUDRATE
+#define NRF_LOG_BACKEND_UART_BAUDRATE 30801920
+#endif
+
+// <o> NRF_LOG_BACKEND_UART_TEMP_BUFFER_SIZE - Size of buffer for partially processed strings. 
+// <i> Size of the buffer is a trade-off between RAM usage and processing.
+// <i> if buffer is smaller then strings will often be fragmented.
+// <i> It is recommended to use size which will fit typical log and only the
+// <i> longer one will be fragmented.
+
+#ifndef NRF_LOG_BACKEND_UART_TEMP_BUFFER_SIZE
+#define NRF_LOG_BACKEND_UART_TEMP_BUFFER_SIZE 64
+#endif
+
+// </e>
+
+// <h> nrf_log - Logging
+
+//==========================================================
+// <e> NRF_LOG_ENABLED - Logging module for nRF5 SDK
 //==========================================================
 #ifndef NRF_LOG_ENABLED
 #define NRF_LOG_ENABLED 1
 #endif
-#if  NRF_LOG_ENABLED
 // <e> NRF_LOG_USES_COLORS - If enabled then ANSI escape code for colors is prefixed to every string
 //==========================================================
 #ifndef NRF_LOG_USES_COLORS
 #define NRF_LOG_USES_COLORS 0
 #endif
-#if  NRF_LOG_USES_COLORS
 // <o> NRF_LOG_COLOR_DEFAULT  - ANSI escape code prefix.
  
 // <0=> Default 
@@ -3767,7 +3096,6 @@
 #define NRF_LOG_WARNING_COLOR 0
 #endif
 
-#endif //NRF_LOG_USES_COLORS
 // </e>
 
 // <o> NRF_LOG_DEFAULT_LEVEL  - Default Severity level
@@ -3782,23 +3110,42 @@
 #define NRF_LOG_DEFAULT_LEVEL 3
 #endif
 
-// <e> NRF_LOG_DEFERRED - Enable deffered logger.
+// <q> NRF_LOG_DEFERRED  - Enable deffered logger.
+ 
 
 // <i> Log data is buffered and can be processed in idle.
-//==========================================================
+
 #ifndef NRF_LOG_DEFERRED
 #define NRF_LOG_DEFERRED 1
 #endif
-#if  NRF_LOG_DEFERRED
-// <o> NRF_LOG_DEFERRED_BUFSIZE - Size of the buffer for logs in words. 
-// <i> Must be power of 2
 
-#ifndef NRF_LOG_DEFERRED_BUFSIZE
-#define NRF_LOG_DEFERRED_BUFSIZE 256
+// <o> NRF_LOG_BUFSIZE  - Size of the buffer for storing logs (in bytes).
+ 
+
+// <i> Must be power of 2 and multiple of 4.
+// <i> If NRF_LOG_DEFERRED = 0 then buffer size can be reduced to minimum.
+// <128=> 128 
+// <256=> 256 
+// <512=> 512 
+// <1024=> 1024 
+// <2048=> 2048 
+// <4096=> 4096 
+// <8192=> 8192 
+// <16384=> 16384 
+
+#ifndef NRF_LOG_BUFSIZE
+#define NRF_LOG_BUFSIZE 1024
 #endif
 
-#endif //NRF_LOG_DEFERRED
-// </e>
+// <q> NRF_LOG_ALLOW_OVERFLOW  - Configures behavior when circular buffer is full.
+ 
+
+// <i> If set then oldest logs are overwritten. Otherwise a 
+// <i> marker is injected informing about overflow.
+
+#ifndef NRF_LOG_ALLOW_OVERFLOW
+#define NRF_LOG_ALLOW_OVERFLOW 1
+#endif
 
 // <q> NRF_LOG_USES_TIMESTAMP  - Enable timestamping
  
@@ -3809,112 +3156,1921 @@
 #define NRF_LOG_USES_TIMESTAMP 0
 #endif
 
-#endif //NRF_LOG_ENABLED
-// </e>
+// <q> NRF_LOG_FILTERS_ENABLED  - Enable dynamic filtering of logs.
+ 
 
-// <h> nrf_log_backend - Logging sink
+#ifndef NRF_LOG_FILTERS_ENABLED
+#define NRF_LOG_FILTERS_ENABLED 0
+#endif
+
+// <q> NRF_LOG_CLI_CMDS  - Enable CLI commands for the module.
+ 
+
+#ifndef NRF_LOG_CLI_CMDS
+#define NRF_LOG_CLI_CMDS 0
+#endif
+
+// <h> Log message pool - Configuration of log message pool
 
 //==========================================================
-// <o> NRF_LOG_BACKEND_MAX_STRING_LENGTH - Buffer for storing single output string 
-// <i> Logger backend RAM usage is determined by this value.
+// <o> NRF_LOG_MSGPOOL_ELEMENT_SIZE - Size of a single element in the pool of memory objects. 
+// <i> If a small value is set, then performance of logs processing
+// <i> is degraded because data is fragmented. Bigger value impacts
+// <i> RAM memory utilization. The size is set to fit a message with
+// <i> a timestamp and up to 2 arguments in a single memory object.
 
-#ifndef NRF_LOG_BACKEND_MAX_STRING_LENGTH
-#define NRF_LOG_BACKEND_MAX_STRING_LENGTH 256
+#ifndef NRF_LOG_MSGPOOL_ELEMENT_SIZE
+#define NRF_LOG_MSGPOOL_ELEMENT_SIZE 20
 #endif
 
-// <o> NRF_LOG_TIMESTAMP_DIGITS - Number of digits for timestamp 
-// <i> If higher resolution timestamp source is used it might be needed to increase that
+// <o> NRF_LOG_MSGPOOL_ELEMENT_COUNT - Number of elements in the pool of memory objects 
+// <i> If a small value is set, then it may lead to a deadlock
+// <i> in certain cases if backend has high latency and holds
+// <i> multiple messages for long time. Bigger value impacts
+// <i> RAM memory usage.
 
-#ifndef NRF_LOG_TIMESTAMP_DIGITS
-#define NRF_LOG_TIMESTAMP_DIGITS 8
+#ifndef NRF_LOG_MSGPOOL_ELEMENT_COUNT
+#define NRF_LOG_MSGPOOL_ELEMENT_COUNT 8
 #endif
 
-// <e> NRF_LOG_BACKEND_SERIAL_USES_UART - If enabled data is printed over UART
+// </h> 
 //==========================================================
-#ifndef NRF_LOG_BACKEND_SERIAL_USES_UART
-#define NRF_LOG_BACKEND_SERIAL_USES_UART 0
-#endif
-#if  NRF_LOG_BACKEND_SERIAL_USES_UART
-// <o> NRF_LOG_BACKEND_SERIAL_UART_BAUDRATE  - Default Baudrate
- 
-// <323584=> 1200 baud 
-// <643072=> 2400 baud 
-// <1290240=> 4800 baud 
-// <2576384=> 9600 baud 
-// <3862528=> 14400 baud 
-// <5152768=> 19200 baud 
-// <7716864=> 28800 baud 
-// <10289152=> 38400 baud 
-// <15400960=> 57600 baud 
-// <20615168=> 76800 baud 
-// <30801920=> 115200 baud 
-// <61865984=> 230400 baud 
-// <67108864=> 250000 baud 
-// <121634816=> 460800 baud 
-// <251658240=> 921600 baud 
-// <268435456=> 57600 baud 
 
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_BAUDRATE
-#define NRF_LOG_BACKEND_SERIAL_UART_BAUDRATE 30801920
-#endif
-
-// <o> NRF_LOG_BACKEND_SERIAL_UART_TX_PIN - UART TX pin 
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_TX_PIN
-#define NRF_LOG_BACKEND_SERIAL_UART_TX_PIN 6
-#endif
-
-// <o> NRF_LOG_BACKEND_SERIAL_UART_RX_PIN - UART RX pin 
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_RX_PIN
-#define NRF_LOG_BACKEND_SERIAL_UART_RX_PIN 8
-#endif
-
-// <o> NRF_LOG_BACKEND_SERIAL_UART_RTS_PIN - UART RTS pin 
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_RTS_PIN
-#define NRF_LOG_BACKEND_SERIAL_UART_RTS_PIN 5
-#endif
-
-// <o> NRF_LOG_BACKEND_SERIAL_UART_CTS_PIN - UART CTS pin 
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_CTS_PIN
-#define NRF_LOG_BACKEND_SERIAL_UART_CTS_PIN 7
-#endif
-
-// <o> NRF_LOG_BACKEND_SERIAL_UART_FLOW_CONTROL  - Hardware Flow Control
- 
-// <0=> Disabled 
-// <1=> Enabled 
-
-#ifndef NRF_LOG_BACKEND_SERIAL_UART_FLOW_CONTROL
-#define NRF_LOG_BACKEND_SERIAL_UART_FLOW_CONTROL 0
-#endif
-
-// <o> NRF_LOG_BACKEND_UART_INSTANCE  - UART instance used
- 
-// <0=> 0 
-
-#ifndef NRF_LOG_BACKEND_UART_INSTANCE
-#define NRF_LOG_BACKEND_UART_INSTANCE 0
-#endif
-
-#endif //NRF_LOG_BACKEND_SERIAL_USES_UART
 // </e>
 
-// <e> NRF_LOG_BACKEND_SERIAL_USES_RTT - If enabled data is printed using RTT
+// <h> nrf_log module configuration 
+
 //==========================================================
-#ifndef NRF_LOG_BACKEND_SERIAL_USES_RTT
-#define NRF_LOG_BACKEND_SERIAL_USES_RTT 1
-#endif
-#if  NRF_LOG_BACKEND_SERIAL_USES_RTT
-// <o> NRF_LOG_BACKEND_RTT_OUTPUT_BUFFER_SIZE - RTT output buffer size. 
-// <i> Should be equal or bigger than \ref NRF_LOG_BACKEND_MAX_STRING_LENGTH.
-// <i> This value is used in Segger RTT configuration to set the buffer size
-// <i> if it is bigger than default RTT buffer size.
+// <h> nrf_log in nRF_Core 
 
-#ifndef NRF_LOG_BACKEND_RTT_OUTPUT_BUFFER_SIZE
-#define NRF_LOG_BACKEND_RTT_OUTPUT_BUFFER_SIZE 512
+//==========================================================
+// <e> NRF_MPU_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_MPU_CONFIG_LOG_ENABLED
+#define NRF_MPU_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_MPU_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_MPU_CONFIG_LOG_LEVEL
+#define NRF_MPU_CONFIG_LOG_LEVEL 3
 #endif
 
-#endif //NRF_LOG_BACKEND_SERIAL_USES_RTT
+// <o> NRF_MPU_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_MPU_CONFIG_INFO_COLOR
+#define NRF_MPU_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_MPU_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_MPU_CONFIG_DEBUG_COLOR
+#define NRF_MPU_CONFIG_DEBUG_COLOR 0
+#endif
+
 // </e>
+
+// <e> NRF_STACK_GUARD_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_STACK_GUARD_CONFIG_LOG_ENABLED
+#define NRF_STACK_GUARD_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_STACK_GUARD_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_STACK_GUARD_CONFIG_LOG_LEVEL
+#define NRF_STACK_GUARD_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_STACK_GUARD_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_STACK_GUARD_CONFIG_INFO_COLOR
+#define NRF_STACK_GUARD_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_STACK_GUARD_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_STACK_GUARD_CONFIG_DEBUG_COLOR
+#define NRF_STACK_GUARD_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> TASK_MANAGER_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef TASK_MANAGER_CONFIG_LOG_ENABLED
+#define TASK_MANAGER_CONFIG_LOG_ENABLED 0
+#endif
+// <o> TASK_MANAGER_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef TASK_MANAGER_CONFIG_LOG_LEVEL
+#define TASK_MANAGER_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> TASK_MANAGER_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TASK_MANAGER_CONFIG_INFO_COLOR
+#define TASK_MANAGER_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> TASK_MANAGER_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TASK_MANAGER_CONFIG_DEBUG_COLOR
+#define TASK_MANAGER_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </h> 
+//==========================================================
+
+// <h> nrf_log in nRF_Drivers 
+
+//==========================================================
+// <e> CLOCK_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef CLOCK_CONFIG_LOG_ENABLED
+#define CLOCK_CONFIG_LOG_ENABLED 0
+#endif
+// <o> CLOCK_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef CLOCK_CONFIG_LOG_LEVEL
+#define CLOCK_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> CLOCK_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef CLOCK_CONFIG_INFO_COLOR
+#define CLOCK_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> CLOCK_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef CLOCK_CONFIG_DEBUG_COLOR
+#define CLOCK_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> COMMON_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef COMMON_CONFIG_LOG_ENABLED
+#define COMMON_CONFIG_LOG_ENABLED 0
+#endif
+// <o> COMMON_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef COMMON_CONFIG_LOG_LEVEL
+#define COMMON_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> COMMON_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef COMMON_CONFIG_INFO_COLOR
+#define COMMON_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> COMMON_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef COMMON_CONFIG_DEBUG_COLOR
+#define COMMON_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> COMP_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef COMP_CONFIG_LOG_ENABLED
+#define COMP_CONFIG_LOG_ENABLED 0
+#endif
+// <o> COMP_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef COMP_CONFIG_LOG_LEVEL
+#define COMP_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> COMP_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef COMP_CONFIG_INFO_COLOR
+#define COMP_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> COMP_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef COMP_CONFIG_DEBUG_COLOR
+#define COMP_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> GPIOTE_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef GPIOTE_CONFIG_LOG_ENABLED
+#define GPIOTE_CONFIG_LOG_ENABLED 0
+#endif
+// <o> GPIOTE_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef GPIOTE_CONFIG_LOG_LEVEL
+#define GPIOTE_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> GPIOTE_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef GPIOTE_CONFIG_INFO_COLOR
+#define GPIOTE_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> GPIOTE_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef GPIOTE_CONFIG_DEBUG_COLOR
+#define GPIOTE_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> I2S_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef I2S_CONFIG_LOG_ENABLED
+#define I2S_CONFIG_LOG_ENABLED 0
+#endif
+// <o> I2S_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef I2S_CONFIG_LOG_LEVEL
+#define I2S_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> I2S_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef I2S_CONFIG_INFO_COLOR
+#define I2S_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> I2S_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef I2S_CONFIG_DEBUG_COLOR
+#define I2S_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> LPCOMP_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef LPCOMP_CONFIG_LOG_ENABLED
+#define LPCOMP_CONFIG_LOG_ENABLED 0
+#endif
+// <o> LPCOMP_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef LPCOMP_CONFIG_LOG_LEVEL
+#define LPCOMP_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> LPCOMP_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef LPCOMP_CONFIG_INFO_COLOR
+#define LPCOMP_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> LPCOMP_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef LPCOMP_CONFIG_DEBUG_COLOR
+#define LPCOMP_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> PDM_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef PDM_CONFIG_LOG_ENABLED
+#define PDM_CONFIG_LOG_ENABLED 0
+#endif
+// <o> PDM_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef PDM_CONFIG_LOG_LEVEL
+#define PDM_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> PDM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PDM_CONFIG_INFO_COLOR
+#define PDM_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> PDM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PDM_CONFIG_DEBUG_COLOR
+#define PDM_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> PPI_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef PPI_CONFIG_LOG_ENABLED
+#define PPI_CONFIG_LOG_ENABLED 0
+#endif
+// <o> PPI_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef PPI_CONFIG_LOG_LEVEL
+#define PPI_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> PPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PPI_CONFIG_INFO_COLOR
+#define PPI_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> PPI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PPI_CONFIG_DEBUG_COLOR
+#define PPI_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> PWM_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef PWM_CONFIG_LOG_ENABLED
+#define PWM_CONFIG_LOG_ENABLED 0
+#endif
+// <o> PWM_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef PWM_CONFIG_LOG_LEVEL
+#define PWM_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> PWM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PWM_CONFIG_INFO_COLOR
+#define PWM_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> PWM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef PWM_CONFIG_DEBUG_COLOR
+#define PWM_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> QDEC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef QDEC_CONFIG_LOG_ENABLED
+#define QDEC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> QDEC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef QDEC_CONFIG_LOG_LEVEL
+#define QDEC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> QDEC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef QDEC_CONFIG_INFO_COLOR
+#define QDEC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> QDEC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef QDEC_CONFIG_DEBUG_COLOR
+#define QDEC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> RNG_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef RNG_CONFIG_LOG_ENABLED
+#define RNG_CONFIG_LOG_ENABLED 0
+#endif
+// <o> RNG_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef RNG_CONFIG_LOG_LEVEL
+#define RNG_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> RNG_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef RNG_CONFIG_INFO_COLOR
+#define RNG_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> RNG_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef RNG_CONFIG_DEBUG_COLOR
+#define RNG_CONFIG_DEBUG_COLOR 0
+#endif
+
+// <q> RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED  - Enables logging of random numbers.
+ 
+
+#ifndef RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED
+#define RNG_CONFIG_RANDOM_NUMBER_LOG_ENABLED 0
+#endif
+
+// </e>
+
+// <e> RTC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef RTC_CONFIG_LOG_ENABLED
+#define RTC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> RTC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef RTC_CONFIG_LOG_LEVEL
+#define RTC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> RTC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef RTC_CONFIG_INFO_COLOR
+#define RTC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> RTC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef RTC_CONFIG_DEBUG_COLOR
+#define RTC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef SAADC_CONFIG_LOG_ENABLED
+#define SAADC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> SAADC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef SAADC_CONFIG_LOG_LEVEL
+#define SAADC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> SAADC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SAADC_CONFIG_INFO_COLOR
+#define SAADC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> SAADC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SAADC_CONFIG_DEBUG_COLOR
+#define SAADC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> SPIS_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef SPIS_CONFIG_LOG_ENABLED
+#define SPIS_CONFIG_LOG_ENABLED 0
+#endif
+// <o> SPIS_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef SPIS_CONFIG_LOG_LEVEL
+#define SPIS_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> SPIS_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SPIS_CONFIG_INFO_COLOR
+#define SPIS_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> SPIS_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SPIS_CONFIG_DEBUG_COLOR
+#define SPIS_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> SPI_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef SPI_CONFIG_LOG_ENABLED
+#define SPI_CONFIG_LOG_ENABLED 0
+#endif
+// <o> SPI_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef SPI_CONFIG_LOG_LEVEL
+#define SPI_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> SPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SPI_CONFIG_INFO_COLOR
+#define SPI_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> SPI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SPI_CONFIG_DEBUG_COLOR
+#define SPI_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> SWI_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef SWI_CONFIG_LOG_ENABLED
+#define SWI_CONFIG_LOG_ENABLED 0
+#endif
+// <o> SWI_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef SWI_CONFIG_LOG_LEVEL
+#define SWI_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> SWI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SWI_CONFIG_INFO_COLOR
+#define SWI_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> SWI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef SWI_CONFIG_DEBUG_COLOR
+#define SWI_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> TIMER_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef TIMER_CONFIG_LOG_ENABLED
+#define TIMER_CONFIG_LOG_ENABLED 0
+#endif
+// <o> TIMER_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef TIMER_CONFIG_LOG_LEVEL
+#define TIMER_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> TIMER_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TIMER_CONFIG_INFO_COLOR
+#define TIMER_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> TIMER_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TIMER_CONFIG_DEBUG_COLOR
+#define TIMER_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> TWIS_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef TWIS_CONFIG_LOG_ENABLED
+#define TWIS_CONFIG_LOG_ENABLED 0
+#endif
+// <o> TWIS_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef TWIS_CONFIG_LOG_LEVEL
+#define TWIS_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> TWIS_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TWIS_CONFIG_INFO_COLOR
+#define TWIS_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> TWIS_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TWIS_CONFIG_DEBUG_COLOR
+#define TWIS_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> TWI_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef TWI_CONFIG_LOG_ENABLED
+#define TWI_CONFIG_LOG_ENABLED 0
+#endif
+// <o> TWI_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef TWI_CONFIG_LOG_LEVEL
+#define TWI_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> TWI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TWI_CONFIG_INFO_COLOR
+#define TWI_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> TWI_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef TWI_CONFIG_DEBUG_COLOR
+#define TWI_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> UART_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef UART_CONFIG_LOG_ENABLED
+#define UART_CONFIG_LOG_ENABLED 0
+#endif
+// <o> UART_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef UART_CONFIG_LOG_LEVEL
+#define UART_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> UART_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef UART_CONFIG_INFO_COLOR
+#define UART_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> UART_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef UART_CONFIG_DEBUG_COLOR
+#define UART_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> USBD_CONFIG_LOG_ENABLED - Enable logging in the module
+//==========================================================
+#ifndef USBD_CONFIG_LOG_ENABLED
+#define USBD_CONFIG_LOG_ENABLED 0
+#endif
+// <o> USBD_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef USBD_CONFIG_LOG_LEVEL
+#define USBD_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> USBD_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef USBD_CONFIG_INFO_COLOR
+#define USBD_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> USBD_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef USBD_CONFIG_DEBUG_COLOR
+#define USBD_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> WDT_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef WDT_CONFIG_LOG_ENABLED
+#define WDT_CONFIG_LOG_ENABLED 0
+#endif
+// <o> WDT_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef WDT_CONFIG_LOG_LEVEL
+#define WDT_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> WDT_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef WDT_CONFIG_INFO_COLOR
+#define WDT_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> WDT_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef WDT_CONFIG_DEBUG_COLOR
+#define WDT_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </h> 
+//==========================================================
+
+// <h> nrf_log in nRF_Libraries 
+
+//==========================================================
+// <e> APP_USBD_CDC_ACM_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef APP_USBD_CDC_ACM_CONFIG_LOG_ENABLED
+#define APP_USBD_CDC_ACM_CONFIG_LOG_ENABLED 0
+#endif
+// <o> APP_USBD_CDC_ACM_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef APP_USBD_CDC_ACM_CONFIG_LOG_LEVEL
+#define APP_USBD_CDC_ACM_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> APP_USBD_CDC_ACM_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_CDC_ACM_CONFIG_INFO_COLOR
+#define APP_USBD_CDC_ACM_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> APP_USBD_CDC_ACM_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_CDC_ACM_CONFIG_DEBUG_COLOR
+#define APP_USBD_CDC_ACM_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> APP_USBD_MSC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef APP_USBD_MSC_CONFIG_LOG_ENABLED
+#define APP_USBD_MSC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> APP_USBD_MSC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef APP_USBD_MSC_CONFIG_LOG_LEVEL
+#define APP_USBD_MSC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> APP_USBD_MSC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_MSC_CONFIG_INFO_COLOR
+#define APP_USBD_MSC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> APP_USBD_MSC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef APP_USBD_MSC_CONFIG_DEBUG_COLOR
+#define APP_USBD_MSC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <q> MEM_MANAGER_ENABLE_LOGS  - Enable debug trace in the module.
+ 
+
+#ifndef MEM_MANAGER_ENABLE_LOGS
+#define MEM_MANAGER_ENABLE_LOGS 0
+#endif
+
+// <e> NRF_BALLOC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_BALLOC_CONFIG_LOG_ENABLED
+#define NRF_BALLOC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_BALLOC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_BALLOC_CONFIG_LOG_LEVEL
+#define NRF_BALLOC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_BALLOC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_BALLOC_CONFIG_INFO_COLOR
+#define NRF_BALLOC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_BALLOC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_BALLOC_CONFIG_DEBUG_COLOR
+#define NRF_BALLOC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_CLI_BLE_UART_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_CLI_BLE_UART_CONFIG_LOG_ENABLED
+#define NRF_CLI_BLE_UART_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_CLI_BLE_UART_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_CLI_BLE_UART_CONFIG_LOG_LEVEL
+#define NRF_CLI_BLE_UART_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_CLI_BLE_UART_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_CLI_BLE_UART_CONFIG_INFO_COLOR
+#define NRF_CLI_BLE_UART_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_CLI_BLE_UART_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_CLI_BLE_UART_CONFIG_DEBUG_COLOR
+#define NRF_CLI_BLE_UART_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_CLI_UART_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_CLI_UART_CONFIG_LOG_ENABLED
+#define NRF_CLI_UART_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_CLI_UART_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_CLI_UART_CONFIG_LOG_LEVEL
+#define NRF_CLI_UART_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_CLI_UART_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_CLI_UART_CONFIG_INFO_COLOR
+#define NRF_CLI_UART_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_CLI_UART_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_CLI_UART_CONFIG_DEBUG_COLOR
+#define NRF_CLI_UART_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_MEMOBJ_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_MEMOBJ_CONFIG_LOG_ENABLED
+#define NRF_MEMOBJ_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_MEMOBJ_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_MEMOBJ_CONFIG_LOG_LEVEL
+#define NRF_MEMOBJ_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_MEMOBJ_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_MEMOBJ_CONFIG_INFO_COLOR
+#define NRF_MEMOBJ_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_MEMOBJ_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_MEMOBJ_CONFIG_DEBUG_COLOR
+#define NRF_MEMOBJ_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_PWR_MGMT_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRF_PWR_MGMT_CONFIG_LOG_ENABLED
+#define NRF_PWR_MGMT_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRF_PWR_MGMT_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_PWR_MGMT_CONFIG_LOG_LEVEL
+#define NRF_PWR_MGMT_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRF_PWR_MGMT_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_PWR_MGMT_CONFIG_INFO_COLOR
+#define NRF_PWR_MGMT_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRF_PWR_MGMT_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_PWR_MGMT_CONFIG_DEBUG_COLOR
+#define NRF_PWR_MGMT_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_SDH_ANT_LOG_ENABLED - Enable logging in SoftDevice handler (ANT) module.
+//==========================================================
+#ifndef NRF_SDH_ANT_LOG_ENABLED
+#define NRF_SDH_ANT_LOG_ENABLED 0
+#endif
+// <o> NRF_SDH_ANT_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_SDH_ANT_LOG_LEVEL
+#define NRF_SDH_ANT_LOG_LEVEL 3
+#endif
+
+// <o> NRF_SDH_ANT_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_ANT_INFO_COLOR
+#define NRF_SDH_ANT_INFO_COLOR 0
+#endif
+
+// <o> NRF_SDH_ANT_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_ANT_DEBUG_COLOR
+#define NRF_SDH_ANT_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_SDH_BLE_LOG_ENABLED - Enable logging in SoftDevice handler (BLE) module.
+//==========================================================
+#ifndef NRF_SDH_BLE_LOG_ENABLED
+#define NRF_SDH_BLE_LOG_ENABLED 1
+#endif
+// <o> NRF_SDH_BLE_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_SDH_BLE_LOG_LEVEL
+#define NRF_SDH_BLE_LOG_LEVEL 3
+#endif
+
+// <o> NRF_SDH_BLE_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_BLE_INFO_COLOR
+#define NRF_SDH_BLE_INFO_COLOR 0
+#endif
+
+// <o> NRF_SDH_BLE_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_BLE_DEBUG_COLOR
+#define NRF_SDH_BLE_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_SDH_LOG_ENABLED - Enable logging in SoftDevice handler module.
+//==========================================================
+#ifndef NRF_SDH_LOG_ENABLED
+#define NRF_SDH_LOG_ENABLED 1
+#endif
+// <o> NRF_SDH_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_SDH_LOG_LEVEL
+#define NRF_SDH_LOG_LEVEL 3
+#endif
+
+// <o> NRF_SDH_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_INFO_COLOR
+#define NRF_SDH_INFO_COLOR 0
+#endif
+
+// <o> NRF_SDH_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_DEBUG_COLOR
+#define NRF_SDH_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// <e> NRF_SDH_SOC_LOG_ENABLED - Enable logging in SoftDevice handler (SoC) module.
+//==========================================================
+#ifndef NRF_SDH_SOC_LOG_ENABLED
+#define NRF_SDH_SOC_LOG_ENABLED 1
+#endif
+// <o> NRF_SDH_SOC_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRF_SDH_SOC_LOG_LEVEL
+#define NRF_SDH_SOC_LOG_LEVEL 3
+#endif
+
+// <o> NRF_SDH_SOC_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_SOC_INFO_COLOR
+#define NRF_SDH_SOC_INFO_COLOR 0
+#endif
+
+// <o> NRF_SDH_SOC_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRF_SDH_SOC_DEBUG_COLOR
+#define NRF_SDH_SOC_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </h> 
+//==========================================================
+
+// </h> 
+//==========================================================
 
 // </h> 
 //==========================================================
@@ -3933,7 +5089,7 @@
 // <i> or this value is actually used. It depends on which one is bigger.
 
 #ifndef SEGGER_RTT_CONFIG_BUFFER_SIZE_UP
-#define SEGGER_RTT_CONFIG_BUFFER_SIZE_UP 64
+#define SEGGER_RTT_CONFIG_BUFFER_SIZE_UP 512
 #endif
 
 // <o> SEGGER_RTT_CONFIG_MAX_NUM_UP_BUFFERS - Size of upstream buffer. 
@@ -3968,6 +5124,576 @@
 
 // </h> 
 //==========================================================
+
+// </h> 
+//==========================================================
+
+// <h> nRF_SoftDevice 
+
+//==========================================================
+// <e> NRF_SDH_BLE_ENABLED - nrf_sdh_ble - SoftDevice BLE event handler
+//==========================================================
+#ifndef NRF_SDH_BLE_ENABLED
+#define NRF_SDH_BLE_ENABLED 1
+#endif
+// <h> BLE Stack configuration - Stack configuration parameters
+
+// <i> These values are not used directly by the SoftDevice handler but the application or other libraries might depend on them.
+// <i> Keep them up-to-date with the desired configuration.
+//==========================================================
+// <o> NRF_SDH_BLE_PERIPHERAL_LINK_COUNT - Maximum number of peripheral links. 
+#ifndef NRF_SDH_BLE_PERIPHERAL_LINK_COUNT
+#define NRF_SDH_BLE_PERIPHERAL_LINK_COUNT 1
+#endif
+
+// <o> NRF_SDH_BLE_CENTRAL_LINK_COUNT - Maximum number of central links. 
+#ifndef NRF_SDH_BLE_CENTRAL_LINK_COUNT
+#define NRF_SDH_BLE_CENTRAL_LINK_COUNT 0
+#endif
+
+// <o> NRF_SDH_BLE_TOTAL_LINK_COUNT - Maximum number of total concurrent connections using the default configuration. 
+#ifndef NRF_SDH_BLE_TOTAL_LINK_COUNT
+#define NRF_SDH_BLE_TOTAL_LINK_COUNT 1
+#endif
+
+// <o> NRF_SDH_BLE_GAP_EVENT_LENGTH - The time set aside for this connection on every connection interval in 1.25 ms units. 
+#ifndef NRF_SDH_BLE_GAP_EVENT_LENGTH
+#define NRF_SDH_BLE_GAP_EVENT_LENGTH 3
+#endif
+
+// <o> NRF_SDH_BLE_GATT_MAX_MTU_SIZE - Static maximum MTU size. 
+#ifndef NRF_SDH_BLE_GATT_MAX_MTU_SIZE
+#define NRF_SDH_BLE_GATT_MAX_MTU_SIZE 23
+#endif
+
+// <o> NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE - Attribute Table size in bytes. The size must be a multiple of 4. 
+#ifndef NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE
+#define NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE 1408
+#endif
+
+// <o> NRF_SDH_BLE_VS_UUID_COUNT - The number of vendor-specific UUIDs. 
+#ifndef NRF_SDH_BLE_VS_UUID_COUNT
+#define NRF_SDH_BLE_VS_UUID_COUNT 1
+#endif
+
+// <q> NRF_SDH_BLE_SERVICE_CHANGED  - Include the Service Changed characteristic in the Attribute Table.
+ 
+
+#ifndef NRF_SDH_BLE_SERVICE_CHANGED
+#define NRF_SDH_BLE_SERVICE_CHANGED 1
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> BLE Observers - Observers and priority levels
+
+//==========================================================
+// <o> NRF_SDH_BLE_OBSERVER_PRIO_LEVELS - Total number of priority levels for BLE observers. 
+// <i> This setting configures the number of priority levels available for BLE event handlers.
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_BLE_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_BLE_OBSERVER_PRIO_LEVELS 3
+#endif
+
+// <h> BLE Observers priorities - Invididual priorities
+
+//==========================================================
+// <o> BLE_ADV_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Advertising module.
+
+#ifndef BLE_ADV_BLE_OBSERVER_PRIO
+#define BLE_ADV_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_ANCS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Apple Notification Service Client.
+
+#ifndef BLE_ANCS_C_BLE_OBSERVER_PRIO
+#define BLE_ANCS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_ANS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Alert Notification Service Client.
+
+#ifndef BLE_ANS_C_BLE_OBSERVER_PRIO
+#define BLE_ANS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_BAS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Battery Service.
+
+#ifndef BLE_BAS_BLE_OBSERVER_PRIO
+#define BLE_BAS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_BAS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Battery Service Client.
+
+#ifndef BLE_BAS_C_BLE_OBSERVER_PRIO
+#define BLE_BAS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_BPS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Blood Pressure Service.
+
+#ifndef BLE_BPS_BLE_OBSERVER_PRIO
+#define BLE_BPS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_CONN_PARAMS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Connection parameters module.
+
+#ifndef BLE_CONN_PARAMS_BLE_OBSERVER_PRIO
+#define BLE_CONN_PARAMS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_CONN_STATE_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Connection State module.
+
+#ifndef BLE_CONN_STATE_BLE_OBSERVER_PRIO
+#define BLE_CONN_STATE_BLE_OBSERVER_PRIO 0
+#endif
+
+// <o> BLE_CSCS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Cycling Speed and Cadence Service.
+
+#ifndef BLE_CSCS_BLE_OBSERVER_PRIO
+#define BLE_CSCS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_CTS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Current Time Service Client.
+
+#ifndef BLE_CTS_C_BLE_OBSERVER_PRIO
+#define BLE_CTS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_DB_DISC_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Database Discovery module.
+
+#ifndef BLE_DB_DISC_BLE_OBSERVER_PRIO
+#define BLE_DB_DISC_BLE_OBSERVER_PRIO 1
+#endif
+
+// <o> BLE_DFU_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the DFU Service.
+
+#ifndef BLE_DFU_BLE_OBSERVER_PRIO
+#define BLE_DFU_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_GLS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Glucose Service.
+
+#ifndef BLE_GLS_BLE_OBSERVER_PRIO
+#define BLE_GLS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_HIDS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Human Interface Device Service.
+
+#ifndef BLE_HIDS_BLE_OBSERVER_PRIO
+#define BLE_HIDS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_HRS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Heart Rate Service.
+
+#ifndef BLE_HRS_BLE_OBSERVER_PRIO
+#define BLE_HRS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_HRS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Heart Rate Service Client.
+
+#ifndef BLE_HRS_C_BLE_OBSERVER_PRIO
+#define BLE_HRS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_HTS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Health Thermometer Service.
+
+#ifndef BLE_HTS_BLE_OBSERVER_PRIO
+#define BLE_HTS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_IAS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Immediate Alert Service.
+
+#ifndef BLE_IAS_BLE_OBSERVER_PRIO
+#define BLE_IAS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_IAS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Immediate Alert Service Client.
+
+#ifndef BLE_IAS_C_BLE_OBSERVER_PRIO
+#define BLE_IAS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_LBS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the LED Button Service.
+
+#ifndef BLE_LBS_BLE_OBSERVER_PRIO
+#define BLE_LBS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_LBS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the LED Button Service Client.
+
+#ifndef BLE_LBS_C_BLE_OBSERVER_PRIO
+#define BLE_LBS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_LLS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Link Loss Service.
+
+#ifndef BLE_LLS_BLE_OBSERVER_PRIO
+#define BLE_LLS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_LNS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Location Navigation Service.
+
+#ifndef BLE_LNS_BLE_OBSERVER_PRIO
+#define BLE_LNS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_NUS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the UART Service.
+
+#ifndef BLE_NUS_BLE_OBSERVER_PRIO
+#define BLE_NUS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_NUS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the UART Central Service.
+
+#ifndef BLE_NUS_C_BLE_OBSERVER_PRIO
+#define BLE_NUS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_OTS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Object transfer service.
+
+#ifndef BLE_OTS_BLE_OBSERVER_PRIO
+#define BLE_OTS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_OTS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Object transfer service client.
+
+#ifndef BLE_OTS_C_BLE_OBSERVER_PRIO
+#define BLE_OTS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_RSCS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Running Speed and Cadence Service.
+
+#ifndef BLE_RSCS_BLE_OBSERVER_PRIO
+#define BLE_RSCS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_RSCS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Running Speed and Cadence Client.
+
+#ifndef BLE_RSCS_C_BLE_OBSERVER_PRIO
+#define BLE_RSCS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BLE_TPS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the TX Power Service.
+
+#ifndef BLE_TPS_BLE_OBSERVER_PRIO
+#define BLE_TPS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> BSP_BTN_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Button Control module.
+
+#ifndef BSP_BTN_BLE_OBSERVER_PRIO
+#define BSP_BTN_BLE_OBSERVER_PRIO 1
+#endif
+
+// <o> NFC_BLE_PAIR_LIB_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the NFC pairing library.
+
+#ifndef NFC_BLE_PAIR_LIB_BLE_OBSERVER_PRIO
+#define NFC_BLE_PAIR_LIB_BLE_OBSERVER_PRIO 1
+#endif
+
+// <o> NRF_BLE_BMS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Bond Management Service.
+
+#ifndef NRF_BLE_BMS_BLE_OBSERVER_PRIO
+#define NRF_BLE_BMS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> NRF_BLE_CGMS_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Contiuon Glucose Monitoring Service.
+
+#ifndef NRF_BLE_CGMS_BLE_OBSERVER_PRIO
+#define NRF_BLE_CGMS_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> NRF_BLE_GATTS_C_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the GATT Service Client.
+
+#ifndef NRF_BLE_GATTS_C_BLE_OBSERVER_PRIO
+#define NRF_BLE_GATTS_C_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> NRF_BLE_GATT_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the GATT module.
+
+#ifndef NRF_BLE_GATT_BLE_OBSERVER_PRIO
+#define NRF_BLE_GATT_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> NRF_BLE_QWR_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Queued writes module.
+
+#ifndef NRF_BLE_QWR_BLE_OBSERVER_PRIO
+#define NRF_BLE_QWR_BLE_OBSERVER_PRIO 2
+#endif
+
+// <o> PM_BLE_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the Peer Manager module.
+
+#ifndef PM_BLE_OBSERVER_PRIO
+#define PM_BLE_OBSERVER_PRIO 2
+#endif
+
+// </h> 
+//==========================================================
+
+// </h> 
+//==========================================================
+
+
+// </e>
+
+// <e> NRF_SDH_ENABLED - nrf_sdh - SoftDevice handler
+//==========================================================
+#ifndef NRF_SDH_ENABLED
+#define NRF_SDH_ENABLED 1
+#endif
+// <h> Dispatch model 
+
+// <i> This setting configures how Stack events are dispatched to the application.
+//==========================================================
+// <o> NRF_SDH_DISPATCH_MODEL
+ 
+
+// <i> NRF_SDH_DISPATCH_MODEL_INTERRUPT: SoftDevice events are passed to the application from the interrupt context.
+// <i> NRF_SDH_DISPATCH_MODEL_APPSH: SoftDevice events are scheduled using @ref app_scheduler.
+// <i> NRF_SDH_DISPATCH_MODEL_POLLING: SoftDevice events are to be fetched manually.
+// <0=> NRF_SDH_DISPATCH_MODEL_INTERRUPT 
+// <1=> NRF_SDH_DISPATCH_MODEL_APPSH 
+// <2=> NRF_SDH_DISPATCH_MODEL_POLLING 
+
+#ifndef NRF_SDH_DISPATCH_MODEL
+#define NRF_SDH_DISPATCH_MODEL 0
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> Clock - SoftDevice clock configuration
+
+//==========================================================
+// <o> NRF_SDH_CLOCK_LF_SRC  - SoftDevice clock source.
+ 
+// <0=> NRF_CLOCK_LF_SRC_RC 
+// <1=> NRF_CLOCK_LF_SRC_XTAL 
+// <2=> NRF_CLOCK_LF_SRC_SYNTH 
+
+#ifndef NRF_SDH_CLOCK_LF_SRC
+#define NRF_SDH_CLOCK_LF_SRC 1
+#endif
+
+// <o> NRF_SDH_CLOCK_LF_RC_CTIV - SoftDevice calibration timer interval. 
+#ifndef NRF_SDH_CLOCK_LF_RC_CTIV
+#define NRF_SDH_CLOCK_LF_RC_CTIV 0
+#endif
+
+// <o> NRF_SDH_CLOCK_LF_RC_TEMP_CTIV - SoftDevice calibration timer interval under constant temperature. 
+// <i> How often (in number of calibration intervals) the RC oscillator shall be calibrated
+// <i>  if the temperature has not changed.
+
+#ifndef NRF_SDH_CLOCK_LF_RC_TEMP_CTIV
+#define NRF_SDH_CLOCK_LF_RC_TEMP_CTIV 0
+#endif
+
+// <o> NRF_SDH_CLOCK_LF_XTAL_ACCURACY  - External crystal clock accuracy used in the LL to compute timing windows.
+ 
+// <0=> NRF_CLOCK_LF_XTAL_ACCURACY_250_PPM 
+// <1=> NRF_CLOCK_LF_XTAL_ACCURACY_500_PPM 
+// <2=> NRF_CLOCK_LF_XTAL_ACCURACY_150_PPM 
+// <3=> NRF_CLOCK_LF_XTAL_ACCURACY_100_PPM 
+// <4=> NRF_CLOCK_LF_XTAL_ACCURACY_75_PPM 
+// <5=> NRF_CLOCK_LF_XTAL_ACCURACY_50_PPM 
+// <6=> NRF_CLOCK_LF_XTAL_ACCURACY_30_PPM 
+// <7=> NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM 
+
+#ifndef NRF_SDH_CLOCK_LF_XTAL_ACCURACY
+#define NRF_SDH_CLOCK_LF_XTAL_ACCURACY 7
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> SDH Observers - Observers and priority levels
+
+//==========================================================
+// <o> NRF_SDH_REQ_OBSERVER_PRIO_LEVELS - Total number of priority levels for request observers. 
+// <i> This setting configures the number of priority levels available for the SoftDevice request event handlers.
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_REQ_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_REQ_OBSERVER_PRIO_LEVELS 2
+#endif
+
+// <o> NRF_SDH_STATE_OBSERVER_PRIO_LEVELS - Total number of priority levels for state observers. 
+// <i> This setting configures the number of priority levels available for the SoftDevice state event handlers.
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_STATE_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_STATE_OBSERVER_PRIO_LEVELS 2
+#endif
+
+// <o> NRF_SDH_STACK_OBSERVER_PRIO_LEVELS - Total number of priority levels for stack event observers. 
+// <i> This setting configures the number of priority levels available for the SoftDevice stack event handlers (ANT, BLE, SoC).
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_STACK_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_STACK_OBSERVER_PRIO_LEVELS 2
+#endif
+
+
+// <h> State Observers priorities - Invididual priorities
+
+//==========================================================
+// <o> CLOCK_CONFIG_STATE_OBSERVER_PRIO  
+// <i> Priority with which state events are dispatched to the Clock driver.
+
+#ifndef CLOCK_CONFIG_STATE_OBSERVER_PRIO
+#define CLOCK_CONFIG_STATE_OBSERVER_PRIO 0
+#endif
+
+// <o> POWER_CONFIG_STATE_OBSERVER_PRIO  
+// <i> Priority with which state events are dispatched to the Power driver.
+
+#ifndef POWER_CONFIG_STATE_OBSERVER_PRIO
+#define POWER_CONFIG_STATE_OBSERVER_PRIO 0
+#endif
+
+// <o> RNG_CONFIG_STATE_OBSERVER_PRIO  
+// <i> Priority with which state events are dispatched to this module.
+
+#ifndef RNG_CONFIG_STATE_OBSERVER_PRIO
+#define RNG_CONFIG_STATE_OBSERVER_PRIO 0
+#endif
+
+// </h> 
+//==========================================================
+
+// <h> Stack Event Observers priorities - Invididual priorities
+
+//==========================================================
+// <o> NRF_SDH_ANT_STACK_OBSERVER_PRIO  
+// <i> This setting configures the priority with which ANT events are processed with respect to other events coming from the stack.
+// <i> Modify this setting if you need to have ANT events dispatched before or after other stack events, such as BLE or SoC.
+// <i> Zero is the highest priority.
+
+#ifndef NRF_SDH_ANT_STACK_OBSERVER_PRIO
+#define NRF_SDH_ANT_STACK_OBSERVER_PRIO 0
+#endif
+
+// <o> NRF_SDH_BLE_STACK_OBSERVER_PRIO  
+// <i> This setting configures the priority with which BLE events are processed with respect to other events coming from the stack.
+// <i> Modify this setting if you need to have BLE events dispatched before or after other stack events, such as ANT or SoC.
+// <i> Zero is the highest priority.
+
+#ifndef NRF_SDH_BLE_STACK_OBSERVER_PRIO
+#define NRF_SDH_BLE_STACK_OBSERVER_PRIO 0
+#endif
+
+// <o> NRF_SDH_SOC_STACK_OBSERVER_PRIO  
+// <i> This setting configures the priority with which SoC events are processed with respect to other events coming from the stack.
+// <i> Modify this setting if you need to have SoC events dispatched before or after other stack events, such as ANT or BLE.
+// <i> Zero is the highest priority.
+
+#ifndef NRF_SDH_SOC_STACK_OBSERVER_PRIO
+#define NRF_SDH_SOC_STACK_OBSERVER_PRIO 0
+#endif
+
+// </h> 
+//==========================================================
+
+// </h> 
+//==========================================================
+
+
+// </e>
+
+// <e> NRF_SDH_SOC_ENABLED - nrf_sdh_soc - SoftDevice SoC event handler
+//==========================================================
+#ifndef NRF_SDH_SOC_ENABLED
+#define NRF_SDH_SOC_ENABLED 1
+#endif
+// <h> SoC Observers - Observers and priority levels
+
+//==========================================================
+// <o> NRF_SDH_SOC_OBSERVER_PRIO_LEVELS - Total number of priority levels for SoC observers. 
+// <i> This setting configures the number of priority levels available for the SoC event handlers.
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_SOC_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_SOC_OBSERVER_PRIO_LEVELS 2
+#endif
+
+// <h> SoC Observers priorities - Invididual priorities
+
+//==========================================================
+// <o> BLE_ADV_SOC_OBSERVER_PRIO  
+// <i> Priority with which SoC events are dispatched to the Advertising module.
+
+#ifndef BLE_ADV_SOC_OBSERVER_PRIO
+#define BLE_ADV_SOC_OBSERVER_PRIO 1
+#endif
+
+// <o> BLE_DFU_SOC_OBSERVER_PRIO  
+// <i> Priority with which BLE events are dispatched to the DFU Service.
+
+#ifndef BLE_DFU_SOC_OBSERVER_PRIO
+#define BLE_DFU_SOC_OBSERVER_PRIO 1
+#endif
+
+// <o> CLOCK_CONFIG_SOC_OBSERVER_PRIO  
+// <i> Priority with which SoC events are dispatched to the Clock driver.
+
+#ifndef CLOCK_CONFIG_SOC_OBSERVER_PRIO
+#define CLOCK_CONFIG_SOC_OBSERVER_PRIO 0
+#endif
+
+// <o> POWER_CONFIG_SOC_OBSERVER_PRIO  
+// <i> Priority with which SoC events are dispatched to the Power driver.
+
+#ifndef POWER_CONFIG_SOC_OBSERVER_PRIO
+#define POWER_CONFIG_SOC_OBSERVER_PRIO 0
+#endif
+
+// </h> 
+//==========================================================
+
+// </h> 
+//==========================================================
+
+
+// </e>
 
 // </h> 
 //==========================================================

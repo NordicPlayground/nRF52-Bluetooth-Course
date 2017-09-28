@@ -13,7 +13,7 @@ The aim of this tutorial is simply to create one service with one characteristic
 
 ## Requirements
 
-- nRF5 SDK v13.0.0
+- nRF5 SDK v14.0.0
 - nRF51 DK or nRF52 DK
 - Keil ARM MKD v5.22 (strictly speaking you can use any IDE you want)
 - nRF Commandline Tools
@@ -37,6 +37,20 @@ The first thing we need to do is to create a new .c file, lets call it ble_cus.c
 #include "ble.h"
 #include "ble_srv_common.h"
 ```
+
+The next step is to add a macro for defining a Custom Service(ble_cus) instance by adding the following snippet below the includes in main.c
+
+```c
+/**@brief   Macro for defining a ble_cus instance.
+ *
+ * @param   _name   Name of the instance.
+ * @hideinitializer
+ */
+#define BLE_CUS_DEF(_name)                                                                          \
+static ble_cus_t _name;                                                                             \
+
+```
+we will use this macro to define a custom service instance in main.c later in the tutorial. 
 
 Next, we're going to need a 128-bit UUID for our custom service since we're not going to implement our service with one of the  16-bit Bluetooth SIG UUIDs that are reserved for standardized profiles. There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
@@ -205,10 +219,10 @@ First, add the ble_cus.h file to the include list in main.c
 #include "ble_cus.h"
 ```
 
-and then add the m_cus of the ble_cus_t type below the defines 
+and then use the BLE_CUS_DEF macro to add a custom service instance called m_cus, i.e. add the following line below the defines in main.c
 
 ```c
-static ble_cus_t    m_cus;
+BLE_CUS_DEF(m_cus);
 ``` 
 
 The next step is to find the empty services_init function in main.c, which should look like this
@@ -275,38 +289,27 @@ We need to replace the BLE_UUID_DEVICE_INFORMATION_SERVICE with the CUSTOM_SERVI
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
  ble_uuid_t m_adv_uuids[] = {{CUSTOM_SERVICE_UUID, BLE_UUID_TYPE_VENDOR_BEGIN }}; /**< Universally unique service identifiers. */
 ```
-After this step you can try to compile your project, but you'll quickly discover that 
-We need to tell the BLE stack that we're using a vendor-specific 128-bit UUID and not a 16-bit bit UUID. This is done by changing the following line in ble_stack_init() 
+After this step we need to tell the BLE stack that we're using a vendor-specific 128-bit UUID and not a 16-bit bit UUID. This is done by changing the following define in sdk_config.h from  
 ```c
-ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 0
+#define NRF_SDH_BLE_VS_UUID_COUNT 0
 ```
 to 
 
 ```c
-ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 1
+#define NRF_SDH_BLE_VS_UUID_COUNT 1
 ```
-After this change the configuration section of ble_stack_init should look like the snippet below
 
-```c
-// Overwrite some of the default configurations for the BLE stack.
-ble_cfg_t ble_cfg;
-
-memset(&ble_cfg, 0, sizeof(ble_cfg));
-ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 1;
-err_code = sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, &ble_cfg, ram_start);
-APP_ERROR_CHECK(err_code);
-```
-Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x20001FD0 and size 0xE030, as shown in the screenshot below
+Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x200020F0 and size 0xDF10, as shown in the screenshot below
 <!---
 - [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
 --->
 Memory Settings  | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings.JPG" width="1000"> |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings_SDK_v14.JPG" width="1000"> |
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
-That should be it, compile the ble_app_template project, flash the S132 v4.0.2 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to scan for the device and view the content of the advertisment package. If you connect to the device you should see the service listed as an "Unknow Service" since we're using a vendor-specific UUID.
+That should be it, compile the ble_app_template project, flash the S132 v5.0.0 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to scan for the device and view the content of the advertisment package. If you connect to the device you should see the service listed as an "Unknow Service" since we're using a vendor-specific UUID.
 
 Advertising Device  | Content of Advertisment Packet    | Service listed in the GATT table    |
 ------------ | ------------- | ------------- | 
@@ -523,17 +526,19 @@ Lastly, we're going to add the ble_cus_on_ble_evt function decleration, which wi
  *
  * @note 
  *
- * @param[in]   p_cus      Custom Service structure.
  * @param[in]   p_ble_evt  Event received from the BLE stack.
+ * @param[in]   p_context  Custom Service structure.
  */
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt);
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context);
 ```
 
 We're now going to implement the ble_cus_on_ble_evt event handler in ble_cus.c.Upon entry its considered good practice to check that none of the pointers that we provided as arguments are NULL. 
 
 ```c
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+    
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
@@ -544,8 +549,10 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 After the NULL check we're going to add a switch-case to check which event that has been propagated to the application by the SoftDevice. 
 
 ```c
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+    
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
@@ -574,7 +581,7 @@ For now we only need to care about the BLE_GAP_EVT_CONNECTED and BLE_GAP_EVT_DIS
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
 }
@@ -588,7 +595,7 @@ Similarly, when we get the Disconnect event, the only thing we need to do is inv
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_disconnect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     UNUSED_PARAMETER(p_ble_evt);
     p_cus->conn_handle = BLE_CONN_HANDLE_INVALID;
@@ -598,8 +605,10 @@ static void on_disconnect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 Now that we have one function for each event we only need to call the function in ble_cus_on_ble_evt, i.e.
 
 ```c
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
@@ -622,25 +631,15 @@ void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 }
 ```
 
-The last thing we have to do is make sure that the application dispatches the SoftDevice events to our ble_cus_on_ble_evt event handler function. This is done by adding the function call to the ble_evt_dispatch() function in main.c
+The last thing we have to do is to make sure that our ble_cus_on_ble_evt event handler function receives SoftDevice events. This is done registering the ble_cus_on_ble_evt event handler as event observer using the NRF_SDH_BLE_OBSERVER() macro. It is convenient to do this within the BLE_CUS_DEF macro that we defined in ble_cus.h, which should be modfied as shown below 
 
 ```c
-static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
-{
-    /** The Connection state module has to be fed BLE events in order to function correctly
-     * Remember to call ble_conn_state_on_ble_evt before calling any ble_conns_state_* functions. */
-    ble_conn_state_on_ble_evt(p_ble_evt);
-    pm_on_ble_evt(p_ble_evt);
-    ble_conn_params_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
-    on_ble_evt(p_ble_evt);
-    ble_advertising_on_ble_evt(p_ble_evt);
-    nrf_ble_gatt_on_ble_evt(&m_gatt, p_ble_evt);
-   
-    //YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
-    ble_cus_on_ble_evt(&m_cus, p_ble_evt);
-    
-}
+#define BLE_CUS_DEF(_name)                                                                          \
+static ble_cus_t _name;                                                                             \
+NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                                 \
+                     BLE_HRS_BLE_OBSERVER_PRIO,                                                     \
+                     ble_cus_on_ble_evt, &_name)
+
 ```
 
 Compile your project and verify that there are no errors before you proceed to the next step. 
@@ -653,8 +652,10 @@ Compile your project and verify that there are no errors before you proceed to t
 
 
  ```c
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
@@ -686,7 +687,7 @@ Just like we did for the BLE_GAP_EVT_CONNECTED and BLE_GAP_EVT_DISCONNECTED we'r
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
 
 }
@@ -695,7 +696,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 Now, once we get the Write event we have to get hold of the Write event parameters that are passed with the event and we have to verify that the the handle that is written to matches the Custom Value Characteristic handle, i.e.
 
 ```c
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
@@ -711,7 +712,7 @@ So lets say that our specifc task is to toggle a LED on the nRF5x DK every time 
 
 
 ```c
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
@@ -727,8 +728,10 @@ We'we now implemented the necessary event handling so on_write() should be added
 
 
  ```c
-void ble_cus_on_ble_evt(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
+    ble_cus_t * p_cus = (ble_cus_t *) p_context;
+
     if (p_cus == NULL || p_ble_evt == NULL)
     {
         return;
@@ -872,7 +875,7 @@ Now, in order to propagate events from our service we need to assign the on_cus_
 We can now invoke this event handler from ble_cus.c by calling p_cus->evt_handler(p_cus, &evt) and as an example we'll invoke the event handler when we get the BLE_GAP_EVT_CONNECTED event, i.e. in the on_connect() function. It's fairly straight forward,  we simply declare a ble_cus_evt_t variable and set its .evt_type field to the BLE_CUS_EVT_CONNECTED and then invoke the event handler with said event. 
 
 ```c
-static void on_connect(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
 
@@ -1089,7 +1092,7 @@ We do not actually need to enable notifications as this is done automatically by
 Adding the code-snippet above to the on_write() function should result in the following function. 
 
 ```c
-static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
+static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
@@ -1124,20 +1127,16 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t * p_ble_evt)
 }
 ```
 
-Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED to the on_cus_evt() event handler in main.c and call ble_cus_custom_value_update(), i.e. 
+Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED to the on_cus_evt() event handler in main.c, i.e. 
 
 ```c
 static void on_cus_evt(ble_cus_t     * p_cus_service,
                        ble_cus_evt_t * p_evt)
 {
-    ret_code_t err_code;
-    uint8_t custom_value = 8;
 
     switch(p_evt->evt_type)
     {
         case BLE_CUS_EVT_NOTIFICATION_ENABLED:
-            err_code = ble_cus_custom_value_update(p_cus_service, custom_value);
-            APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_CUS_EVT_CONNECTED :
@@ -1157,3 +1156,66 @@ Compile the project and flash it to you nRF5x DK. If you open the nRF Connect ap
 Service, Characteristic and Descriptor  | 
 ------------ |
 <img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_char_desc.png" width="500"> |
+
+We're now ready to notify some values from the nRF52 DK to the nRF Connect app. In order to do that we're going to create an application timer that calls ble_cus_custom_value_update() at a regular interval and then start it when we get the BLE_CUS_EVT_NOTIFICATION_ENABLED event. So first, add the following define to the top of main.c
+
+```c
+#define NOTIFICATION_INTERVAL           APP_TIMER_TICKS(1000)
+```
+
+which is going to the timeout interval of our application timer. Next you will need to create an application timer id with the name m_notification_timer_id by calling the APP_TIMER_DEF  below the defines in main.c, i.e. 
+```c
+APP_TIMER_DEF(m_notification_timer_id);
+```
+
+Below this macro call you can declare a unsigned 8-bit variable called  m_custom_value, i.e. 
+
+```c
+static uint8_t m_custom_value = 0;
+```
+
+which will be used to hold the custom value we're going to notify to the nRF Connect app. Next, find the timers_init() functino in main.c and add the folling snippet to create the application timer
+
+```c
+    // Create timers.
+    err_code = app_timer_create(&m_notification_timer_id, APP_TIMER_MODE_REPEATED, notification_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+```
+
+Great, we now have a application timer and the next step is to start the application timer when we receive the BLE_CUS_EVT_NOTIFICATION_ENABLED, i.e. add the following snippet under the BLE_CUS_EVT_NOTIFICATION_ENABLED case in the on_cus_evt event handler in main.c
+
+```c         
+           err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
+           APP_ERROR_CHECK(err_code);
+```
+
+Lastly, we need to create the notification_timeout_handler which will increment the m_custom_value variable and then call ble_cus_custom_value_update by declaring the following function above timers_init() in main.c
+
+```c
+/**@brief Function for handling the Battery measurement timer timeout.
+ *
+ * @details This function will be called each time the battery level measurement timer expires.
+ *
+ * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
+ *                       app_start_timer() call to the timeout handler.
+ */
+static void notification_timeout_handler(void * p_context)
+{
+    UNUSED_PARAMETER(p_context);
+    ret_code_t err_code;
+    
+    // Increment the value of m_custom_value before nortifing it.
+    m_custom_value++;
+    
+    err_code = ble_cus_custom_value_update(&m_cus, m_custom_value);
+    APP_ERROR_CHECK(err_code);
+}
+```
+
+Compile the project and flash it to your nRF52 DK. Open the nRF Connect app, connect to the nRF52 DK and enable notification by clicking the button highlighted in the screenshot below
+
+Enable Notifications  | 
+------------ |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/enable_notif.png" width="500"> |
+
+You should now see a value field appear below the Unknown Characteristics properties and the value should be incrementing every second. Congratulations you have now created a custom service and notified custom values!

@@ -6,6 +6,19 @@
 #include "ble.h"
 #include "ble_srv_common.h"
 
+/**@brief   Macro for defining a ble_hrs instance.
+ *
+ * @param   _name   Name of the instance.
+ * @hideinitializer
+ */
+#define BLE_CUS_DEF(_name)                                                                          \
+static ble_cus_t _name;                                                                             \
+NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                                 \
+                     BLE_HRS_BLE_OBSERVER_PRIO,                                                     \
+                     ble_cus_on_ble_evt, &_name)
+
+
+
 // CUSTOM_SERVICE_UUID_BASE f364adc9-b000-4042-ba50-05ca45bf8abc
 
 #define CUSTOM_SERVICE_UUID_BASE         {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, \
@@ -75,7 +88,7 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
  * @param[in]   p_cus      Custom Service structure.
  * @param[in]   p_ble_evt  Event received from the BLE stack.
  */
-void ble_cus_on_ble_evt(ble_cus_t * p_bas, ble_evt_t * p_ble_evt);
+void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context);
 
 /**@brief Function for updating the custom value.
  *
