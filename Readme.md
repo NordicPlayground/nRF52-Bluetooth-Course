@@ -5,6 +5,9 @@ This tutorial will show you how to create a custom service with a custom value c
 
 The aim of this tutorial is simply to create one service with one characteristic without too much theory in between the steps. There are no .c or .h files that needs to be downloaded as we will be starting from scratch in the ble_app_template project. 
 
+However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v14.0.0/examples/ble_peripheral. 
+
+
 <!---
 ## TODO
 
@@ -17,6 +20,11 @@ The aim of this tutorial is simply to create one service with one characteristic
 - nRF51 DK or nRF52 DK
 - Latest version of Keil ARM MKD 
 - nRF Commandline Tools
+
+## Supports
+
+- Keil
+- Make and gcc
 
 ## Tutorial Steps
 <!---
