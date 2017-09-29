@@ -21,7 +21,7 @@ However, if you simply want to compile the example without doing the tutorial st
 - Latest version of Keil ARM MKD 
 - nRF Commandline Tools
 
-## Supports
+## IDE/Toolchain Support
 
 - Keil
 - Make and gcc
