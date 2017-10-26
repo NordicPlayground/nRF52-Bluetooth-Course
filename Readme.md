@@ -309,7 +309,7 @@ to
 #define NRF_SDH_BLE_VS_UUID_COUNT 1
 ```
 
-Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x200020F0 and size 0xDF10, as shown in the screenshot below
+Now, adding a vendor-specific UUID to the BLE stack results in the RAM requirement of the SoftDevice increasing, which we need to take into account. 
 <!---
 - [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
 --->
