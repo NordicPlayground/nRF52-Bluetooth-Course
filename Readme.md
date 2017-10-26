@@ -313,9 +313,18 @@ Now, adding a vendor-specific UUID to the BLE stack results in the RAM requireme
 <!---
 - [ ] Optional: Add section where the function of app_ram_base since its useful for debugging.
 --->
-Memory Settings  | 
+Segger Embedded Studio(SES): Click "Project -> Edit Options", select the Common Configuration, then select Linker and then open the Section Placement Macros Section abd modify RAM_START IRAM1 to 0x200020F0 and RAM_SIZE to 0xDF10, as shown in the screenshot below
+
+Memory Settings Segger Embedded Studio | 
+------------ |
+<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings_SDK_v14_SES.JPG" width="1000"> |
+
+Keil: Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x200020F0 and size 0xDF10, as shown in the screenshot below
+
+Memory Settings Keil | 
 ------------ |
 <img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings_SDK_v14.JPG" width="1000"> |
+
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
