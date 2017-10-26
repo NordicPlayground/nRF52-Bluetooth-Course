@@ -1,11 +1,11 @@
 Custom Service Tutorial
 -------
 
-This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v14.0.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial.
+This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v14.1.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial. Note, these tutorials are compatible with an older SDK version, but the theory regarding Bluetooth Low Energy has not changed much.
 
 The aim of this tutorial is simply to create one service with one characteristic without too much theory in between the steps. There are no .c or .h files that needs to be downloaded as we will be starting from scratch in the ble_app_template project. 
 
-However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v14.0.0/examples/ble_peripheral. 
+However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v14.1.0/examples/ble_peripheral. 
 
 
 <!---
@@ -14,17 +14,19 @@ However, if you simply want to compile the example without doing the tutorial st
 - [ ] Add register definition file (.svd) and retarget of printf to the ble_app_uart Segger Embedded Project.
 --->
 
-## Requirements
+## HW Requirements
+- nRF52 Development Kit 
 
-- nRF5 SDK v14.0.0
-- nRF51 DK or nRF52 DK
-- Latest version of Keil ARM MKD 
-- nRF Commandline Tools
+## SW Requirements
+- nRF5 SDK v14.1.0 [download page](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/)
+- Latest version of Keil ARM MKD [download page](https://devzone.nordicsemi.com/tutorials/8) or latest version of Segger Embedded Studio[download page](https://www.segger.com/downloads/embedded-studio/)
+- nRF Command Line Tools [download page](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.tools/dita/tools/nrf5x_command_line_tools/nrf5x_installation.html?cp=5_1_1)
 
 ## IDE/Toolchain Support
 
 - Keil
-- Make and gcc
+- Make and GCC
+- Segger Embedded Studio
 
 ## Tutorial Steps
 <!---
