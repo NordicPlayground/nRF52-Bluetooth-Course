@@ -1056,13 +1056,14 @@ The next step is to add the Notify property to the Custom Value Characteristic a
 
 This will add a Client Characteristic Configuration Descriptor or CCCD to the Custom Value Characteristic which allows us to enable or disable notifications by writing to the CCCD. Notification is by default disabled and in order to enable it we have to write 0x0001 to the CCCD. Remember that everytime we write to a characteristic or one of its descriptors, we will get a Write event, thus we need to handle the case where a peer writes to the CCCD in the on_write() function. 
 
-However, before modifying the on_write() function we need do is to add an additional event, BLE_CUS_EVT_NOTIFICATION_ENABLED, to the ble_cus_evt_type_t enumeration in ble_cus.h
+However, before modifying the on_write() function we need do is to add two additional event, BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED, to the ble_cus_evt_type_t enumeration in ble_cus.h
 
 ```c
 /**@brief Custom Service event type. */
 typedef enum
 {
     BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
+    BLE_CUS_EVT_NOTIFICATION_DISABLED,                            /**< Custom value notification disabled event. */
     BLE_CUS_EVT_DISCONNECTED,
     BLE_CUS_EVT_CONNECTED
 } ble_cus_evt_type_t;
@@ -1137,7 +1138,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 }
 ```
 
-Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED to the on_cus_evt() event handler in main.c, i.e. 
+Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED to the on_cus_evt() event handler in main.c, i.e. 
 
 ```c
 static void on_cus_evt(ble_cus_t     * p_cus_service,
@@ -1147,6 +1148,9 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
     switch(p_evt->evt_type)
     {
         case BLE_CUS_EVT_NOTIFICATION_ENABLED:
+            break;
+
+        case BLE_CUS_EVT_NOTIFICATION_DISABLED:
             break;
 
         case BLE_CUS_EVT_CONNECTED :
@@ -1196,6 +1200,13 @@ Great, we now have a application timer and the next step is to start the applica
 
 ```c         
            err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
+           APP_ERROR_CHECK(err_code);
+```
+
+Similarly, we want the notification timer to stop when we get the BLE_CUS_EVT_NOTIFICATION_DISABLED event. Thus, we add the following snippet to the BLE_CUS_EVT_NOTIFICATION_DISABLED case in the on_cus_evt event handler in main.c
+
+```c         
+           err_code = app_timer_stop(m_notification_timer_id);
            APP_ERROR_CHECK(err_code);
 ```
 
