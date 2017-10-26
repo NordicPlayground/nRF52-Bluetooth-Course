@@ -384,10 +384,16 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
     {
         case BLE_CUS_EVT_NOTIFICATION_ENABLED:
             
-           err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
-           APP_ERROR_CHECK(err_code);
-        
+             err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
+             APP_ERROR_CHECK(err_code);
+             break;
+
+        case BLE_CUS_EVT_NOTIFICATION_DISABLED:
+
+            err_code = app_timer_stop(m_notification_timer_id);
+            APP_ERROR_CHECK(err_code);
             break;
+
         case BLE_CUS_EVT_CONNECTED:
             break;
 

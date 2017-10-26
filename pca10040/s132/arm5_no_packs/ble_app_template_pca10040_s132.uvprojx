@@ -10,12 +10,12 @@
       <TargetName>nrf52832_xxaa</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060300::V5.06 update 3 (build 300)::ARMCC</pCCUsed>
+      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>nRF52832_xxAA</Device>
           <Vendor>Nordic Semiconductor</Vendor>
-          <PackID>NordicSemiconductor.nRF_InternalDeviceFamilyPack.8.14.1</PackID>
+          <PackID>NordicSemiconductor.nRF_DeviceFamilyPack.8.15.0</PackID>
           <PackURL>http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/</PackURL>
           <Cpu>IROM(0x00000000,0x80000) IRAM(0x20000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(64000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -330,10 +330,9 @@
             <vShortWch>0</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--reduce_paths</MiscControls>
-              <Define> BOARD_PCA10040 CONFIG_GPIO_AS_PINRESET NRF52 NRF52832_XXAA NRF52_PAN_74 NRF_SD_BLE_API_VERSION=5 S132 SOFTDEVICE_PRESENT SWI_DISABLE0</Define>
+              <Define>BOARD_PCA10040 CONFIG_GPIO_AS_PINRESET NRF52 NRF52832_XXAA NRF52_PAN_74 NRF_SD_BLE_API_VERSION=5 S132 SOFTDEVICE_PRESENT SWI_DISABLE0</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\config;..\..\..\..\..\..\components;..\..\..\..\..\..\components\ble\ble_advertising;..\..\..\..\..\..\components\ble\ble_dtm;..\..\..\..\..\..\components\ble\ble_racp;..\..\..\..\..\..\components\ble\ble_services\ble_ancs_c;..\..\..\..\..\..\components\ble\ble_services\ble_ans_c;..\..\..\..\..\..\components\ble\ble_services\ble_bas;..\..\..\..\..\..\components\ble\ble_services\ble_bas_c;..\..\..\..\..\..\components\ble\ble_services\ble_cscs;..\..\..\..\..\..\components\ble\ble_services\ble_cts_c;..\..\..\..\..\..\components\ble\ble_services\ble_dfu;..\..\..\..\..\..\components\ble\ble_services\ble_dis;..\..\..\..\..\..\components\ble\ble_services\ble_gls;..\..\..\..\..\..\components\ble\ble_services\ble_hids;..\..\..\..\..\..\components\ble\ble_services\ble_hrs;..\..\..\..\..\..\components\ble\ble_services\ble_hrs_c;..\..\..\..\..\..\components\ble\ble_services\ble_hts;..\..\..\..\..\..\components\ble\ble_services\ble_ias;..\..\..\..\..\..\components\ble\ble_services\ble_ias_c;..\..\..\..\..\..\components\ble\ble_services\ble_lbs;..\..\..\..\..\..\components\ble\ble_services\ble_lbs_c;..\..\..\..\..\..\components\ble\ble_services\ble_lls;..\..\..\..\..\..\components\ble\ble_services\ble_nus;..\..\..\..\..\..\components\ble\ble_services\ble_nus_c;..\..\..\..\..\..\components\ble\ble_services\ble_rscs;..\..\..\..\..\..\components\ble\ble_services\ble_rscs_c;..\..\..\..\..\..\components\ble\ble_services\ble_tps;..\..\..\..\..\..\components\ble\common;..\..\..\..\..\..\components\ble\nrf_ble_gatt;..\..\..\..\..\..\components\ble\nrf_ble_qwr;..\..\..\..\..\..\components\ble\peer_manager;..\..\..\..\..\..\components\boards;..\..\..\..\..\..\components\drivers_nrf\clock;..\..\..\..\..\..\components\drivers_nrf\common;..\..\..\..\..\..\components\drivers_nrf\comp;..\..\..\..\..\..\components\drivers_nrf\delay;..\..\..\..\..\..\components\drivers_nrf\gpiote;..\..\..\..\..\..\components\drivers_nrf\hal;..\..\..\..\..\..\components\drivers_nrf\i2s;..\..\..\..\..\..\components\drivers_nrf\lpcomp;..\..\..\..\..\..\components\drivers_nrf\pdm;..\..\..\..\..\..\components\drivers_nrf\power;..\..\..\..\..\..\components\drivers_nrf\ppi;..\..\..\..\..\..\components\drivers_nrf\pwm;..\..\..\..\..\..\components\drivers_nrf\qdec;..\..\..\..\..\..\components\drivers_nrf\rng;..\..\..\..\..\..\components\drivers_nrf\rtc;..\..\..\..\..\..\components\drivers_nrf\saadc;..\..\..\..\..\..\components\drivers_nrf\spi_master;..\..\..\..\..\..\components\drivers_nrf\spi_slave;..\..\..\..\..\..\components\drivers_nrf\swi;..\..\..\..\..\..\components\drivers_nrf\timer;..\..\..\..\..\..\components\drivers_nrf\twi_master;..\..\..\..\..\..\components\drivers_nrf\twis_slave;..\..\..\..\..\..\components\drivers_nrf\uart;..\..\..\..\..\..\components\drivers_nrf\usbd;..\..\..\..\..\..\components\drivers_nrf\wdt;..\..\..\..\..\..\components\libraries\atomic;..\..\..\..\..\..\components\libraries\atomic_fifo;..\..\..\..\..\..\components\libraries\balloc;..\..\..\..\..\..\components\libraries\bsp;..\..\..\..\..\..\components\libraries\button;..\..\..\..\..\..\components\libraries\crc16;..\..\..\..\..\..\components\libraries\crc32;..\..\..\..\..\..\components\libraries\csense;..\..\..\..\..\..\components\libraries\csense_drv;..\..\..\..\..\..\components\libraries\ecc;..\..\..\..\..\..\components\libraries\experimental_cli;..\..\..\..\..\..\components\libraries\experimental_log;..\..\..\..\..\..\components\libraries\experimental_log\src;..\..\..\..\..\..\components\libraries\experimental_memobj;..\..\..\..\..\..\components\libraries\experimental_section_vars;..\..\..\..\..\..\components\libraries\fds;..\..\..\..\..\..\components\libraries\fstorage;..\..\..\..\..\..\components\libraries\gpiote;..\..\..\..\..\..\components\libraries\hardfault;..\..\..\..\..\..\components\libraries\hci;..\..\..\..\..\..\components\libraries\led_softblink;..\..\..\..\..\..\components\libraries\low_power_pwm;..\..\..\..\..\..\components\libraries\mem_manager;..\..\..\..\..\..\components\libraries\mutex;..\..\..\..\..\..\components\libraries\pwm;..\..\..\..\..\..\components\libraries\pwr_mgmt;..\..\..\..\..\..\components\libraries\queue;..\..\..\..\..\..\components\libraries\scheduler;..\..\..\..\..\..\components\libraries\sensorsim;..\..\..\..\..\..\components\libraries\slip;..\..\..\..\..\..\components\libraries\strerror;..\..\..\..\..\..\components\libraries\timer;..\..\..\..\..\..\components\libraries\twi;..\..\..\..\..\..\components\libraries\uart;..\..\..\..\..\..\components\libraries\usbd;..\..\..\..\..\..\components\libraries\usbd\class\audio;..\..\..\..\..\..\components\libraries\usbd\class\cdc;..\..\..\..\..\..\components\libraries\usbd\class\cdc\acm;..\..\..\..\..\..\components\libraries\usbd\class\hid;..\..\..\..\..\..\components\libraries\usbd\class\hid\generic;..\..\..\..\..\..\components\libraries\usbd\class\hid\kbd;..\..\..\..\..\..\components\libraries\usbd\class\hid\mouse;..\..\..\..\..\..\components\libraries\usbd\class\msc;..\..\..\..\..\..\components\libraries\usbd\config;..\..\..\..\..\..\components\libraries\util;..\..\..\..\..\..\components\softdevice\common;..\..\..\..\..\..\components\softdevice\s132\headers;..\..\..\..\..\..\components\softdevice\s132\headers\nrf52;..\..\..\..\..\..\components\toolchain;..\..\..\..\..\..\external\fprintf;..\..\..\..\..\..\external\segger_rtt;..\config</IncludePath>
             </VariousControls>
@@ -348,7 +347,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls> --cpreproc_opts=-DBOARD_PCA10040,-DCONFIG_GPIO_AS_PINRESET,-DNRF52,-DNRF52832_XXAA,-DNRF52_PAN_74,-DNRF_SD_BLE_API_VERSION=5,-DS132,-DSOFTDEVICE_PRESENT,-DSWI_DISABLE0</MiscControls>
               <Define> BOARD_PCA10040 CONFIG_GPIO_AS_PINRESET NRF52 NRF52832_XXAA NRF52_PAN_74 NRF_SD_BLE_API_VERSION=5 S132 SOFTDEVICE_PRESENT SWI_DISABLE0</Define>
@@ -438,7 +436,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -498,7 +495,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -553,7 +549,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -608,7 +603,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -668,7 +662,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -723,7 +716,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -778,7 +770,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -833,7 +824,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -888,7 +878,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -943,7 +932,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -998,7 +986,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1053,7 +1040,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1108,7 +1094,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1163,7 +1148,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1218,7 +1202,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1273,7 +1256,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1328,7 +1310,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1383,7 +1364,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1438,7 +1418,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1493,7 +1472,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1548,7 +1526,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1608,7 +1585,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1663,7 +1639,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1718,7 +1693,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1773,7 +1747,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1833,7 +1806,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1888,7 +1860,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1943,7 +1914,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1998,7 +1968,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2053,7 +2022,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2108,7 +2076,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2163,7 +2130,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2218,7 +2184,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2273,7 +2238,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2328,7 +2292,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2383,7 +2346,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2438,7 +2400,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2493,7 +2454,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2548,7 +2508,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2603,7 +2562,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2658,7 +2616,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2713,7 +2670,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2768,7 +2724,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2823,7 +2778,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2878,7 +2832,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2933,7 +2886,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2988,7 +2940,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3048,7 +2999,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3103,7 +3053,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3158,7 +3107,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3213,7 +3161,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3268,7 +3215,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3323,7 +3269,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3340,9 +3285,9 @@
           <GroupName>nRF_Segger_RTT</GroupName>
           <Files>
             <File>
-              <FileName>RTT_Syscalls_KEIL.c</FileName>
+              <FileName>SEGGER_RTT_Syscalls_KEIL.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\external\segger_rtt\RTT_Syscalls_KEIL.c</FilePath>
+              <FilePath>..\..\..\..\..\..\external\segger_rtt\SEGGER_RTT_Syscalls_KEIL.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>0</UseCPPCompiler>
@@ -3383,7 +3328,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3438,7 +3382,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3493,7 +3436,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3553,7 +3495,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3608,7 +3549,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3663,7 +3603,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3702,7 +3641,7 @@
         <TargetCommonOption>
           <Device>nRF52832_xxAA</Device>
           <Vendor>Nordic Semiconductor</Vendor>
-          <PackID>NordicSemiconductor.nRF_InternalDeviceFamilyPack.8.14.1</PackID>
+          <PackID>NordicSemiconductor.nRF_DeviceFamilyPack.8.14.1</PackID>
           <PackURL>http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/</PackURL>
           <Cpu>IROM(0x00000000,0x80000) IRAM(0x20000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(64000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -4017,7 +3956,6 @@
             <vShortWch>0</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--reduce_paths</MiscControls>
               <Define></Define>
@@ -4035,7 +3973,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls> --cpreproc_opts=</MiscControls>
               <Define></Define>
@@ -4125,7 +4062,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4185,7 +4121,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4240,7 +4175,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4295,7 +4229,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4355,7 +4288,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4410,7 +4342,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4465,7 +4396,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4520,7 +4450,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4575,7 +4504,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4630,7 +4558,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4685,7 +4612,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4740,7 +4666,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4795,7 +4720,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4850,7 +4774,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4905,7 +4828,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4960,7 +4882,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5015,7 +4936,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5070,7 +4990,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5125,7 +5044,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5180,7 +5098,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5235,7 +5152,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5295,7 +5211,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5350,7 +5265,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5405,7 +5319,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5460,7 +5373,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5520,7 +5432,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5575,7 +5486,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5630,7 +5540,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5685,7 +5594,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5740,7 +5648,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5795,7 +5702,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5850,7 +5756,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5905,7 +5810,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5960,7 +5864,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6015,7 +5918,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6070,7 +5972,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6125,7 +6026,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6180,7 +6080,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6235,7 +6134,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6290,7 +6188,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6345,7 +6242,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6400,7 +6296,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6455,7 +6350,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6510,7 +6404,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6565,7 +6458,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6620,7 +6512,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6675,7 +6566,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6735,7 +6625,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6790,7 +6679,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6845,7 +6733,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6900,7 +6787,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6955,7 +6841,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7010,7 +6895,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7027,9 +6911,9 @@
           <GroupName>nRF_Segger_RTT</GroupName>
           <Files>
             <File>
-              <FileName>RTT_Syscalls_KEIL.c</FileName>
+              <FileName>SEGGER_RTT_Syscalls_KEIL.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\external\segger_rtt\RTT_Syscalls_KEIL.c</FilePath>
+              <FilePath>..\..\..\..\..\..\external\segger_rtt\SEGGER_RTT_Syscalls_KEIL.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>0</UseCPPCompiler>
@@ -7070,7 +6954,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7125,7 +7008,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7180,7 +7062,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7240,7 +7121,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7295,7 +7175,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7350,7 +7229,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -7415,7 +7293,6 @@
                 <vShortWch>2</vShortWch>
                 <v6Lto>0</v6Lto>
                 <v6WtE>2</v6WtE>
-                <v6Rtti>2</v6Rtti>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -7433,7 +7310,6 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <uClangAs>2</uClangAs>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -7486,7 +7362,6 @@
                 <vShortWch>2</vShortWch>
                 <v6Lto>0</v6Lto>
                 <v6WtE>2</v6WtE>
-                <v6Rtti>2</v6Rtti>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -7504,7 +7379,6 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <uClangAs>2</uClangAs>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -7537,18 +7411,28 @@
     </packages>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
-        <package name="CMSIS" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.0.0" condition="Cortex-M ARMv8-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0-Beta4"/>
         <targetInfos>
-          <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice"/>
+          <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice" versionMatchMode=""/>
+        </targetInfos>
+      </component>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="Cortex-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+        <targetInfos>
           <targetInfo name="nrf52832_xxaa" versionMatchMode="fixed"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="Startup" Cvendor="NordicSemiconductor" Cversion="8.14.1" condition="nRF5x Series CMSIS Device">
-        <package name="nRF_DeviceFamilyPack" url="http://developer.nordicsemi.com/nRF51_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
+      <component Cclass="Device" Cgroup="Startup" Cvendor="NordicSemiconductor" Cversion="8.14.1" condition="nRF52832 Device and CMSIS">
+        <package license="License\license.txt" name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
         <targetInfos>
-          <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice"/>
           <targetInfo name="nrf52832_xxaa" versionMatchMode="fixed"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="Startup" Cvendor="NordicSemiconductor" Cversion="8.15.0" condition="nRF52832 Device and CMSIS">
+        <package license="License\license.txt" name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.15.0"/>
+        <targetInfos>
+          <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice" versionMatchMode=""/>
         </targetInfos>
       </component>
     </components>
@@ -7556,7 +7440,7 @@
       <file attr="config" category="source" condition="ARM Compiler" name="Device\Source\arm\arm_startup_nrf52.s" version="8.14.1">
         <instance index="0">RTE\Device\nRF52832_xxAA\arm_startup_nrf52.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="NordicSemiconductor" Cversion="8.14.1" condition="nRF52832 Device and CMSIS"/>
-        <package name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
+        <package license="License\license.txt" name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
         <targetInfos>
           <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice"/>
           <targetInfo name="nrf52832_xxaa"/>
@@ -7565,7 +7449,7 @@
       <file attr="config" category="source" name="Device\Source\system_nrf52.c" version="8.14.1">
         <instance index="0">RTE\Device\nRF52832_xxAA\system_nrf52.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="NordicSemiconductor" Cversion="8.14.1" condition="nRF52832 Device and CMSIS"/>
-        <package name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
+        <package license="License\license.txt" name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.14.1"/>
         <targetInfos>
           <targetInfo excluded="1" name="flash_s132_nrf52_5.0.0_softdevice"/>
           <targetInfo name="nrf52832_xxaa"/>
