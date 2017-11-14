@@ -37,6 +37,13 @@ However, if you simply want to compile the example without doing the tutorial st
 
 [link to webpage](www.google.com)
 --->
+### Step 0
+1. Navigate to the nRF5_SDK_14.1.0_1dda907/examples/ble_peripheral folder and find the ble_app_template project folder.
+
+2. Create a copy of the folder and name it `custom_ble_service_example`.
+
+3. Navigate to custom_ble_service_example\pca10040\s132\ses and open the ble_app_template_pca10040_s132.emProject project
+
 ### Step 1 - Creating a Custom Base UUID 
 
 The first thing we need to do is to create a new .c file, lets call it ble_cus.c (**Cu**stom **S**ervice), and its accompaning .h file ble_cus.h.  At the top of the header file we'll need to include the following .h files
