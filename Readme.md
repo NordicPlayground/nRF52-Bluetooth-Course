@@ -14,6 +14,24 @@ However, if you simply want to compile the example without doing the tutorial st
 - [ ] Add register definition file (.svd) and retarget of printf to the ble_app_uart Segger Embedded Project.
 --->
 
+## Course Evaluation 
+
+Please take 2 minutes to fill out the Course Evaluation Form,link below, at the end of the course.
+
+[Course Evaluation Form](https://docs.google.com/forms/d/e/1FAIpQLSfZIr9SsAr5Gm3za6rc4yYhO6xgOACvx9umaXq6YaCNqNWGbg/viewform?usp=sf_link)  
+
+It is important to us that you tell us what you liked/did not like about the course so that we can improve the course material and presentations.
+
+The evaluation is of course anonymous.
+
+## Presentations
+The presentations from the course can be downloaded in PDF-format using the links below:
+
+[Nordic Introduction](https://drive.google.com/open?id=1UV0YcPMnzqEFaf7FXfKMM1ya_2WyJjiX)
+[nRF52 Series Introduction](https://drive.google.com/open?id=1DJhOiuR6F2JIaHdpkApCtCWzILYU1nhw)
+[Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1oK3d_zCZY6K-xsa3hajiHMVA94GwB-nw)
+[SoftDevice Introduction](https://drive.google.com/open?id=1RqaAA-yGL2DICAQJJzZ1g6qfeXtXlSGc)
+
 ## HW Requirements
 - nRF52 Development Kit 
 
