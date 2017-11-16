@@ -28,8 +28,11 @@ The evaluation is of course anonymous.
 The presentations from the course can be downloaded in PDF-format using the links below:
 
 [Nordic Introduction](https://drive.google.com/open?id=1UV0YcPMnzqEFaf7FXfKMM1ya_2WyJjiX)
+
 [nRF52 Series Introduction](https://drive.google.com/open?id=1DJhOiuR6F2JIaHdpkApCtCWzILYU1nhw)
+
 [Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1oK3d_zCZY6K-xsa3hajiHMVA94GwB-nw)
+
 [SoftDevice Introduction](https://drive.google.com/open?id=1RqaAA-yGL2DICAQJJzZ1g6qfeXtXlSGc)
 
 ## HW Requirements
@@ -39,6 +42,7 @@ The presentations from the course can be downloaded in PDF-format using the link
 - nRF5 SDK v14.1.0 [download page](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/)
 - Latest version of Keil ARM MKD [download page](https://devzone.nordicsemi.com/tutorials/8) or latest version of Segger Embedded Studio[download page](https://www.segger.com/downloads/embedded-studio/)
 - nRF Command Line Tools [download page](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.tools/dita/tools/nrf5x_command_line_tools/nrf5x_installation.html?cp=5_1_1)
+- nRF Connect for Mobile, [download page](https://www.nordicsemi.com/eng/Products/Nordic-mobile-Apps/nRF-Connect-for-mobile-previously-called-nRF-Master-Control-Panel)
 
 ## IDE/Toolchain Support
 
