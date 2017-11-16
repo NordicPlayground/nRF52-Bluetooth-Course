@@ -31,7 +31,7 @@ The presentations from the course can be downloaded in PDF-format using the link
 
 [nRF52 Series Introduction](https://drive.google.com/open?id=1DJhOiuR6F2JIaHdpkApCtCWzILYU1nhw)
 
-[Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1oK3d_zCZY6K-xsa3hajiHMVA94GwB-nw)
+[Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1wZPqWX-K2Nr8uKMYV12MjwMLRnbCS-9J)
 
 [SoftDevice Introduction](https://drive.google.com/open?id=1RqaAA-yGL2DICAQJJzZ1g6qfeXtXlSGc)
 
