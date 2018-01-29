@@ -1,11 +1,11 @@
 Custom Service Tutorial
 -------
 
-This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v14.1.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial. Note, these tutorials are compatible with an older SDK version, but the theory regarding Bluetooth Low Energy has not changed much.
+This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v14.2.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial. Note, these tutorials are compatible with an older SDK version, but the theory regarding Bluetooth Low Energy has not changed much.
 
 The aim of this tutorial is simply to create one service with one characteristic without too much theory in between the steps. There are no .c or .h files that needs to be downloaded as we will be starting from scratch in the ble_app_template project. 
 
-However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v14.1.0/examples/ble_peripheral. 
+However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v14.2.0/examples/ble_peripheral. 
 
 
 <!---
@@ -13,7 +13,7 @@ However, if you simply want to compile the example without doing the tutorial st
 
 - [ ] Add register definition file (.svd) and retarget of printf to the ble_app_uart Segger Embedded Project.
 --->
-
+<!---
 ## Course Evaluation 
 
 Please take 2 minutes to fill out the Course Evaluation Form,link below, at the end of the course.
@@ -34,21 +34,26 @@ The presentations from the course can be downloaded in PDF-format using the link
 [Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1wZPqWX-K2Nr8uKMYV12MjwMLRnbCS-9J)
 
 [SoftDevice Introduction](https://drive.google.com/open?id=1RqaAA-yGL2DICAQJJzZ1g6qfeXtXlSGc)
+--->
 
 ## HW Requirements
 - nRF52 Development Kit 
 
 ## SW Requirements
-- nRF5 SDK v14.1.0 [download page](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/)
-- Latest version of Keil ARM MKD [download page](https://devzone.nordicsemi.com/tutorials/8) or latest version of Segger Embedded Studio[download page](https://www.segger.com/downloads/embedded-studio/)
-- nRF Command Line Tools [download page](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.tools/dita/tools/nrf5x_command_line_tools/nrf5x_installation.html?cp=5_1_1)
+- nRF5 SDK v14.2.0 [download page](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/)
+- Latest version of Segger Embedded Studio[download page](https://www.segger.com/downloads/embedded-studio/) or latest version of Keil ARM MKD [download page](https://devzone.nordicsemi.com/tutorials/8) or the GNU ARM Embedded Toolchain 4.9-2015-q3-update [download page](https://launchpad.net/gcc-arm-embedded/4.9/4.9-2015-q3-update)
 - nRF Connect for Mobile, [download page](https://www.nordicsemi.com/eng/Products/Nordic-mobile-Apps/nRF-Connect-for-mobile-previously-called-nRF-Master-Control-Panel)
+- nRF Command Line Tools [download page](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.tools/dita/tools/nrf5x_command_line_tools/nrf5x_installation.html?cp=5_1_1)
+
 
 ## IDE/Toolchain Support
 
-- Keil
-- Make and GCC
+Nordic Semiconductor added Segger Embedded Studio support in SDK v14.1.0 and the tutorial has been written with that IDE in mind, i.e. steps to change Memory Settings/build Parameters will mainly be for SES. However, the code should compile with the other IDEs/toolchains in the list. 
+
 - Segger Embedded Studio
+- Make and GCC
+- Keil
+
 
 ## Tutorial Steps
 <!---
@@ -59,14 +64,16 @@ The presentations from the course can be downloaded in PDF-format using the link
 
 [link to webpage](www.google.com)
 --->
-### Step 0
-1. Navigate to the nRF5_SDK_14.1.0_1dda907/examples/ble_peripheral folder and find the ble_app_template project folder.
+### Step 1 - Getting started  
+1. Download nRF5_SDK_14.2.0_17b948a from the [download page](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/) and extract the zip to your drive, e.g. C:\NordicSemi\nRF5_SDK_14.2.0_17b948a.
 
-2. Create a copy of the folder and name it `custom_ble_service_example`.
+2. Navigate to the nRF5_SDK_14.2.0_17b948a/examples/ble_peripheral folder and find the ble_app_template project folder.
 
-3. Navigate to custom_ble_service_example\pca10040\s132\ses and open the ble_app_template_pca10040_s132.emProject project
+3. Create a copy of the folder and name it `custom_ble_service_example`.
 
-### Step 1 - Creating a Custom Base UUID 
+4. Navigate to custom_ble_service_example\pca10040\s132\ses and open the ble_app_template_pca10040_s132.emProject project
+
+### Step 2 - Creating a Custom Base UUID 
 
 The first thing we need to do is to create a new .c file, lets call it ble_cus.c (**Cu**stom **S**ervice), and its accompaning .h file ble_cus.h.  At the top of the header file we'll need to include the following .h files
 
