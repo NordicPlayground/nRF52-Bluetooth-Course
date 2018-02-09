@@ -778,7 +778,6 @@ static void advertising_init(void)
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }
 
-
 /**@brief Function for initializing buttons and leds.
  *
  * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
@@ -841,7 +840,6 @@ static void advertising_start(bool erase_bonds)
 int main(void)
 {
     bool erase_bonds;
-
     // Initialize.
     log_init();
     timers_init();
@@ -865,7 +863,7 @@ int main(void)
     {
         if (NRF_LOG_PROCESS() == false)
         {
-            power_manage();
+            //power_manage();
         }
     }
 }
