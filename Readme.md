@@ -75,7 +75,7 @@ Nordic Semiconductor added Segger Embedded Studio support in SDK v14.1.0 and the
 
 ### Step 2 - Creating a Custom Base UUID 
 
-The first thing we need to do is to create a new .c file, lets call it ble_cus.c (**Cu**stom **S**ervice), and its accompaning .h file ble_cus.h.  At the top of the header file we'll need to include the following .h files
+The first thing we need to do is to create a new .c file, lets call it ble_cus.c (**Cu**stom **S**ervice), and its accompaning .h file ble_cus.h. Create the two files in the same folder as the main.c file.   At the top of the header file ble_cus.h we'll need to include the following .h files
 
 ```c
 #include <stdint.h>
@@ -84,26 +84,14 @@ The first thing we need to do is to create a new .c file, lets call it ble_cus.c
 #include "ble_srv_common.h"
 ```
 
-The next step is to add a macro for defining a Custom Service(ble_cus) instance by adding the following snippet below the includes in main.c
 
-```c
-/**@brief   Macro for defining a ble_cus instance.
- *
- * @param   _name   Name of the instance.
- * @hideinitializer
- */
-#define BLE_CUS_DEF(_name)                                                                          \
-static ble_cus_t _name;                                                                             \
-
-```
-we will use this macro to define a custom service instance in main.c later in the tutorial. 
 
 Next, we're going to need a 128-bit UUID for our custom service since we're not going to implement our service with one of the  16-bit Bluetooth SIG UUIDs that are reserved for standardized profiles. There are several ways to generate a 128-bit UUID, but we'll use [this](https://www.uuidgenerator.net/version4) Online UUID generator. The webpage will generate a random 128-bit UUID, which in my case was
 
 ```
 f364adc9-b000-4042-ba50-05ca45bf8abc
 ```
-The UUID is given as the sixteen octets of a UUID are represented as 32 hexadecimal (base 16) digits, displayed in five groups separated by hyphens, in the form 8-4-4-4-12. The 16 octets are given in big-endian, while we use the small-endian representation in our SDK. Thus, we must reverse the byte-ordering when we define our UUID base, as shown below.
+The UUID is given as the sixteen octets of a UUID are represented as 32 hexadecimal (base 16) digits, displayed in five groups separated by hyphens, in the form 8-4-4-4-12. The 16 octets are given in big-endian, while we use the small-endian representation in our SDK. Thus, we must reverse the byte-ordering when we define our UUID base in the ble_cus.h, as shown below.
 
 ```c
 #define CUSTOM_SERVICE_UUID_BASE         {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, \
@@ -130,10 +118,24 @@ First things first, we need to include the ble_cus.h header file we just created
 #include "boards.h"
 ```
 
+The next step is to add a macro for defining a Custom Service(ble_cus) instance by adding the following snippet below the includes in ble_cus.h
+
+```c
+/**@brief   Macro for defining a ble_cus instance.
+ *
+ * @param   _name   Name of the instance.
+ * @hideinitializer
+ */
+#define BLE_CUS_DEF(_name)                                                                          \
+static ble_cus_t _name;                                                                             \
+
+```
+we will use this macro to define a custom service instance in main.c later in the tutorial. 
+
 Ok, so far so good. Now we need to create two structures in ble_cus.h, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
 ```c
-/**@brief Battery Service init structure. This contains all options and data needed for
+/**@brief Custom Service init structure. This contains all options and data needed for
  *        initialization of the service.*/
 typedef struct
 {
