@@ -1001,10 +1001,10 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
 }
 ```
 
-Now, in order to propagate events from our service we need to assign the on_cus_evt function as the event handler function of our service when we initialize the Custom Service. This is done by setting the .evt_handler field of the cus_init struct equal to on_cus_evt, i.e.
+Now, in order to propagate events from our service we need to assign the on_cus_evt function as the event handler function of our service when we initialize the Custom Service. This is done by setting the .evt_handler field of the cus_init struct equal to on_cus_evt in services_init() in main.c, i.e.
 
 ```c
- /* This code belongs in ble_cus_init() in ble_cus.c*/
+ /* This code belongs in services_init in main.c*/
 
     // Set the cus event handler
     cus_init.evt_handler                = on_cus_evt;
