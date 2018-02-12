@@ -1217,7 +1217,7 @@ typedef enum
 Back to the on_write() function, the first thing we should do is to add a if-statement that checks if the handle that is written to matches the handle of the CCCD and that the value has the correct length. If we pass this check we need to check wether notifications has been enabled or not. 
 
 ```c
-/* This code belongs in custom_value_char_add() in ble_cus.c*/
+/* This code belongs in on_write() in ble_cus.c*/
 
     // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
     if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
