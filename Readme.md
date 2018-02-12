@@ -120,6 +120,7 @@ First things first, we need to include the ble_cus.h header file we just created
 #include <string.h>
 #include "nrf_gpio.h"
 #include "boards.h"
+#include "nrf_log.h"
 ```
 
 The next step is to add a macro for defining a Custom Service(ble_cus) instance by adding the following snippet below the includes in ble_cus.h
