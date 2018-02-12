@@ -78,6 +78,7 @@ Nordic Semiconductor added Segger Embedded Studio support in SDK v14.1.0 and the
 The first thing we need to do is to create a new .c file, lets call it ble_cus.c (**Cu**stom **S**ervice), and its accompaning .h file ble_cus.h. Create the two files in the same folder as the main.c file.   At the top of the header file ble_cus.h we'll need to include the following .h files
 
 ```c
+/* This code belongs in ble_cus.h*/
 #include <stdint.h>
 #include <stdbool.h>
 #include "ble.h"
@@ -94,12 +95,14 @@ f364adc9-b000-4042-ba50-05ca45bf8abc
 The UUID is given as the sixteen octets of a UUID are represented as 32 hexadecimal (base 16) digits, displayed in five groups separated by hyphens, in the form 8-4-4-4-12. The 16 octets are given in big-endian, while we use the small-endian representation in our SDK. Thus, we must reverse the byte-ordering when we define our UUID base in the ble_cus.h, as shown below.
 
 ```c
+/* This code belongs in ble_cus.h*/
 #define CUSTOM_SERVICE_UUID_BASE         {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, \
                                           0x40, 0x42, 0xB0, 0x00, 0xC9, 0xAD, 0x64, 0xF3}
 ```
 Now that we have defined our Base UUID, we need to define a 16-bit UUID for the Custom Service and a 16-bit UUID for a Custom Value Characteristic.  
 
 ```c
+/* This code belongs in ble_cus.h*/
 #define CUSTOM_SERVICE_UUID               0x1400
 #define CUSTOM_VALUE_CHAR_UUID            0x1401
 ```
@@ -110,6 +113,7 @@ The values for the 16-bit UUIDs that will be inserted into the base UUID can be 
 First things first, we need to include the ble_cus.h header file we just created as well as some common SDK header files in ble_cus.c.
 
 ```c
+/* This code belongs in ble_cus.c*/
 #include "sdk_common.h"
 #include "ble_srv_common.h"
 #include "ble_cus.h"
@@ -121,6 +125,8 @@ First things first, we need to include the ble_cus.h header file we just created
 The next step is to add a macro for defining a Custom Service(ble_cus) instance by adding the following snippet below the includes in ble_cus.h
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief   Macro for defining a ble_cus instance.
  *
  * @param   _name   Name of the instance.
@@ -135,6 +141,8 @@ we will use this macro to define a custom service instance in main.c later in th
 Ok, so far so good. Now we need to create two structures in ble_cus.h, one Custom Service init structure, ble_cus_init_t struct to hold all the options and data needed to initialize our custom service.
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service init structure. This contains all options and data needed for
  *        initialization of the service.*/
 typedef struct
@@ -147,6 +155,8 @@ typedef struct
 The second struct that we need to create is the Custom Service structure, ble_cus_s, which holds the status information of the service. 
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service structure. This contains various status information for the service. */
 struct ble_cus_s
 {
@@ -159,6 +169,8 @@ struct ble_cus_s
 
 The next step is to add a forward declaration of the ble_cus_t type
 ```c
+/* This code belongs in ble_cus.h*/
+
 // Forward declaration of the ble_cus_t type.
 typedef struct ble_cus_s ble_cus_t;
 ```
@@ -167,6 +179,8 @@ typedef struct ble_cus_s ble_cus_t;
 The first function we're going to implement is ble_cus_init function, which we're going to initialize our service with. First, we need to do is to add its function decleration in the ble_cus.h file. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 /**@brief Function for initializing the Custom Service.
  *
  * @param[out]  p_cus       Custom Service structure. This structure will have to be supplied by
@@ -182,6 +196,8 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
 The first thing we should do upon entering ble_cus_init is to check that none of the pointers that we passed as arguments are NULL and declare the two variables err_code and ble_uuid.
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 {
     if (p_cus == NULL || p_cus_init == NULL)
@@ -196,6 +212,8 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 After verifying that the pointers are valid we can initialize the Custom Service structure
 
 ```c
+/* This code belongs in ble_cus_init() in ble_cus.c*/
+
 // Initialize service structure
 p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 ```
@@ -203,6 +221,8 @@ p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 This consists of setting the connection handle to invalid( should only be valid when we're in a connection). Next, we're going to add our custom (also referred to as vendor specific) base UUID to the BLE stack's table.
 
 ```c
+/* This code belongs in ble_cus_init() ble_cus.c*/
+
 // Add Custom Service UUID
 ble_uuid128_t base_uuid = {CUSTOM_SERVICE_UUID_BASE};
 err_code =  sd_ble_uuid_vs_add(&base_uuid, &p_cus->uuid_type);
@@ -215,6 +235,8 @@ ble_uuid.uuid = CUSTOM_SERVICE_UUID;
 We're almost done, the last thing we have to do is to add the Custom Service decleration to the BLE Stack's GATT table. 
 
 ```c
+/* This code belongs in ble_cus_init() in ble_cus.c*/
+
 // Add the Custom Service
 err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid, &p_cus->service_handle);
 if (err_code != NRF_SUCCESS)
@@ -226,6 +248,8 @@ if (err_code != NRF_SUCCESS)
 If you have followed the steps correctly, then ble_cus_init should look like this.
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 {
     if (p_cus == NULL || p_cus_init == NULL)
@@ -379,6 +403,8 @@ A service is nothing with out a characteristic, so lets add one of those by crea
 
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief Function for adding the Custom Value characteristic.
  *
  * @param[in]   p_cus        Custom Service structure.
@@ -392,6 +418,8 @@ Now, back in ble_cus.c, the first thing we have to do is to add several metadata
 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 /**@brief Function for adding the Custom Value characteristic.
  *
  * @param[in]   p_cus        Custom Service structure.
@@ -412,6 +440,8 @@ static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * 
 Now starts the rather tedious part of populating all these variables, we'll start with char_md, which sets the properties that will be displayed to the central during service discovery.
 
 ```c
+/* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     memset(&char_md, 0, sizeof(char_md));
 
     char_md.char_props.read   = 1;
@@ -427,6 +457,8 @@ Now starts the rather tedious part of populating all these variables, we'll star
 So we want to be able to both write and read to our Custom Value characteristic, but we do not want to enable the notify property until later. Next we're going to populate the attr_md, which actually sets the properties( i.e. accessability of the attribute).
 
 ```c
+    /* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     memset(&attr_md, 0, sizeof(attr_md));
 
     attr_md.read_perm  = p_cus_init->custom_value_char_attr_md.read_perm;
@@ -443,6 +475,8 @@ The permissions set in the attr_md struct should correspond with the properties 
 The next variable that we have to populate is ble_uuid, which is going to hold our CUSTOM_VALUE_CHAR_UUID and is of the same type as the CUSTOM_SERVICE_UUID_BASE, i.e. vendor specific, which we specified in the .uuid_type field of Custom Service strucure when we added the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table.
 
 ```c
+    /* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     ble_uuid.type = p_cus->uuid_type;
     ble_uuid.uuid = CUSTOM_VALUE_CHAR_UUID;
 ```
@@ -450,6 +484,8 @@ The next variable that we have to populate is ble_uuid, which is going to hold o
 Next, we're going to populate the attr_char_value struct, which sets the UUID, points to the attribute metadata and sets the size of the characteristic, in our case a single byte(uint8_t). 
 
 ```c
+    /* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     memset(&attr_char_value, 0, sizeof(attr_char_value));
 
     attr_char_value.p_uuid    = &ble_uuid;
@@ -462,6 +498,8 @@ Next, we're going to populate the attr_char_value struct, which sets the UUID, p
 Finally, we're done populating structs and we can add our characteristic by calling sd_ble_gatts_characteristic_add() with the structs as arguments.
 
 ```c
+/* This code belongs in custom_value_char_add() in ble_cus.c*/
+
 err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md,
                                                &attr_char_value,
                                                &p_cus->custom_value_handles);
@@ -476,6 +514,8 @@ err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md,
 After all that hard work (copy-pasting) your custom_value_char_add() function should look like this. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 {
     uint32_t            err_code;
@@ -530,6 +570,8 @@ static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * 
  The final step is to call custom_value_char_add() at the end of ble_cus_init the service has been added, i.e. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 {
     if (p_cus == NULL || p_cus_init == NULL)
@@ -574,9 +616,11 @@ Service and Characteristic  |
 Great, we now have a Custom Service and a Custom Value Characteristic, but we want to be able to write to the characteristic and perform a specific task based on the value that was written to the characteristic, e.g. turn on a LED. However, before we can do that we need to do some event handling in ble_cus.h and ble_cus.c. 
 
 
-Lastly, we're going to add the ble_cus_on_ble_evt function decleration, which will handle the events of the ble_cus_evt_type_t from our service.
+Lastly, we're going to add the ble_cus_on_ble_evt function decleration to  ble_cus.h, which will handle the events of the ble_cus_evt_type_t from our service.
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief Function for handling the Application's BLE Stack events.
  *
  * @details Handles all events from the BLE stack of interest to the Battery Service.
@@ -592,6 +636,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context);
 We're now going to implement the ble_cus_on_ble_evt event handler in ble_cus.c.Upon entry its considered good practice to check that none of the pointers that we provided as arguments are NULL. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
     ble_cus_t * p_cus = (ble_cus_t *) p_context;
@@ -606,6 +652,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 After the NULL check we're going to add a switch-case to check which event that has been propagated to the application by the SoftDevice. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
     ble_cus_t * p_cus = (ble_cus_t *) p_context;
@@ -633,6 +681,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 For now we only need to care about the BLE_GAP_EVT_CONNECTED and BLE_GAP_EVT_DISCONNECTED events. So let's create the two functions on_connect() and on_disconnect(), starting with on_connect(). The only thing we need to do when we get the Connect event is to assign the connection handle in the Custom Service structure to the connection handle that is passed with the event. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 /**@brief Function for handling the Connect event.
  *
  * @param[in]   p_cus       Custom Service structure.
@@ -647,6 +697,8 @@ static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 Similarly, when we get the Disconnect event, the only thing we need to do is invalidate the connection handle in the Custom Service structure since the connection is now dead.
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 /**@brief Function for handling the Disconnect event.
  *
  * @param[in]   p_cus       Custom Service structure.
@@ -662,6 +714,8 @@ static void on_disconnect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 Now that we have one function for each event we only need to call the function in ble_cus_on_ble_evt, i.e.
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
     ble_cus_t * p_cus = (ble_cus_t *) p_context;
@@ -691,6 +745,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 The last thing we have to do is to make sure that our ble_cus_on_ble_evt event handler function receives SoftDevice events. This is done registering the ble_cus_on_ble_evt event handler as event observer using the NRF_SDH_BLE_OBSERVER() macro. It is convenient to do this within the BLE_CUS_DEF macro that we defined in ble_cus.h, which should be modfied as shown below 
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 #define BLE_CUS_DEF(_name)                                                                          \
 static ble_cus_t _name;                                                                             \
 NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                                 \
@@ -709,6 +765,8 @@ Compile your project and verify that there are no errors before you proceed to t
 
 
  ```c
+/* This code belongs in ble_cus.c*/
+
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
     ble_cus_t * p_cus = (ble_cus_t *) p_context;
@@ -739,6 +797,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 Just like we did for the BLE_GAP_EVT_CONNECTED and BLE_GAP_EVT_DISCONNECTED we're going to create a on_write function that should be called when we get the Write event. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 /**@brief Function for handling the Write event.
  *
  * @param[in]   p_cus       Custom Service structure.
@@ -753,6 +813,8 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 Now, once we get the Write event we have to get hold of the Write event parameters that are passed with the event and we have to verify that the the handle that is written to matches the Custom Value Characteristic handle, i.e.
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
@@ -769,6 +831,8 @@ So lets say that our specifc task is to toggle a LED on the nRF5x DK every time 
 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
@@ -785,6 +849,8 @@ We'we now implemented the necessary event handling so on_write() should be added
 
 
  ```c
+ /* This code belongs in ble_cus.c*/
+
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 {
     ble_cus_t * p_cus = (ble_cus_t *) p_context;
@@ -816,6 +882,8 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
 However, all this will be for nothing if we do not to allow the peer to actually write and/or read from the characteristic value. This is done by adding two lines to services_init() in main.c before we call ble_cus_init(). 
 
 ```c
+/* This code belongs in services_init() in main.c*/
+
 BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.read_perm);
 BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cus_init.custom_value_char_attr_md.write_perm);
 ```
@@ -836,6 +904,8 @@ Until now we've only handled the events that are propagated by the SoftDevice, b
 In order to do this we need to add an event handler to our Custom Service Init structure and Custom Service structure
 
 ```c
+ /* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service init structure. This contains all options and data needed for
  *        initialization of the service.*/
 typedef struct
@@ -859,6 +929,8 @@ struct ble_cus_s
 After adding the event handler to the structures we must make sure that we initialize our service correctly in ble_cus_init()
 
 ```c
+ /* This code belongs in ble_cus_init() in ble_cus.c*/
+
 // Initialize service structure
 p_cus->evt_handler               = p_cus_init->evt_handler;
 p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
@@ -867,6 +939,8 @@ p_cus->conn_handle               = BLE_CONN_HANDLE_INVALID;
 Next, we need to declare an event type specific to our service
 
 ```c
+ /* This code belongs in ble_cus.h*/
+
 typedef enum
 {
     BLE_CUS_EVT_DISCONNECTED,
@@ -878,6 +952,8 @@ For now we're only going to add the BLE_CUS_EVT_CONNECTED and BLE_CUS_EVT_DISCON
 After declaring the event type we need to declare an event structure that holds a ble_cus_evt_type_t event, i.e. 
 
 ```c
+ /* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service event. */
 typedef struct
 {
@@ -888,6 +964,8 @@ typedef struct
  Next, we need declare the Custom Service event handler type 
 
 ```c
+ /* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service event handler type. */
 typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_cus, ble_cus_evt_t * p_evt);
 ```
@@ -895,6 +973,8 @@ typedef void (*ble_cus_evt_handler_t) (ble_cus_t * p_cus, ble_cus_evt_t * p_evt)
 Now, back in main we're going to create the event handler function on_cus_evt, which takes the same parameters as the ble_cus_evt_handler_t type.
 
 ```c
+ /* This code belongs in main.c*/
+
 /**@brief Function for handling the Custom Service Service events.
  *
  * @details This function will be called for all Custom Service events which are passed to
@@ -925,6 +1005,8 @@ static void on_cus_evt(ble_cus_t     * p_cus_service,
 Now, in order to propagate events from our service we need to assign the on_cus_evt function as the event handler function of our service when we initialize the Custom Service. This is done by setting the .evt_handler field of the cus_init struct equal to on_cus_evt, i.e.
 
 ```c
+ /* This code belongs in ble_cus_init() in ble_cus.c*/
+
     // Set the cus event handler
     cus_init.evt_handler                = on_cus_evt;
 ```
@@ -932,6 +1014,8 @@ Now, in order to propagate events from our service we need to assign the on_cus_
 We can now invoke this event handler from ble_cus.c by calling p_cus->evt_handler(p_cus, &evt) and as an example we'll invoke the event handler when we get the BLE_GAP_EVT_CONNECTED event, i.e. in the on_connect() function. It's fairly straight forward,  we simply declare a ble_cus_evt_t variable and set its .evt_type field to the BLE_CUS_EVT_CONNECTED and then invoke the event handler with said event. 
 
 ```c
+ /* This code belongs in ble_cus.c*/
+
 static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     p_cus->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -949,6 +1033,8 @@ static void on_connect(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 Next, we're going to add the ble_cus_custom_value_update function decleration to the ble_cus.h file, which we're going to use to update our Custom Value Characteristic.
 
 ```c
+ /* This code belongs in ble_cus.h*/
+
 /**@brief Function for updating the custom value.
  *
  * @details The application calls this function when the cutom value should be updated. If
@@ -967,6 +1053,8 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value);
 Back in ble_cus.c, we're going to continue the good practice of checking that the pointer we passed as an argument is'nt NULL
 
 ```c
+ /* This code belongs in ble_cus.c*/
+
 uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value){
     if (p_cus == NULL)
     {
@@ -978,6 +1066,8 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value){
 Next, we're going to update the value in the GATT table with our custom_value that we passed as an argument to the ble_cus_custom_value_update() function. 
 
 ```c
+/* This code belongs in ble_cus_custom_value_update() in ble_cus.c*/
+
 uint32_t err_code = NRF_SUCCESS;
 ble_gatts_value_t gatts_value;
 
@@ -1001,6 +1091,8 @@ if (err_code != NRF_SUCCESS)
 After updating the value in the GATT table we're ready to notify our peer that the value of our Custom Value Characteristic has changed. 
 
 ```c
+/* This code belongs in ble_cus_custom_value_update() in ble_cus.c*/
+
 // Send value if connected and notifying.
 if ((p_cus->conn_handle != BLE_CONN_HANDLE_INVALID)) 
 {
@@ -1029,6 +1121,8 @@ The first thing we should do is to verify that we have a valid connection handle
 After adding the code snippets above ble_cus_custom_value_update() should look like below
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
 {
     NRF_LOG_INFO("In ble_cus_custom_value_update. \r\n"); 
@@ -1084,6 +1178,8 @@ uint32_t ble_cus_custom_value_update(ble_cus_t * p_cus, uint8_t custom_value)
 Like the characteristic metadata we need to set the metadata of the CCCD in custom_value_char_add(), which is done by adding the following snippet before the characteristic metadata is set. 
 
 ```c
+/* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     memset(&cccd_md, 0, sizeof(cccd_md));
 
     //  Read  operation on Cccd should be possible without authentication.
@@ -1092,11 +1188,12 @@ Like the characteristic metadata we need to set the metadata of the CCCD in cust
     
     cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
 ```
-We're setting the read and write permissions to the CCCD to open, i.e. no encryption is needed to write or read from the CCCD. 
+We're setting the read and write permissions to the CCCD to open, i.e. no encryption is needed to write or read from the CCCD. The .vloc option is set to BLE_GATTS_VLOC_STACK, which means that the value of the CCCD will be stored in SoftDevice memory section and not in the application memory section. 
 
 The next step is to add the Notify property to the Custom Value Characteristic and add a pointer to  the CCCD metadata in the characteristic metadata. This is done by modifying  the characteristic metadata properties in custom_value_char_add() function , i.e. setting .notify to 1 and .p_cccd_md to point to the CCCD metadata struct. 
 
 ```c
+/* This code belongs in custom_value_char_add() in ble_cus.c*/
     char_md.char_props.notify = 1;  
     char_md.p_cccd_md         = &cccd_md; 
 ```
@@ -1106,6 +1203,8 @@ This will add a Client Characteristic Configuration Descriptor or CCCD to the Cu
 However, before modifying the on_write() function we need do is to add two additional event, BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED, to the ble_cus_evt_type_t enumeration in ble_cus.h
 
 ```c
+/* This code belongs in ble_cus.h*/
+
 /**@brief Custom Service event type. */
 typedef enum
 {
@@ -1119,6 +1218,8 @@ typedef enum
 Back to the on_write() function, the first thing we should do is to add a if-statement that checks if the handle that is written to matches the handle of the CCCD and that the value has the correct length. If we pass this check we need to check wether notifications has been enabled or not. 
 
 ```c
+/* This code belongs in custom_value_char_add() in ble_cus.c*/
+
     // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
     if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
         && (p_evt_write->len == 2)
@@ -1150,6 +1251,8 @@ We do not actually need to enable notifications as this is done automatically by
 Adding the code-snippet above to the on_write() function should result in the following function. 
 
 ```c
+/* This code belongs in ble_cus.c*/
+
 static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
@@ -1188,6 +1291,8 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
 Now the last thing we have to do is to add the BLE_CUS_EVT_NOTIFICATION_ENABLED and BLE_CUS_EVT_NOTIFICATION_DISABLED to the on_cus_evt() event handler in main.c, i.e. 
 
 ```c
+/* This code belongs in main.c*/
+
 static void on_cus_evt(ble_cus_t     * p_cus_service,
                        ble_cus_evt_t * p_evt)
 {
@@ -1221,23 +1326,27 @@ Service, Characteristic and Descriptor  |
 We're now ready to notify some values from the nRF52 DK to the nRF Connect app. In order to do that we're going to create an application timer that calls ble_cus_custom_value_update() at a regular interval and then start it when we get the BLE_CUS_EVT_NOTIFICATION_ENABLED event. So first, add the following define to the top of main.c
 
 ```c
+/* This code belongs in main.c*/
 #define NOTIFICATION_INTERVAL           APP_TIMER_TICKS(1000)
 ```
 
 which is going to the timeout interval of our application timer. Next you will need to create an application timer id with the name m_notification_timer_id by calling the APP_TIMER_DEF  below the defines in main.c, i.e. 
 ```c
+/* This code belongs in main.c*/
 APP_TIMER_DEF(m_notification_timer_id);
 ```
 
 Below this macro call you can declare a unsigned 8-bit variable called  m_custom_value, i.e. 
 
 ```c
+/* This code belongs in main.c*/
 static uint8_t m_custom_value = 0;
 ```
 
 which will be used to hold the custom value we're going to notify to the nRF Connect app. Next, find the timers_init() functino in main.c and add the folling snippet to create the application timer
 
 ```c
+/* This code belongs in timers_init() in main.c*/
     // Create timers.
     err_code = app_timer_create(&m_notification_timer_id, APP_TIMER_MODE_REPEATED, notification_timeout_handler);
     APP_ERROR_CHECK(err_code);
@@ -1245,14 +1354,16 @@ which will be used to hold the custom value we're going to notify to the nRF Con
 
 Great, we now have a application timer and the next step is to start the application timer when we receive the BLE_CUS_EVT_NOTIFICATION_ENABLED, i.e. add the following snippet under the BLE_CUS_EVT_NOTIFICATION_ENABLED case in the on_cus_evt event handler in main.c
 
-```c         
+```c
+/* This code belongs in on_cus_evt() in main.c*/         
            err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
            APP_ERROR_CHECK(err_code);
 ```
 
 Similarly, we want the notification timer to stop when we get the BLE_CUS_EVT_NOTIFICATION_DISABLED event. Thus, we add the following snippet to the BLE_CUS_EVT_NOTIFICATION_DISABLED case in the on_cus_evt event handler in main.c
 
-```c         
+```c
+/* This code belongs in on_cus_evt() in main.c*/           
            err_code = app_timer_stop(m_notification_timer_id);
            APP_ERROR_CHECK(err_code);
 ```
@@ -1260,6 +1371,8 @@ Similarly, we want the notification timer to stop when we get the BLE_CUS_EVT_NO
 Lastly, we need to create the notification_timeout_handler which will increment the m_custom_value variable and then call ble_cus_custom_value_update by declaring the following function above timers_init() in main.c
 
 ```c
+/* This code belongs in main.c*/  
+
 /**@brief Function for handling the Battery measurement timer timeout.
  *
  * @details This function will be called each time the battery level measurement timer expires.
