@@ -411,23 +411,9 @@ Advertising Device  | Content of Advertisment Packet    | Service listed in the 
 
 ### Step 4 - Adding a Custom Value Characteristic to the Custom Service.
 
-A service is nothing with out a characteristic, so lets add one of those by creating the custom_value_char_add function. As this is a function that we want to be public, i.e. available to the application, we need to declare it in the ble_cus.h 
+A service is nothing with out a characteristic, so lets add one of those by creating the custom_value_char_add function to ble_cus.c. 
 
-
-```c
-/* This code belongs in ble_cus.h*/
-
-/**@brief Function for adding the Custom Value characteristic.
- *
- * @param[in]   p_cus        Custom Service structure.
- * @param[in]   p_cus_init   Information needed to initialize the service.
- *
- * @return      NRF_SUCCESS on success, otherwise an error code.
- */
-static uint32_t custom_value_char_add(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init);
-```
-Now, back in ble_cus.c, the first thing we have to do is to add several metadata variables that we will later populate. 
-
+The first thing we have to do is to declare the function and then add several metadata variables that we will later populate, as shown in the snippet below.
 
 ```c
 /* This code belongs in ble_cus.c*/
