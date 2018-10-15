@@ -18,7 +18,7 @@ However, if you simply want to compile the example without following the course 
 
 Please take 2 minutes to fill out the Course Evaluation Form, link below, at the end of the course.
 
-[Course Evaluation Form](https://drive.google.com/open?id=1XpQXYPlki1_D-FKVl9kPpIWD0c6-GPXb7Uw3jcjdYuk)  
+[Course Evaluation Form](https://drive.google.com/open?id=1hzn3SHDQ2Qg0d-_jRboxD2qpFKHSPzwKGH7Nz3AKotQ)  
 
 It is important to us that you tell us what you liked/did not like about the course so that we can improve the course material and presentations.
 
@@ -27,13 +27,13 @@ The evaluation is of course anonymous.
 ## Presentations
 The presentations from the course can be downloaded in PDF-format using the links below:
 
-[Nordic Introduction]()
+[Nordic Introduction](https://github.com/bjornspockeli/custom_ble_service_example/blob/master/pdf/01_Nordic_Company_Introduction.pdf)
 
-[nRF52832 Intro + Embedded C Intro]()
+[nRF52832 Intro + Embedded C Intro](https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/pdf/02_nRF52%20Student_%20Intro_v0.1.pdf)
 
-[Bluetooth Low Energy Protocol]()
+[Bluetooth Low Energy Protocol](https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/pdf/03_Bluetooth%20Overview.pdf)
 
-[SoftDevice Introduction]()
+[SoftDevice Introduction](https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/pdf/04_Softdevice_Student_Introduction_v0.1.pdf)
 
 
 ## HW Requirements
@@ -390,13 +390,13 @@ MEMORY
 
 Memory Settings Segger Embedded Studio | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings_SDK_v15_SES.JPG" width="1000"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/memory_settings_SDK_v15_SES.JPG" width="1000"> |
 
 **Keil:** Click "Options for Target" in Keil and modify the Read/Write Memory Areas so that IRAM1 has the start address 0x20002220 and size 0xDDE0, as shown in the screenshot below
 
 Memory Settings Keil | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/memory_settings_SDK_v15_Keil.JPG" width="1000"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/memory_settings_SDK_v15_Keil.JPG" width="1000"> |
 
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
@@ -405,7 +405,7 @@ That should be it, compile the ble_app_template project, flash the S132 v6.0.0 S
 
 Advertising Device  | Content of Advertisment Packet    | Service listed in the GATT table    |
 ------------ | ------------- | ------------- | 
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/advertising_device.png" width="250">  | <img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/advertisement_packet.png" width="250 "> | <img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service.png" width="250"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/advertising_device.png" width="250">  | <img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/advertisement_packet.png" width="250 "> | <img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/service.png" width="250"> |
 
 
 ### Step 4 - Adding a Custom Value Characteristic to the Custom Service.
@@ -605,7 +605,7 @@ Compile the project and flash it to you nRF5x DK. If you open the nRF Connect ap
 
 Service and Characteristic  | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_and_char.png" width="250"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/service_and_char.png" width="250"> |
 
 
 ### Step 5 - Handling events from the SoftDevice.
@@ -888,7 +888,7 @@ These two lines sets the write and read permissions to the characteristic value 
 
 Write button  | Write value   | 
 ------------ | ------------- | 
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/write_to_char_1.png" width="250">  | <img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/write_to_char_2.png" width="250"> | 
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/write_to_char_1.png" width="250">  | <img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/write_to_char_2.png" width="250"> | 
 
 
 **Challenge 1:** p_evt_write also has a data field. Use the data to decide if the LED is to be turned on or off. 
@@ -1317,7 +1317,7 @@ Compile the project and flash it to you nRF5x DK. If you open the nRF Connect ap
 
 Service, Characteristic and Descriptor  | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/service_char_desc.png" width="500"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/service_char_desc.png" width="500"> |
 
 We're now ready to notify some values from the nRF52 DK to the nRF Connect app. In order to do that we're going to create an application timer that calls ble_cus_custom_value_update() at a regular interval and then start it when we get the BLE_CUS_EVT_NOTIFICATION_ENABLED event. So first, add the following define to the top of main.c
 
@@ -1393,6 +1393,6 @@ Compile the project and flash it to your nRF52 DK. Open the nRF Connect app, con
 
 Enable Notifications  | 
 ------------ |
-<img src="https://github.com/bjornspockeli/custom_ble_service_example/blob/master/images/enable_notif.png" width="500"> |
+<img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/enable_notif.png" width="500"> |
 
 You should now see a value field appear below the Unknown Characteristics properties and the value should be incrementing every second. Congratulations you have now created a custom service and notified custom values!
