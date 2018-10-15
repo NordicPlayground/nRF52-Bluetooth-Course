@@ -274,10 +274,8 @@ uint32_t ble_cus_init(ble_cus_t * p_cus, const ble_cus_init_t * p_cus_init)
 
     // Add the Custom Service
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid, &p_cus->service_handle);
-    if (err_code != NRF_SUCCESS)
-    {
-        return err_code;
-    }
+    VERIFY_SUCCESS(err_code);
+    
     return err_code;
 }
 ```
@@ -305,8 +303,16 @@ The next step is to find the empty services_init function in main.c, which shoul
  */
 static void services_init(void)
 {
+    ret_code_t         err_code;
+    nrf_ble_qwr_init_t qwr_init = {0};
+
+    // Initialize Queued Write Module.
+    qwr_init.error_handler = nrf_qwr_error_handler;
+
+    err_code = nrf_ble_qwr_init(&m_qwr, &qwr_init);
+    APP_ERROR_CHECK(err_code);
+
     /* YOUR_JOB: Add code to initialize the services used by the application.
-       ret_code_t                         err_code;
        ble_xxs_init_t                     xxs_init;
        ble_yys_init_t                     yys_init;
 
@@ -336,10 +342,17 @@ Ok, we're going to do as we're told, i.e. create a ble_cus_init_t struct and pop
 ```c
 /**@brief Function for initializing services that will be used by the application.
  */
-static void services_init(void)
+ static void services_init(void)
 {
-    /* YOUR_JOB: Add code to initialize the services used by the application.*/
-    ret_code_t                         err_code;
+    ret_code_t         err_code;
+    nrf_ble_qwr_init_t qwr_init = {0};
+
+    // Initialize Queued Write Module.
+    qwr_init.error_handler = nrf_qwr_error_handler;
+
+    err_code = nrf_ble_qwr_init(&m_qwr, &qwr_init);
+    APP_ERROR_CHECK(err_code);
+    
     ble_cus_init_t                     cus_init;
 
      // Initialize CUS Service init structure to zero.
@@ -347,6 +360,29 @@ static void services_init(void)
 	
     err_code = ble_cus_init(&m_cus, &cus_init);
     APP_ERROR_CHECK(err_code);	
+
+    /* YOUR_JOB: Add code to initialize the services used by the application.
+       ble_xxs_init_t                     xxs_init;
+       ble_yys_init_t                     yys_init;
+
+       // Initialize XXX Service.
+       memset(&xxs_init, 0, sizeof(xxs_init));
+
+       xxs_init.evt_handler                = NULL;
+       xxs_init.is_xxx_notify_supported    = true;
+       xxs_init.ble_xx_initial_value.level = 100;
+
+       err_code = ble_bas_init(&m_xxs, &xxs_init);
+       APP_ERROR_CHECK(err_code);
+
+       // Initialize YYY Service.
+       memset(&yys_init, 0, sizeof(yys_init));
+       yys_init.evt_handler                  = on_yys_evt;
+       yys_init.ble_yy_initial_value.counter = 0;
+
+       err_code = ble_yy_service_init(&yys_init, &yy_init);
+       APP_ERROR_CHECK(err_code);
+     */
 }
 ```
 Now that we have initialized the service we have to add the 128bit UUID to the advertisement packet. If you navigate to the top of main.c you should find the m_adv_uuids array.
