@@ -180,7 +180,7 @@ typedef struct ble_cus_s ble_cus_t;
 The first function we're going to implement is ble_cus_init function, which we're going to initialize our service with. First, we need to do is to add its function decleration in the ble_cus.h file. 
 
 ```c
-/* This code belongs in ble_cus.c*/
+/* This code belongs in ble_cus.h*/
 
 /**@brief Function for initializing the Custom Service.
  *
