@@ -1,11 +1,11 @@
-Custom Service Tutorial
+nRF52 Bluetooth Course 
 -------
 
-This tutorial will show you how to create a custom service with a custom value characteristic in the ble_app_template project found in the Nordic nRF5 SDK v15.0.0. This tutorial can be seen as the combined version of the BLE [Advertising](https://devzone.nordicsemi.com/tutorials/5) / [Services](https://devzone.nordicsemi.com/tutorials/8) / [Characteristics](https://devzone.nordicsemi.com/tutorials/17) , A Beginner's Tutorial series, which I strongly recommend to take a look at as they go deeper into the matter than this tutorial. Note, these tutorials are compatible with an older SDK version, but the theory regarding Bluetooth Low Energy has not changed much.
+This repository contains the hands-on exercises for the nRF52 Bluetooth Course . At the end of the course you should be able to create your own custom service with a custom  characteristic in the ble_app_template project found in the Nordic nRF5 SDK v15.0.0. 
 
 The aim of this tutorial is simply to create one service with one characteristic without too much theory in between the steps. There are no .c or .h files that needs to be downloaded as we will be starting from scratch in the ble_app_template project. 
 
-However, if you simply want to compile the example without doing the tutorial steps then you can be clone this repo into SDK v15.0.0/examples/ble_peripheral. 
+However, if you simply want to compile the example without following the course steps then you can be clone this repo into SDK v15.0.0/examples/ble_peripheral. 
 
 
 <!---
@@ -13,10 +13,10 @@ However, if you simply want to compile the example without doing the tutorial st
 
 - [ ] Add register definition file (.svd) and retarget of printf to the ble_app_uart Segger Embedded Project.
 --->
-<!---
+
 ## Course Evaluation 
 
-Please take 2 minutes to fill out the Course Evaluation Form,link below, at the end of the course.
+Please take 2 minutes to fill out the Course Evaluation Form, link below, at the end of the course.
 
 [Course Evaluation Form](https://drive.google.com/open?id=1XpQXYPlki1_D-FKVl9kPpIWD0c6-GPXb7Uw3jcjdYuk)  
 
@@ -27,15 +27,14 @@ The evaluation is of course anonymous.
 ## Presentations
 The presentations from the course can be downloaded in PDF-format using the links below:
 
-[Nordic Introduction](https://drive.google.com/open?id=1SfSxpVHnDYIAP90M2gJaMhYqdbjRbz5c)
+[Nordic Introduction]()
 
-[nRF52832 Intro + Embedded C Intro](https://drive.google.com/open?id=1c9AbTeCmHP_36Dex_SDQyUNXEwW8HVpd)
+[nRF52832 Intro + Embedded C Intro]()
 
-[Bluetooth Low Energy Protocol](https://drive.google.com/open?id=1_Jzx0dUwmVSBqMoAqXI4Kmriw-wH3c8h)
+[Bluetooth Low Energy Protocol]()
 
-[SoftDevice Introduction](https://drive.google.com/open?id=1-y6_JC5us2DkBKWTHW4NNWeQyqhTP_lv)
+[SoftDevice Introduction]()
 
---->
 
 ## HW Requirements
 - nRF52 Development Kit 
