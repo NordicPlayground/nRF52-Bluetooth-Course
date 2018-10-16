@@ -453,7 +453,7 @@ Memory Settings Keil |
 
 The final step we have to do is to change the calling order in  main() so that services_init() is called before advertising_init(). This is because we need to add the CUSTOM_SERVICE_UUID_BASE to the BLE stack's table using sd_ble_uuid_vs_add() in ble_cus_init() before we call advertising_init(). Doing it the otherway around will cause advertising_init() to return an error code. 
 
-That should be it, compile the ble_app_template project, flash the S132 v6.0.0 SoftDevice and then flash the ble_app_template application. LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to scan for the device and view the content of the advertisment package. If you connect to the device you should see the service listed as an "Unknow Service" since we're using a vendor-specific UUID.
+That should be it, compile the ble_app_template project, flash the S132 v6.0.0 SoftDevice and then flash the ble_app_template application( only applicable if you are using Keil). LED1 on your nRF52 DK should now start blinking, indicating that its advertising.  Use nRF Connect for Android/iOS to scan for the device and view the content of the advertisment package. If you connect to the device you should see the service listed as an "Unknow Service" since we're using a vendor-specific UUID.
 
 Advertising Device  | Content of Advertisment Packet    | Service listed in the GATT table    |
 ------------ | ------------- | ------------- | 
