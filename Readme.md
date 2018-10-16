@@ -175,7 +175,23 @@ The next step is to add a forward declaration of the ble_cus_t type
 // Forward declaration of the ble_cus_t type.
 typedef struct ble_cus_s ble_cus_t;
 ```
+Make sure that you add this above the BLE_CUS_DEF macro as ble_cus_t is used in this macro, i.e. in this order
 
+```c
+/* This code belongs in ble_cus.h*/
+
+// Forward declaration of the ble_cus_t type.
+typedef struct ble_cus_s ble_cus_t;
+
+/**@brief   Macro for defining a ble_cus instance.
+ *
+ * @param   _name   Name of the instance.
+ * @hideinitializer
+ */
+#define BLE_CUS_DEF(_name)                                                                          \
+static ble_cus_t _name;                                                                             \
+
+```
 
 The first function we're going to implement is ble_cus_init function, which we're going to initialize our service with. First, we need to do is to add its function decleration in the ble_cus.h file. 
 
