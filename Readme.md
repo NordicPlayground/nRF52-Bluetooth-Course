@@ -1448,3 +1448,325 @@ Enable Notifications  |
 <img src="https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/images/enable_notif.png" width="500"> |
 
 You should now see a value field appear below the Unknown Characteristics properties and the value should be incrementing every second. Congratulations you have now created a custom service and notified custom values!
+
+## Task 2 - Controlling a Servo using BLE
+
+In this task we will use the custom service and its characteristic to control a servo using Pulse-Width Modulation. The PWM library in the nRF SDK uses one of the nRF52s TIMER peripherals in addition to the PPI and GPIOTE peripherals. The app_pwm library is documented on this Infocenter page.
+
+### Step 1 - Connecting the Servo to the nRF52 DK
+
+There are three wires coming from the SG90 Servo:
+
+Brown: Ground - Should be connected to one of the pins marked GND on your nRF52 DK.
+
+Red: 5V - Should be connected to the pin marked 5V on your nRF52 DK.
+
+Orange: PWM Control Signal - Should be connected to one of the unused GPIO pins of the nRF52 DK (for example P0.04, pin number 4).
+
+### Step 2 - Adding the necessary libraries and drivers
+
+In order to use the library we need to add the necessary .c and .h files to our project. 
+
+app_pwm.h - Add #include "app_pwm.h" to the other include statements at the top of main.c
+
+app_pwm.c - Right-click the nRF_Libraries folder in the Project Explorer and select "Add Existing File ...". Navigate to the nRF5_SDK_15.0.0_a53641a\components\libraries\pwm folder and add app_pwm.c
+
+nrf_drv_ppi.c - Right-click the nRF_Drivers folder in the Project Explorer and select "Add Existing File ...".
+Navigate to the nRF5_SDK_15.0.0_a53641a\integration\nrfx\legacy folder and add nrf_drv_ppi.c
+
+nrfx_timer.c - Right-click the nRF_Drivers folder in the Project Explorer and select "Add Existing File ...".
+Navigate to the nRF5_SDK\nRF5_SDK_15.0.0_a53641a\modules\nrfx\drivers\src folder and add nrfx_timer.c
+
+nrfx_ppi.c - Right-click the nRF_Drivers folder in the Project Explorer and select "Add Existing File ...".
+Navigate to the nRF5_SDK\nRF5_SDK_15.0.0_a53641a\modules\nrfx\drivers\src folder and add nrfx_ppi.c
+
+### 3 - Enabling the added libraries and drivers in sdk_config.h
+
+In order for the module to be compiled when we build the project we need to enable the modules in the sdk_config.h file. Open the sdk_config file, search for the defines below and set the value to 1.
+
+nRF_Drivers in sdk_config.h
+
+    PPI_ENABLED 1
+
+    TIMER_ENABLED 1
+
+nRF_Libraries in sdk_config.h
+
+    APP_PWM_ENABLED 1
+
+### Step 3 - Adding PWM code to main.c
+
+First we need to create a PWM instance that uses TIMER 1 to generate the PWM signal. This is done by adding APP_PWM_INSTANCE macro with the following parameters to main.c at the same place where we added BLE_CUS_DEF(m_cus)
+```c
+    //PMW instance
+    APP_PWM_INSTANCE(PWM1, 1); // Setup a PWM instance with TIMER 1
+```
+
+Next, we need to create a function called pwm_init where we initialize the pwm library. Add the following function right above main() in main.c
+```c
+static void pwm_init()
+{
+    ret_code_t err_code;
+    
+    // Configure the PWM library 
+    app_pwm_config_t pwm1_cfg = {
+      .pins            = {4, APP_PWM_NOPIN},                                             // Use pin 4 as the PWM pin and setting the second pin to APP_PWM_NOPIN, i.e. not used
+      .pin_polarity    = {APP_PWM_POLARITY_ACTIVE_HIGH, APP_PWM_POLARITY_ACTIVE_LOW},    // Set the polarity of the pin to high, i.e. if the duty cycle is set to 10% the pin will be high 10% of the time and off 90% 
+      .num_of_channels = 1,                                                             // Set the channel number, i.e. the number of pins to 1
+      .period_us       = 20000L                                                         // Set the PWM period to 20msec. 
+    };
+
+    err_code = app_pwm_init(&PWM1,&pwm1_cfg,NULL);
+    APP_ERROR_CHECK(err_code);
+
+    app_pwm_enable(&PWM1);
+}
+```
+Lastly, we need to call the pwm_init() in main(), add it after peer_manager_init().
+
+
+In order to verify that the servo has been correctly connected to the NRF52 DK and that we can change the duty cycle, add the following line before the for(;;) loop in main(). 
+
+APP_ERROR_CHECK(app_pwm_channel_duty_set(&PWM1, 0, 7)); 
+
+This will make the servo move to 90 degrees, so make sure that the servo arm is turned to one of its outer positions before connecting it to the DK. After adding pwm_init() and the code line above your main() function should look like this 
+
+```c
+int main(void)
+{
+    bool erase_bonds;
+
+    // Initialize.
+    log_init();
+    timers_init();
+    buttons_leds_init(&erase_bonds);
+    power_management_init();
+    ble_stack_init();
+    gap_params_init();
+    gatt_init();
+    services_init();
+    advertising_init();
+    conn_params_init();
+    peer_manager_init();
+    pwm_init();
+
+    // Start execution.
+    NRF_LOG_INFO("Template example started.");
+    application_timers_start();
+
+    advertising_start(erase_bonds);
+
+    // Comment out this line after you have verified that the servo moves to the 90 degree position. 
+    APP_ERROR_CHECK(app_pwm_channel_duty_set(&PWM1, 0, 7));
+
+    // Enter main loop.
+    for (;;)
+    {
+        idle_state_handle();
+    }
+}
+```
+
+Compile the code, flash it to the nRF52 DK and observe that the servo moves to its 90 degree postition. Comment out the line after you have verified that the servo is correctly connected. 
+
+### Step 4 - Modifying the Custom Service to handle Servo events
+
+Now, we want to modify the custom service to receive the duty cycle of the servo over Bluetooth, i.e. write the duty cycle to the custom value characteristic and then call app_pwm_channel_duty_set() to move the servo to the choosen position. 
+
+First, we're going to add a BLE_CUS_EVT_SERVO event to ble_cus_evt_type_t in ble_cus.h
+```c
+/**@brief Custom Service event type. */
+typedef enum
+{
+    BLE_CUS_EVT_NOTIFICATION_ENABLED,                             /**< Custom value notification enabled event. */
+    BLE_CUS_EVT_NOTIFICATION_DISABLED,                             /**< Custom value notification disabled event. */
+    BLE_CUS_EVT_DISCONNECTED,
+    BLE_CUS_EVT_CONNECTED,
+    BLE_CUS_EVT_SERVO
+} ble_cus_evt_type_t;
+```
+The second change we want to do in ble_cus.h is to add a duty_cycle variable to the ble_cus_evt_t struct so that we can pass the duty cycle value to the on_cus_evt event handler in main.c, i.e. 
+
+```c
+    /**@brief Custom Service event. */
+    typedef struct
+    {
+        ble_cus_evt_type_t evt_type;                                  /**< Type of event. */
+        uint8_t duty_cycle;                                           /**< Servo duty cycle */
+    } ble_cus_evt_t;
+```
+
+The next thing we need to do is to modify the on_write() in ble_cus.c function to receive the duty cycle sent over BLE
+```c
+ // Custom Value Characteristic Written to.
+    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    {
+        nrf_gpio_pin_toggle(LED_4);
+        
+        // Check if data pointer is not a null-pointer
+        if(p_evt_write->data != NULL)
+        {
+           evt.evt_type = BLE_CUS_EVT_SERVO;
+           
+           // Set duty cycle to value written to the characteristic
+           evt.duty_cycle = p_evt_write->data[0];
+
+           NRF_LOG_INFO("New Duty Cycle received %d\r\n", evt.duty_cycle); 
+
+           // Call the application event handler.
+           p_cus->evt_handler(p_cus, &evt);     
+    }
+```
+After the modification the on_write() in ble_cus.c should look like this
+
+```c
+    static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
+    {
+        ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+        ble_cus_evt_t evt;
+
+        // Check if its the Custom Value Characteristic thats been written to.
+        if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+        {
+            nrf_gpio_pin_toggle(LED_4);
+            
+            if(p_evt_write->data != NULL)
+            {
+                evt.evt_type = BLE_CUS_EVT_SERVO;
+                
+                evt.duty_cycle = p_evt_write->data[0];
+
+                //Print the calulated duty cycle to the debug terminal
+                NRF_LOG_INFO("Duty Cycle: %d \r\n", evt.duty_cycle); 
+
+                // Call the application event handler.
+                p_cus->evt_handler(p_cus, &evt);
+            }
+        }
+
+        // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+        if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle)
+            && (p_evt_write->len == 2)
+        )
+        {
+            // CCCD written, call application event handler
+            if (p_cus->evt_handler != NULL)
+            {
+                
+                if (ble_srv_is_notification_enabled(p_evt_write->data))
+                {
+                    evt.evt_type = BLE_CUS_EVT_NOTIFICATION_ENABLED;
+                }
+                else
+                {
+                    evt.evt_type = BLE_CUS_EVT_NOTIFICATION_DISABLED;
+                }
+                // Call the application event handler.
+                p_cus->evt_handler(p_cus, &evt);
+            }
+        }
+
+    }
+```
+
+### Step 5 - Handle the BLE_CUS_EVT_SERVO event in on_cus_evt() 
+
+The last thing we need to do is to add the BLE_CUS_EVT_SERVO event to the switch-case in on_cus_evt() in main.c
+
+```c
+    static void on_cus_evt(ble_cus_t     * p_cus_service,
+                        ble_cus_evt_t * p_evt)
+    {
+        ret_code_t err_code;
+        
+        switch(p_evt->evt_type)
+        {
+            case BLE_CUS_EVT_NOTIFICATION_ENABLED:
+                
+                err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
+                APP_ERROR_CHECK(err_code);
+                break;
+
+            case BLE_CUS_EVT_NOTIFICATION_DISABLED:
+
+                err_code = app_timer_stop(m_notification_timer_id);
+                APP_ERROR_CHECK(err_code);
+                break;
+
+            case BLE_CUS_EVT_CONNECTED:
+                break;
+
+            case BLE_CUS_EVT_DISCONNECTED:
+                break;
+            // Add this case
+            case BLE_CUS_EVT_SERVO:
+                break;
+
+            default:
+                // No implementation needed.
+                break;
+        }
+    }
+```
+
+The last thing we need to do now is to add the function that sets the duty cycle, app_pwm_channel_duty_set(), with the duty_cycle parameter passed in the p_evt struct. 
+
+```c
+static void on_cus_evt(ble_cus_t     * p_cus_service,
+                       ble_cus_evt_t * p_evt)
+{
+    ret_code_t err_code;
+    
+    switch(p_evt->evt_type)
+    {
+        case BLE_CUS_EVT_NOTIFICATION_ENABLED:
+            
+             err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
+             APP_ERROR_CHECK(err_code);
+             break;
+
+        case BLE_CUS_EVT_NOTIFICATION_DISABLED:
+
+            err_code = app_timer_stop(m_notification_timer_id);
+            APP_ERROR_CHECK(err_code);
+            break;
+
+        case BLE_CUS_EVT_CONNECTED:
+            break;
+
+        case BLE_CUS_EVT_DISCONNECTED:
+              break;
+        case BLE_CUS_EVT_SERVO:
+              err_code = app_pwm_channel_duty_set(&PWM1, 0, p_evt->duty_cycle);
+              APP_ERROR_CHECK(err_code);
+              break;
+
+        default:
+              // No implementation needed.
+              break;
+    }
+}
+```
+Now we should be able to send the duty cycle value to the nRF52 DK and change the angle of the servo. Compile the code, flash it to the DK and open the nRF Connect app. Connect to the nRF52 DK and write a value between 3 and 13 to the characteristic. Note: In hexadecimal 3 = 0x03 and 13 = 0xD.    
+
+### Step 7 - Calculating duty cycle from angle
+
+Sending the duty cycle over BLE works, but it would be even better if we could send the angle and then have the nRF52832 calculate the duty cycle based on that. 
+
+We know that the servo will be at 0 degrees if we set the duty cycle to 3% and at 180 degrees if the duty cycle is set to 13%. Based on this information we can set up a linear equation on the form 
+
+```
+y = mx + b
+```
+where m = y2-y1/x2-x1 and b = y(0), see this[https://www.mathplanet.com/education/algebra-1/formulating-linear-equations/writing-linear-equations-using-the-slope-intercept-form] for the theory. So if we say that the Duty Cycle is Y and the angle is X, we end up with the following formula
+
+```
+Duty Cycle = m*Angle + b
+```
+Calculate the value of m and b based on the fact that Duty Cycle(angle=0) = 3 and Duty Cycle(angle=180) = 13. 
+
+Replace evt.duty_cycle = (p_evt_write->data[0]) in the on_write() function with the equation. Compile the code, flash it to the DK and open the nRF Connect app. Connect to the nRF52 DK and write a value between 0 and 180 to the characteristic. Note: In hexadecimal 0 = 0x00, 90 = 0x5A and 180 = 0xB4.     
+
+
+
+
