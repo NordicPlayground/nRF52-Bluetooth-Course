@@ -1489,6 +1489,8 @@ nRF_Drivers in sdk_config.h
     PPI_ENABLED 1
 
     TIMER_ENABLED 1
+    
+    TIMER1_ENABLED 1
 
 nRF_Libraries in sdk_config.h
 
