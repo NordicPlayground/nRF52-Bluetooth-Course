@@ -27,7 +27,7 @@ The evaluation is of course anonymous.
 ## Presentations
 The presentations from the course can be downloaded in PDF-format using the links below:
 
-[Nordic Introduction](https://github.com/bjornspockeli/custom_ble_service_example/blob/master/pdf/01_Nordic_Company_Introduction.pdf)
+[Nordic Introduction](https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/pdf/01_Nordic_Company_Introduction.pdf)
 
 [nRF52832 Intro + Embedded C Intro](https://github.com/NordicPlayground/nRF52-Bluetooth-Course/blob/master/pdf/02_nRF52%20Student_%20Intro_v0.1.pdf)
 
